@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>診断ページ | サイ</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+	<main class="container">
+		<header class="hero">
+			<p class="eyebrow">S.I.E Enneagram Check</p>
+			<h1>エニアグラム診断フォーム</h1>
+			<p>
+				各設問について、いまの自分に最も近い選択肢を選んでください。
+				全135問（9タイプ x 15問）です。
+			</p>
+			<p><a href="index.html">トップへ戻る</a></p>
+		</header>
+
+		<section class="progress-panel" aria-live="polite">
+			<p>回答済み: <strong id="answered-count">0</strong> / <span id="total-count">135</span></p>
+		</section>
+
+		<form id="diagnosis-form" class="question-form"></form>
+
+		<div class="actions">
+			<button type="submit" form="diagnosis-form" class="primary-btn">診断結果を表示</button>
+			<button type="reset" form="diagnosis-form" class="ghost-btn">入力をリセット</button>
+		</div>
+
+		<section id="diagnosis-result" class="result" hidden>
+			<h2>診断結果</h2>
+			<p id="result-summary"></p>
+			<div id="result-detail" class="result-detail"></div>
+			<h3 class="sub-heading">上位3タイプ比較</h3>
+			<div id="result-cards" class="result-cards"></div>
+		</section>
+	</main>
+	<script src="script.js"></script>
+</body>
+</html>
