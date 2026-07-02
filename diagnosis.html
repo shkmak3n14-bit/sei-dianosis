@@ -32,10 +32,17 @@
 		<section id="diagnosis-result" class="result" hidden>
 			<h2>診断結果</h2>
 			<p id="result-summary"></p>
+			<nav id="result-rank-nav" class="result-rank-nav" aria-label="結果の切り替え"></nav>
 			<div id="result-detail" class="result-detail"></div>
 			<h3 class="sub-heading">上位3タイプ比較</h3>
 			<div id="result-cards" class="result-cards"></div>
 		</section>
+
+		<div id="result-actions" class="result-actions" hidden>
+			<button type="button" id="diagnosis-reset-btn" class="ghost-btn">診断初期化</button>
+			<button type="button" id="diagnosis-redo-btn" class="ghost-btn">診断をやり直す</button>
+			<button type="button" id="diagnosis-accept-btn" class="primary-btn">概ね合っている</button>
+		</div>
 	</main>
 	<script src="script.js"></script>
 </body>

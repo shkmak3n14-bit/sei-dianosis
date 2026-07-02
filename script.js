@@ -1,11 +1,21 @@
+const DIAGNOSIS_STORAGE_KEY = "sieDiagnosisState";
+
+let currentDiagnosisResult = null;
+
 document.addEventListener("DOMContentLoaded", () => {
 	const startButton = document.getElementById("start-diagnosis");
 	const diagnosisForm = document.getElementById("diagnosis-form");
+	const wPage = document.getElementById("w-page");
 
 	if (startButton) {
 		startButton.addEventListener("click", () => {
 			window.location.href = "diagnosis.html";
 		});
+	}
+
+	if (wPage) {
+		initializeWPage();
+		return;
 	}
 
 	if (diagnosisForm) {
@@ -364,8 +374,13 @@ function initializeDiagnosisForm(diagnosisForm) {
 	const totalCountElement = document.getElementById("total-count");
 	const resultSection = document.getElementById("diagnosis-result");
 	const resultSummary = document.getElementById("result-summary");
+	const resultRankNav = document.getElementById("result-rank-nav");
 	const resultDetail = document.getElementById("result-detail");
 	const resultCards = document.getElementById("result-cards");
+	const resultActions = document.getElementById("result-actions");
+	const resetButton = document.getElementById("diagnosis-reset-btn");
+	const redoButton = document.getElementById("diagnosis-redo-btn");
+	const acceptButton = document.getElementById("diagnosis-accept-btn");
 	const totalQuestions = ENNEAGRAM_TYPES.reduce((sum, entry) => sum + entry.questions.length, 0);
 
 	if (totalCountElement) {
@@ -405,32 +420,58 @@ function initializeDiagnosisForm(diagnosisForm) {
 	}).join("");
 
 	updateAnsweredCount(diagnosisForm, answeredCountElement, totalQuestions);
+	const storedState = loadStoredDiagnosisState();
+
+	if (storedState && Array.isArray(storedState.answers)) {
+		restoreAnswers(diagnosisForm, storedState.answers);
+		updateAnsweredCount(diagnosisForm, answeredCountElement, totalQuestions);
+	}
 
 	diagnosisForm.addEventListener("change", () => {
 		updateAnsweredCount(diagnosisForm, answeredCountElement, totalQuestions);
 	});
 
 	diagnosisForm.addEventListener("reset", () => {
-		if (resultSection) {
-			resultSection.hidden = true;
-		}
-
-		if (resultSummary) {
-			resultSummary.textContent = "";
-		}
-
-		if (resultDetail) {
-			resultDetail.innerHTML = "";
-		}
-
-		if (resultCards) {
-			resultCards.innerHTML = "";
-		}
+		clearDiagnosisResultUI({ resultSection, resultSummary, resultRankNav, resultDetail, resultCards, resultActions });
+		currentDiagnosisResult = null;
+		clearStoredDiagnosisState();
 
 		window.setTimeout(() => {
 			updateAnsweredCount(diagnosisForm, answeredCountElement, totalQuestions);
+			window.scrollTo({ top: 0, behavior: "smooth" });
 		}, 0);
 	});
+
+	if (resetButton) {
+		resetButton.addEventListener("click", () => {
+			diagnosisForm.reset();
+		});
+	}
+
+	if (redoButton) {
+		redoButton.addEventListener("click", () => {
+			if (resultSection) {
+				resultSection.hidden = true;
+			}
+
+			if (resultActions) {
+				resultActions.hidden = true;
+			}
+
+			window.scrollTo({ top: 0, behavior: "smooth" });
+		});
+	}
+
+	if (acceptButton) {
+		acceptButton.addEventListener("click", () => {
+			if (!currentDiagnosisResult) {
+				return;
+			}
+
+			saveDiagnosisState(currentDiagnosisResult);
+			window.location.href = "w.html";
+		});
+	}
 
 	diagnosisForm.addEventListener("submit", (event) => {
 		event.preventDefault();
@@ -457,46 +498,111 @@ function initializeDiagnosisForm(diagnosisForm) {
 		});
 
 		scores.sort((a, b) => b.score - a.score);
+		const answers = collectAnswers(diagnosisForm);
 		const topThree = scores.slice(0, 3);
-		const dominantType = topThree[0];
-		const dominantProfile = TYPE_PROFILES[dominantType.type];
-		const cyclePercent = Math.round((dominantType.score / dominantType.max) * 100);
-		const maturityLabel = getMaturityLabel(cyclePercent);
+		currentDiagnosisResult = {
+			scores,
+			answers,
+			selectedRankIndex: 0
+		};
+		saveDiagnosisState(currentDiagnosisResult);
 
 		if (resultSummary) {
-			resultSummary.textContent = `最も傾向が強いのは タイプ${dominantType.type}（${dominantType.name}）です。まず詳細レポートを確認し、最後に上位3タイプ比較を見てください。`;
+			resultSummary.textContent = `最も傾向が強いのは タイプ${topThree[0].type}（${topThree[0].name}）です。2位・3位の結果は上部リンクで切り替えられます。`;
 		}
 
-		if (resultDetail && dominantProfile) {
-			resultDetail.innerHTML = buildDetailedReportMarkup(dominantType, dominantProfile, cyclePercent, maturityLabel);
-		}
-
-		if (resultCards) {
-			resultCards.innerHTML = topThree
-				.map((item) => {
-					const percentage = Math.round((item.score / item.max) * 100);
-
-					return `
-						<article class="result-card">
-							<h3>タイプ${item.type}（${item.name}）</h3>
-							<p class="score">${item.score} / ${item.max} 点</p>
-							<p>一致度: ${percentage}%</p>
-						</article>
-					`;
-				})
-				.join("");
-		}
-
-		if (resultSection) {
-			resultSection.hidden = false;
-			resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
-		}
+		renderDiagnosisResult(currentDiagnosisResult, 0, {
+			resultSection,
+			resultSummary,
+			resultRankNav,
+			resultDetail,
+			resultCards,
+			resultActions
+		});
 	});
+
+	if (resultRankNav) {
+		resultRankNav.addEventListener("click", (event) => {
+			const link = event.target.closest("a[data-rank]");
+
+			if (!link || !currentDiagnosisResult) {
+				return;
+			}
+
+			event.preventDefault();
+			const selectedRankIndex = Number(link.dataset.rank);
+			renderDiagnosisResult(currentDiagnosisResult, selectedRankIndex, {
+				resultSection,
+				resultSummary,
+				resultRankNav,
+				resultDetail,
+				resultCards,
+				resultActions
+			});
+		});
+	}
 }
 
-function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturityLabel) {
+function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
+	if (!resultState || !elements) {
+		return;
+	}
+
+	currentDiagnosisResult = {
+		...resultState,
+		selectedRankIndex
+	};
+
+	const selectedResult = resultState.scores[selectedRankIndex] ?? resultState.scores[0];
+	const profile = TYPE_PROFILES[selectedResult.type];
+	const cyclePercent = Math.round((selectedResult.score / selectedResult.max) * 100);
+	const maturityLabel = getMaturityLabel(cyclePercent);
+	const visibleRanks = resultState.scores.slice(0, 3);
+
+	if (elements.resultRankNav) {
+		elements.resultRankNav.innerHTML = visibleRanks
+			.map((item, index) => {
+				const activeClass = index === selectedRankIndex ? "is-active" : "";
+				return `<a href="#diagnosis-result" class="rank-link ${activeClass}" data-rank="${index}">${index + 1}位を見る</a>`;
+			})
+			.join("");
+	}
+
+	if (elements.resultDetail && profile) {
+		elements.resultDetail.innerHTML = buildDetailedReportMarkup(selectedResult, profile, cyclePercent, maturityLabel, selectedRankIndex);
+	}
+
+	if (elements.resultCards) {
+		elements.resultCards.innerHTML = visibleRanks
+			.map((item, index) => {
+				const percentage = Math.round((item.score / item.max) * 100);
+
+				return `
+					<article class="result-card">
+						<h3>${index + 1}位 タイプ${item.type}（${item.name}）</h3>
+						<p class="score">${item.score} / ${item.max} 点</p>
+						<p>一致度: ${percentage}%</p>
+						<p><a href="#diagnosis-result" class="rank-link" data-rank="${index}">${index + 1}位の詳細を見る</a></p>
+					</article>
+				`;
+			})
+			.join("");
+	}
+
+	if (elements.resultActions) {
+		elements.resultActions.hidden = false;
+	}
+
+	if (elements.resultSection) {
+		elements.resultSection.hidden = false;
+		elements.resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
+	}
+}
+
+function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturityLabel, selectedRankIndex) {
 	return `
 		<article class="report-card">
+			<p class="report-rank">${selectedRankIndex + 1}位</p>
 			<h3>タイプNo</h3>
 			<p>タイプ${dominantType.type}</p>
 
@@ -547,6 +653,124 @@ function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturity
 			<p>${maturityLabel}</p>
 		</article>
 	`;
+}
+
+function clearDiagnosisResultUI(elements) {
+	if (elements.resultSection) {
+		elements.resultSection.hidden = true;
+	}
+
+	if (elements.resultSummary) {
+		elements.resultSummary.textContent = "";
+	}
+
+	if (elements.resultRankNav) {
+		elements.resultRankNav.innerHTML = "";
+	}
+
+	if (elements.resultDetail) {
+		elements.resultDetail.innerHTML = "";
+	}
+
+	if (elements.resultCards) {
+		elements.resultCards.innerHTML = "";
+	}
+
+	if (elements.resultActions) {
+		elements.resultActions.hidden = true;
+	}
+}
+
+function collectAnswers(formElement) {
+	return Array.from(formElement.querySelectorAll("fieldset")).map((fieldset) => {
+		return Array.from(fieldset.querySelectorAll('input[type="radio"]')).reduce((selectedValue, input) => {
+			if (input.checked) {
+				return Number(input.value);
+			}
+
+			return selectedValue;
+		}, 0);
+	});
+}
+
+function restoreAnswers(formElement, answers) {
+	const fieldsets = Array.from(formElement.querySelectorAll("fieldset"));
+
+	fieldsets.forEach((fieldset, index) => {
+		const value = answers[index];
+
+		if (typeof value !== "number") {
+			return;
+		}
+
+		const target = fieldset.querySelector(`input[type="radio"][value="${value}"]`);
+
+		if (target) {
+			target.checked = true;
+		}
+	});
+}
+
+function saveDiagnosisState(state) {
+	window.sessionStorage.setItem(DIAGNOSIS_STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadStoredDiagnosisState() {
+	const raw = window.sessionStorage.getItem(DIAGNOSIS_STORAGE_KEY);
+
+	if (!raw) {
+		return null;
+	}
+
+	try {
+		return JSON.parse(raw);
+	} catch {
+		return null;
+	}
+}
+
+function clearStoredDiagnosisState() {
+	window.sessionStorage.removeItem(DIAGNOSIS_STORAGE_KEY);
+}
+
+function initializeWPage() {
+	const wPage = document.getElementById("w-page");
+	const wSummary = document.getElementById("w-summary");
+	const wDetail = document.getElementById("w-detail");
+	const wBackLink = document.getElementById("w-back-link");
+	const storedState = loadStoredDiagnosisState();
+
+	if (!wPage) {
+		return;
+	}
+
+	if (!storedState || !Array.isArray(storedState.scores) || storedState.scores.length === 0) {
+		if (wSummary) {
+			wSummary.textContent = "診断結果が見つかりません。もう一度診断してください。";
+		}
+		return;
+	}
+
+	const selectedRankIndex = Number.isInteger(storedState.selectedRankIndex) ? storedState.selectedRankIndex : 0;
+	const topResult = storedState.scores[selectedRankIndex] ?? storedState.scores[0];
+	const profile = TYPE_PROFILES[topResult.type];
+	const percentage = Math.round((topResult.score / topResult.max) * 100);
+
+	if (wSummary) {
+		wSummary.textContent = `${selectedRankIndex + 1}位の結果を確認しました。タイプ${topResult.type}（${profile.title}）が最有力です。`;
+	}
+
+	if (wDetail) {
+		wDetail.innerHTML = `
+			<p>好循環度: ${percentage}%</p>
+			<p>${profile.overview}</p>
+			<p>この画面から先は、必要に応じて診断ページへ戻って回答を調整できます。</p>
+		`;
+	}
+
+	if (wBackLink) {
+		wBackLink.href = "diagnosis.html";
+	}
 }
 
 function getMaturityLabel(cyclePercent) {
