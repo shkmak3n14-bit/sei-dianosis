@@ -23,6 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
+function getPreviewTypeFromQuery() {
+	const params = new URLSearchParams(window.location.search);
+	const previewType = Number(params.get("previewType"));
+
+	if (Number.isInteger(previewType) && previewType >= 1 && previewType <= 9) {
+		return previewType;
+	}
+
+	return null;
+}
+
 const RESPONSE_OPTIONS = [
 	{ label: "ほとんどない", value: 1 },
 	{ label: "たまにある", value: 2 },
@@ -382,9 +393,44 @@ function initializeDiagnosisForm(diagnosisForm) {
 	const redoButton = document.getElementById("diagnosis-redo-btn");
 	const acceptButton = document.getElementById("diagnosis-accept-btn");
 	const totalQuestions = ENNEAGRAM_TYPES.reduce((sum, entry) => sum + entry.questions.length, 0);
+	const previewType = getPreviewTypeFromQuery();
 
 	if (totalCountElement) {
 		totalCountElement.textContent = String(totalQuestions);
+	}
+
+	if (previewType) {
+		const previewState = createPreviewResultState(previewType);
+		currentDiagnosisResult = previewState;
+		renderDiagnosisResult(previewState, 0, {
+			resultSection,
+			resultSummary,
+			resultRankNav,
+			resultDetail,
+			resultCards,
+			resultActions
+		});
+
+		if (diagnosisForm) {
+			diagnosisForm.hidden = true;
+		}
+
+		const progressPanel = document.querySelector(".progress-panel");
+		const actions = document.querySelector(".actions");
+
+		if (progressPanel) {
+			progressPanel.hidden = true;
+		}
+
+		if (actions) {
+			actions.hidden = true;
+		}
+
+		if (resultSummary) {
+			resultSummary.textContent = `タイプ${previewType}のプレビュー表示です。`;
+		}
+
+		return;
 	}
 
 	diagnosisForm.innerHTML = ENNEAGRAM_TYPES.map((entry) => {
@@ -541,6 +587,27 @@ function initializeDiagnosisForm(diagnosisForm) {
 			});
 		});
 	}
+}
+
+function createPreviewResultState(previewType) {
+	const scores = ENNEAGRAM_TYPES.map((entry) => {
+		const max = entry.questions.length * RESPONSE_OPTIONS.length;
+		const distance = Math.abs(entry.type - previewType);
+		const score = entry.type === previewType ? max : Math.max(max - distance * 7, Math.ceil(max * 0.55));
+
+		return {
+			type: entry.type,
+			name: entry.name,
+			score,
+			max
+		};
+	}).sort((a, b) => b.score - a.score);
+
+	return {
+		scores,
+		answers: [],
+		selectedRankIndex: 0
+	};
 }
 
 function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
