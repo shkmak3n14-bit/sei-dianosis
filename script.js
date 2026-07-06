@@ -1,4 +1,5 @@
 const DIAGNOSIS_STORAGE_KEY = "sieDiagnosisState";
+const WING_STORAGE_KEY = "sieWingState";
 
 let currentDiagnosisResult = null;
 
@@ -158,7 +159,7 @@ const ENNEAGRAM_TYPES = [
 			"安心できる環境を求める。",
 			"自分の判断に自信が持てないことがある。",
 			"群れの中で安心する。",
-			"権威に対して複雑な感情がある。",
+			"目上の人や権威ある立場の人に対して、頼りたい気持ちと疑う気持ちが同時に出ることがある。",
 			"ルールがあると安心する。",
 			"他人の意見を参考にすることが多い。",
 			"自分の不安を隠すことがある。",
@@ -378,6 +379,111 @@ const TYPE_PROFILES = {
 		compatibility: "良い: 3・6（方向性と安心を補完） / 悪い: 8・1（圧力や批判で萎縮しやすい）",
 		advice: "毎日最優先タスクを1つだけ先に実施する、断る練習を短文で行う、意見表明の回数目標を設定する。"
 	}
+};
+
+const TYPE_WING_MAP = {
+	1: ["1w9", "1w2"],
+	2: ["2w1", "2w3"],
+	3: ["3w2", "3w4"],
+	4: ["4w3", "4w5"],
+	5: ["5w4", "5w6"],
+	6: ["6w5", "6w7"],
+	7: ["7w6", "7w8"],
+	8: ["8w7", "8w9"],
+	9: ["9w8", "9w1"]
+};
+
+const WING_QUESTIONS = {
+	"1w9": [
+		"正しさを求めつつ、穏やかでいたい気持ちがある。",
+		"怒りを抑え込みやすい。",
+		"静かに改善しようとする。"
+	],
+	"1w2": [
+		"正しさと同時に、人の役に立ちたい気持ちがある。",
+		"他人のために頑張りすぎることがある。",
+		"厳しさと優しさが混ざる。"
+	],
+	"2w1": [
+		"人を助けたい気持ちと、正しくありたい気持ちが両方ある。",
+		"自分に厳しくなることがある。",
+		"相手のために『正しい行動』を選びやすい。"
+	],
+	"2w3": [
+		"人を助けたい気持ちと、評価されたい気持ちが両方ある。",
+		"明るく振る舞うことが多い。",
+		"人からの反応に敏感。"
+	],
+	"3w2": [
+		"成果を出したい気持ちと、人の役に立ちたい気持ちがある。",
+		"明るく社交的に振る舞う。",
+		"努力を見せたい。"
+	],
+	"3w4": [
+		"成果を出したい気持ちと、個性を大事にしたい気持ちがある。",
+		"感情が揺れやすい。",
+		"自分の内面を気にする。"
+	],
+	"4w3": [
+		"個性を大事にしつつ、成果も求める。",
+		"感情表現が豊か。",
+		"自分を良く見せたい気持ちがある。"
+	],
+	"4w5": [
+		"個性を大事にしつつ、深い理解を求める。",
+		"一人の時間が必要。",
+		"感情と知性が混ざる。"
+	],
+	"5w4": [
+		"理解を求めつつ、感情の深さもある。",
+		"内面世界が豊か。",
+		"感情が揺れやすい。"
+	],
+	"5w6": [
+		"理解を求めつつ、不安にも敏感。",
+		"慎重に行動する。",
+		"情報を集める。"
+	],
+	"6w5": [
+		"不安に敏感で、理解を求める。",
+		"深く考えすぎることがある。",
+		"一人で準備したい。"
+	],
+	"6w7": [
+		"不安に敏感だが、明るく振る舞おうとする。",
+		"楽しいことを求める。",
+		"気分が揺れやすい。"
+	],
+	"7w6": [
+		"楽しいことを求めつつ、不安にも敏感。",
+		"計画を立てることがある。",
+		"選択肢を増やしたい。"
+	],
+	"7w8": [
+		"楽しいことを求めつつ、強さも求める。",
+		"行動力がある。",
+		"直感で動く。"
+	],
+	"8w7": [
+		"強さを求めつつ、楽しさも求める。",
+		"行動力が高い。",
+		"感情が強く出る。"
+	],
+	"8w9": [
+		"強さを求めつつ、穏やかでいたい気持ちがある。",
+		"怒りを抑え込むことがある。",
+		"静かに支配しようとする。"
+	],
+	"9w8": [
+		"穏やかでいたいが、強さも求める。",
+		"行動力が出るときがある。",
+		"自分の意見を押し出す場面がある。"
+	],
+	"9w1": [
+		"穏やかでいたいが、正しさも求める。",
+		"自分に厳しくなることがある。",
+		"静かに改善しようとする。"
+	]
 };
 
 function initializeDiagnosisForm(diagnosisForm) {
@@ -805,6 +911,11 @@ function initializeWPage() {
 	const wSummary = document.getElementById("w-summary");
 	const wDetail = document.getElementById("w-detail");
 	const wBackLink = document.getElementById("w-back-link");
+	const wingIntro = document.getElementById("wing-intro");
+	const wingForm = document.getElementById("wing-form");
+	const wingResult = document.getElementById("wing-result");
+	const wingResultSummary = document.getElementById("wing-result-summary");
+	const wingResultDetail = document.getElementById("wing-result-detail");
 	const storedState = loadStoredDiagnosisState();
 
 	if (!wPage) {
@@ -822,6 +933,11 @@ function initializeWPage() {
 	const topResult = storedState.scores[selectedRankIndex] ?? storedState.scores[0];
 	const profile = TYPE_PROFILES[topResult.type];
 	const percentage = Math.round((topResult.score / topResult.max) * 100);
+	const wingCodes = TYPE_WING_MAP[topResult.type] ?? [];
+	const totalWingQuestions = wingCodes.reduce((sum, wingCode) => {
+		const questions = WING_QUESTIONS[wingCode] ?? [];
+		return sum + questions.length;
+	}, 0);
 
 	if (wSummary) {
 		wSummary.textContent = `${selectedRankIndex + 1}位の結果を確認しました。タイプ${topResult.type}（${profile.title}）が最有力です。`;
@@ -831,13 +947,219 @@ function initializeWPage() {
 		wDetail.innerHTML = `
 			<p>好循環度: ${percentage}%</p>
 			<p>${profile.overview}</p>
-			<p>この画面から先は、必要に応じて診断ページへ戻って回答を調整できます。</p>
+			<p>ウイング判定では、タイプ${topResult.type}に対応する ${wingCodes.join(" と ")} のみ、合計${totalWingQuestions}問を表示します。</p>
 		`;
+	}
+
+	if (wingIntro) {
+		wingIntro.textContent = `タイプ${topResult.type}のウイング候補（${wingCodes.join(" / ")}）に回答してください。`;
+	}
+
+	if (wingForm) {
+		wingForm.innerHTML = buildWingFormMarkup(wingCodes);
+
+		wingForm.addEventListener("submit", (event) => {
+			event.preventDefault();
+
+			if (!wingForm.checkValidity()) {
+				wingForm.reportValidity();
+				return;
+			}
+
+			const wingScores = wingCodes.map((wingCode) => {
+				const questions = WING_QUESTIONS[wingCode] ?? [];
+				const score = questions.reduce((sum, _questionText, questionIndex) => {
+					const questionName = `wing-${wingCode}-q${questionIndex + 1}`;
+					const selected = wingForm.querySelector(`input[name="${questionName}"]:checked`);
+
+					return sum + Number(selected ? selected.value : 0);
+				}, 0);
+
+				return {
+					wingCode,
+					score,
+					max: questions.length * RESPONSE_OPTIONS.length
+				};
+			});
+
+			wingScores.sort((a, b) => b.score - a.score);
+			const topWing = wingScores[0];
+			const secondWing = wingScores[1];
+			const wingState = {
+				type: topResult.type,
+				wings: wingCodes,
+				scores: wingScores,
+				answers: collectWingAnswers(wingForm, wingCodes)
+			};
+
+			saveWingState(wingState);
+
+			if (wingResultSummary && topWing) {
+				wingResultSummary.textContent = `ウイング判定は ${topWing.wingCode} が最有力です。`;
+			}
+
+			if (wingResultDetail && topWing) {
+				const topPercent = Math.round((topWing.score / topWing.max) * 100);
+				const secondPercent = secondWing ? Math.round((secondWing.score / secondWing.max) * 100) : 0;
+
+				wingResultDetail.innerHTML = `
+					<p>タイプ${topResult.type}の候補: ${wingCodes.join(" / ")}</p>
+					<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
+					${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
+				`;
+			}
+
+			if (wingResult) {
+				wingResult.hidden = false;
+				wingResult.scrollIntoView({ behavior: "smooth", block: "start" });
+			}
+		});
+	}
+
+	const storedWingState = loadWingState();
+
+	if (
+		storedWingState &&
+		storedWingState.type === topResult.type &&
+		Array.isArray(storedWingState.wings) &&
+		storedWingState.wings.length === wingCodes.length &&
+		storedWingState.wings.every((wingCode, index) => wingCode === wingCodes[index])
+	) {
+		if (wingForm && Array.isArray(storedWingState.answers)) {
+			restoreWingAnswers(wingForm, wingCodes, storedWingState.answers);
+		}
+
+		const topWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[0] : null;
+		const secondWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[1] : null;
+
+		if (wingResultSummary && topWing) {
+			wingResultSummary.textContent = `前回のウイング判定では ${topWing.wingCode} が最有力でした。`;
+		}
+
+		if (wingResultDetail && topWing) {
+			const topPercent = Math.round((topWing.score / topWing.max) * 100);
+			const secondPercent = secondWing ? Math.round((secondWing.score / secondWing.max) * 100) : 0;
+
+			wingResultDetail.innerHTML = `
+				<p>タイプ${topResult.type}の候補: ${wingCodes.join(" / ")}</p>
+				<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
+				${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
+			`;
+		}
+
+		if (wingResult) {
+			wingResult.hidden = false;
+		}
+	} else {
+		clearWingState();
 	}
 
 	if (wBackLink) {
 		wBackLink.href = "diagnosis.html";
 	}
+}
+
+function buildWingFormMarkup(wingCodes) {
+	return wingCodes
+		.map((wingCode) => {
+			const questions = WING_QUESTIONS[wingCode] ?? [];
+			const questionsMarkup = questions
+				.map((questionText, questionIndex) => {
+					const questionName = `wing-${wingCode}-q${questionIndex + 1}`;
+					const optionsMarkup = RESPONSE_OPTIONS.map((option) => {
+						const optionId = `${questionName}-v${option.value}`;
+
+						return `
+							<label for="${optionId}" class="option-pill">
+								<input id="${optionId}" type="radio" name="${questionName}" value="${option.value}" required />
+								<span>${option.label}</span>
+							</label>
+						`;
+					}).join("");
+
+					return `
+						<div class="question-item">
+							<p class="question-text">Q${questionIndex + 1}. ${questionText}</p>
+							<div class="option-grid">${optionsMarkup}</div>
+						</div>
+					`;
+				})
+				.join("");
+
+			return `
+				<fieldset class="type-section">
+					<legend>${wingCode}</legend>
+					${questionsMarkup}
+				</fieldset>
+			`;
+		})
+		.join("");
+}
+
+function collectWingAnswers(formElement, wingCodes) {
+	return wingCodes.map((wingCode) => {
+		const questions = WING_QUESTIONS[wingCode] ?? [];
+		const answers = questions.map((_questionText, questionIndex) => {
+			const questionName = `wing-${wingCode}-q${questionIndex + 1}`;
+			const selected = formElement.querySelector(`input[name="${questionName}"]:checked`);
+
+			return selected ? Number(selected.value) : 0;
+		});
+
+		return {
+			wingCode,
+			answers
+		};
+	});
+}
+
+function restoreWingAnswers(formElement, wingCodes, storedAnswers) {
+	if (!Array.isArray(storedAnswers)) {
+		return;
+	}
+
+	wingCodes.forEach((wingCode) => {
+		const targetWing = storedAnswers.find((entry) => entry && entry.wingCode === wingCode);
+
+		if (!targetWing || !Array.isArray(targetWing.answers)) {
+			return;
+		}
+
+		targetWing.answers.forEach((value, questionIndex) => {
+			if (typeof value !== "number") {
+				return;
+			}
+
+			const questionName = `wing-${wingCode}-q${questionIndex + 1}`;
+			const targetInput = formElement.querySelector(`input[name="${questionName}"][value="${value}"]`);
+
+			if (targetInput) {
+				targetInput.checked = true;
+			}
+		});
+	});
+}
+
+function saveWingState(state) {
+	window.sessionStorage.setItem(WING_STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadWingState() {
+	const raw = window.sessionStorage.getItem(WING_STORAGE_KEY);
+
+	if (!raw) {
+		return null;
+	}
+
+	try {
+		return JSON.parse(raw);
+	} catch {
+		return null;
+	}
+}
+
+function clearWingState() {
+	window.sessionStorage.removeItem(WING_STORAGE_KEY);
 }
 
 function getMaturityLabel(cyclePercent) {

@@ -386,6 +386,14 @@ h3 {
 	margin-top: 18px;
 }
 
+.wing-section {
+	margin-top: 20px;
+}
+
+.wing-section h2 {
+	margin-bottom: 8px;
+}
+
 .result-cards {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
