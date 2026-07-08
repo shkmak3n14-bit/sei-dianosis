@@ -9,11 +9,17 @@ document.addEventListener("DOMContentLoaded", () => {
 	const startButton = document.getElementById("start-diagnosis");
 	const diagnosisForm = document.getElementById("diagnosis-form");
 	const wPage = document.getElementById("w-page");
+	const wingLearnPage = document.getElementById("wing-learn-page");
 
 	if (startButton) {
 		startButton.addEventListener("click", () => {
 			window.location.href = "diagnosis.html";
 		});
+	}
+
+	if (wingLearnPage) {
+		initializeWingLearnPage();
+		return;
 	}
 
 	if (wPage) {
@@ -880,9 +886,15 @@ function renderWingLongProfile(wingCode) {
 		return "";
 	}
 
+	const hasDetail = Object.prototype.hasOwnProperty.call(WING_DETAIL_PROFILES, wingCode);
+	const detailLinkMarkup = hasDetail
+		? `<p class="detail-link-row"><a href="wing-learn.html?wing=${encodeURIComponent(wingCode)}" class="detail-link">詳細版を読む →</a></p>`
+		: "";
+
 	return `
 		<article class="report-card">
 			<h3>本文版ウイング解説</h3>
+			${detailLinkMarkup}
 			<p><strong>1. メインタイプ＋ウイング:</strong> ${profile.title}</p>
 			<p><strong>2. 概要:</strong> ${profile.overview}</p>
 			<p><strong>3. ウイングの現れ方:</strong> ${profile.manifestation}</p>
@@ -897,6 +909,156 @@ function renderWingLongProfile(wingCode) {
 		</article>
 	`;
 }
+
+const WING_DETAIL_PROFILES = {
+	"9w1": {
+		title: "タイプ9ウイング1（やわらかく整える人）",
+		sections: [
+			{
+				heading: "1. メインタイプ＋ウイング",
+				body: "タイプ9ウイング1"
+			},
+			{
+				heading: "2. 概要",
+				body: "9w1は、穏やかでいたい気持ちと、きちんとしていたい気持ちの両方を持ちやすいタイプです。対立を避けたい一方で、内側には「こうあるべき」という基準もあります。そのため、外からは柔らかく見えても、内面では静かな緊張や自己批判を抱えていることがあります。"
+			},
+			{
+				heading: "3. このウイングが日常でどう現れやすいか",
+				body: "ふだんは人に合わせやすく、場を乱さないように動きます。ただ、雑さや不誠実さが目に入ると、内心ではかなり引っかかります。表立ってぶつかるより、自分が我慢する、静かに距離を取る、黙って整え直す、という形で反応しやすいです。頼まれると断りきれず引き受ける一方で、「本当はこうしたほうがいいのに」と思いながら飲み込むこともあります。"
+			},
+			{
+				heading: "4. 何を大切にしているか",
+				body: "平和、穏やかさ、良心、誠実さ、丁寧さを大切にしやすいです。ただ楽でいたいというより、「波風を立てず、でも雑にはしたくない」という気持ちがあります。"
+			},
+			{
+				heading: "5. 無理が出やすい場面・強く反応しやすいこと",
+				body: "急かされること、乱暴に扱われること、不誠実さを押しつけられることに無理が出やすいです。また、自分の気持ちを後回しにし続けると、表面上は穏やかなままでも内側に不満や疲れがたまりやすくなります。"
+			},
+			{
+				heading: "6. 好循環には何が必要か",
+				body: "落ち着いて考える時間があること。自分のペースを守れること。意見を急かされずに言えること。丁寧さや誠実さがきちんと尊重される環境では、9w1の穏やさは周囲を安心させる力になります。"
+			},
+			{
+				heading: "7. 学びには何が必要か",
+				body: "優しさを持ちながらも、曖昧さを整理できる人が合いやすいです。感情を乱暴に踏み込まず、それでも「あなたはどうしたいのか」を静かに問い返せる人です。タイプで言えば、落ち着いた1、5、6あたりの資質を持つ人から学びやすいことがあります。"
+			},
+			{
+				heading: "8. 成長のきっかけや刺激を受けやすい相手の傾向",
+				body: "遠慮しすぎず、でも押しつけすぎない人が刺激になります。特に、自分の意思をはっきり持ちつつ相手も尊重できる人は、9w1に「静かなままでも意見は持っていい」と気づかせてくれます。タイプで言えば、成熟した3や8、あるいは健全な1の影響が役立つことがあります。"
+			},
+			{
+				heading: "9. 悪循環の入口で起きやすいこと",
+				body: "小さな違和感を飲み込み続ける。断るべき場面で曖昧に受ける。自分の本音が分からなくなる。その一方で、内心では「ちゃんとしたいのにできていない」と自分を責めやすくなります。"
+			},
+			{
+				heading: "10. 「今ちょっと危ないかも」と気づくためのチェックポイント",
+				body: "頼まれると反射的に引き受けていないか。「別にいい」と言いながら少しイライラしていないか。やるべきことの前で、静かに固まっていないか。人に腹を立てるより先に、自分を責めていないか。"
+			},
+			{
+				heading: "11. 悪循環から立て直すために必要なこと",
+				body: "今すぐ必要なのは、「本当は嫌だった」「本当はこうしたい」を小さく言葉にすることです。大きな主張でなくて構いません。まずは、自分の感覚を消さないことが大切です。長い目では、対立を避けることと自分を消すことは同じではない、と体で学ぶ必要があります。意見を言っても関係は壊れない経験を少しずつ増やすことが回復につながります。"
+			}
+		]
+	},
+	"9w8": {
+		title: "タイプ9ウイング8（穏やかさと芯の強さ）",
+		sections: [
+			{
+				heading: "1. メインタイプ＋ウイング",
+				body: "タイプ9ウイング8"
+			},
+			{
+				heading: "2. 概要",
+				body: "9w8は、穏やかでいたい気持ちを土台に持ちながら、必要な時には強く踏ん張る力もあるタイプです。9の柔らかさに8の芯の強さが加わるため、ふだんはおだやかでも、境界を越えられた時には急に力強く反応することがあります。優しいだけではなく、守るものがあるとかなり粘り強い人です。"
+			},
+			{
+				heading: "3. このウイングが日常でどう現れやすいか",
+				body: "ふだんは自然体で構え、人に細かく干渉しすぎません。ただ、自分の領域や大切な人が脅かされると、一気に態度が変わることがあります。普段は譲れても、「そこは無理」という一点ではかなり頑固です。人前で目立って支配したいというより、静かに主導権を失いたくない感覚を持ちやすいです。"
+			},
+			{
+				heading: "4. 何を大切にしているか",
+				body: "安心、平和、自分のペース、境界線、身内の安全を大切にしやすいです。「揉めたくない」が本音でも、「舐められたくない」「踏み込まれたくない」も同時にあります。"
+			},
+			{
+				heading: "5. 無理が出やすい場面・強く反応しやすいこと",
+				body: "強引にコントロールされること。何度も境界を無視されること。大事な人や自分の居場所が軽く扱われること。こうした場面では、普段の穏やかさから急に強い反応へ切り替わることがあります。"
+			},
+			{
+				heading: "6. 好循環には何が必要か",
+				body: "安心して力を抜けること。自分のペースが守られること。必要な時に遠慮なく「嫌だ」と言えること。人に合わせすぎず、自分の感覚も尊重される環境では、9w8の包容力と底力が安定して働きます。"
+			},
+			{
+				heading: "7. 学びには何が必要か",
+				body: "落ち着いていて、圧をかけずに本音を引き出せる人が向いています。また、強さを持ちながら乱暴ではない人も良い学び相手になります。タイプで言えば、成熟した8、1、5あたりの資質を持つ人が役立つことがあります。"
+			},
+			{
+				heading: "8. 成長のきっかけや刺激を受けやすい相手の傾向",
+				body: "自分の意志を明確に持ち、前に進む力のある人から刺激を受けやすいです。ただし、押しつける人ではなく、「あなたはどうしたい」と促してくれる人が向いています。タイプで言えば、健全な3や8、あるいは自覚的な6などが動くきっかけになりやすいです。"
+			},
+			{
+				heading: "9. 悪循環の入口で起きやすいこと",
+				body: "面倒を避けて先送りする。言うべきことを言わずに溜める。普段は大丈夫そうに見えて、内側では鈍い苛立ちがたまる。限界を超えたところで急に強く出て、自分でも驚くことがあります。"
+			},
+			{
+				heading: "10. 「今ちょっと危ないかも」と気づくためのチェックポイント",
+				body: "「どうでもいい」と言う回数が増えていないか。本当は嫌なのに流していないか。黙っているが、体は固くなっていないか。小さなことに急にムッとしやすくなっていないか。人を避けたい気持ちと、強く押し返したい気持ちが同時に出ていないか。"
+			},
+			{
+				heading: "11. 悪循環から立て直すために必要なこと",
+				body: "今すぐ必要なのは、爆発する前に不快感を小さく認めることです。「まだ大丈夫」と鈍らせ続けるほど、反動は強くなります。長い目では、穏やかさのために自分を消すのではなく、自分を守ったうえで穏やかでいる練習が必要です。境界線を早めに言葉にすることが、結果として人間関係も守ります。"
+			}
+		]
+	},
+	"8w9": {
+		title: "タイプ8ウイング9（静かに守るリーダー）",
+		sections: [
+			{
+				heading: "1. メインタイプ＋ウイング",
+				body: "タイプ8ウイング9"
+			},
+			{
+				heading: "2. 概要",
+				body: "8w9は、強さと落ち着きをあわせ持ちやすいタイプです。8の押し出す力に、9のどっしりした安定感が加わるため、派手に動くというより、静かに場を支配することがあります。荒っぽさだけでなく、「自分の世界を乱されたくない」「守るべきものは守る」という感覚が強い人です。"
+			},
+			{
+				heading: "3. このウイングが日常でどう現れやすいか",
+				body: "ふだんは堂々としていて、必要以上に騒ぎません。ただし、越えてほしくない線を踏まれると、かなり明確に止めに入ります。感情を細かく言葉にするより、態度や空気で意思を示すことも多いです。リーダーシップも取れますが、注目されたいというより、場を自分の感覚に合う状態へ整えたい気持ちが出やすいです。"
+			},
+			{
+				heading: "4. 何を大切にしているか",
+				body: "自立、主導権、平穏、境界線、信頼、守る責任を大切にしやすいです。「弱く見られたくない」と同時に、「無駄に波風は立てたくない」も持っています。"
+			},
+			{
+				heading: "5. 無理が出やすい場面・強く反応しやすいこと",
+				body: "支配されること。裏で操作されること。大事なものを軽く扱われること。曖昧な圧や回りくどい干渉にも強く反応しやすいです。表面上は静かでも、限界を超えるとかなりはっきり線を引きます。"
+			},
+			{
+				heading: "6. 好循環には何が必要か",
+				body: "無駄な駆け引きがないこと。責任範囲が明確であること。守るべき対象や目的がはっきりしていること。静かでも主導権を持てる環境では、8w9の頼もしさと安定感がよく生きます。"
+			},
+			{
+				heading: "7. 学びには何が必要か",
+				body: "強さに飲まれず、しかし対抗心だけでもぶつからない人が向いています。率直さを受け止めながら、見落とした感情や影響を返してくれる人です。タイプで言えば、成熟した2、5、9、1あたりの資質が補いになりやすいです。"
+			},
+			{
+				heading: "8. 成長のきっかけや刺激を受けやすい相手の傾向",
+				body: "こちらの力を恐れず、それでいて敵対もしない人が良い刺激になります。「押す」以外の進め方を見せてくれる人、柔らかさが弱さではないと体感させてくれる人が役立ちます。タイプで言えば、健全な9、2、4などの資質が刺激になることがあります。"
+			},
+			{
+				heading: "9. 悪循環の入口で起きやすいこと",
+				body: "我慢していないつもりでも、実は不快感をためている。相手の事情より先に、自分の防衛が強くなる。話し合いより先に切る、止める、押し返す方向へ傾く。感情を見せるより、無言の圧や距離で示しやすくなります。"
+			},
+			{
+				heading: "10. 「今ちょっと危ないかも」と気づくためのチェックポイント",
+				body: "相手の話を聞く前に結論を出していないか。最近「任せる」より「自分で握る」が増えていないか。小さな違和感に対して、必要以上に強い反応をしていないか。本当は傷ついたのに、怒りだけで処理していないか。"
+			},
+			{
+				heading: "11. 悪循環から立て直すために必要なこと",
+				body: "今すぐ必要なのは、怒りの奥にある感覚を一段だけ丁寧に見ることです。無力感、失望、悲しさ、疲れが隠れていることがあります。長い目では、強さを手放すのではなく、強さの使い方を増やすことが成長につながります。押す、守る、止めるだけでなく、聴く、待つ、任せるも力の一部だと体で覚えていくことが大切です。"
+			}
+		]
+	}
+};
 
 function getWingProfileLayerHint(layer) {
 	if (layer === "mobile") {
@@ -2006,3 +2168,55 @@ function updateAnsweredCount(formElement, answeredCountElement, totalQuestions) 
 	answeredCountElement.textContent = String(answeredQuestions);
 }
 
+function initializeWingLearnPage() {
+	const contentEl = document.getElementById("wing-learn-content");
+	const backLink = document.getElementById("wing-learn-back");
+	const params = new URLSearchParams(window.location.search);
+	const wingCode = params.get("wing") ?? "";
+	const availableCodes = Object.keys(WING_DETAIL_PROFILES);
+
+	if (backLink) {
+		backLink.href = "index.html#wing-detail-section";
+	}
+
+	availableCodes.forEach((code) => {
+		const navItem = document.getElementById(`nav-${code}`);
+
+		if (navItem) {
+			if (code === wingCode) {
+				navItem.setAttribute("aria-current", "page");
+				navItem.classList.add("is-active");
+			} else {
+				navItem.removeAttribute("aria-current");
+				navItem.classList.remove("is-active");
+			}
+		}
+	});
+
+	if (!contentEl) {
+		return;
+	}
+
+	if (!wingCode || !WING_DETAIL_PROFILES[wingCode]) {
+		contentEl.innerHTML = `
+			<div class="wing-learn-placeholder">
+				<p>上のリンクからウイングを選んでください。</p>
+				<p>現在、詳細解説があるウイングは 9w1・9w8・8w9 です。</p>
+			</div>
+		`;
+		return;
+	}
+
+	const detail = WING_DETAIL_PROFILES[wingCode];
+	const sectionsMarkup = detail.sections.map((section) => `
+		<section class="wing-learn-section">
+			<h2 class="wing-learn-section-heading">${section.heading}</h2>
+			<p>${section.body}</p>
+		</section>
+	`).join("");
+
+	contentEl.innerHTML = `
+		<h2 class="wing-learn-title">${detail.title}</h2>
+		${sectionsMarkup}
+	`;
+}

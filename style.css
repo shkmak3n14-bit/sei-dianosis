@@ -450,6 +450,118 @@ h3 {
 	font-size: 0.95rem;
 }
 
+.detail-link-row {
+	margin: 0 0 16px;
+}
+
+.detail-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 6px 14px;
+	border-radius: 999px;
+	background: #e6f5ee;
+	color: var(--accent-strong);
+	font-weight: 700;
+	font-size: 0.92rem;
+	text-decoration: none;
+	border: 1px solid #8dc9b0;
+	transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.detail-link:hover {
+	background: #d0ede1;
+	transform: translateY(-1px);
+}
+
+.wing-learn-nav {
+	margin: 0 0 20px;
+	padding: 14px;
+	border: 1px solid var(--border);
+	border-radius: 14px;
+	background: #f7fcf9;
+}
+
+.wing-learn-nav-label {
+	margin: 0 0 8px;
+	font-weight: 700;
+	color: var(--accent-strong);
+	font-size: 0.92rem;
+}
+
+.wing-learn-nav-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.wing-learn-nav-list a {
+	display: inline-flex;
+	align-items: center;
+	padding: 7px 14px;
+	border-radius: 999px;
+	border: 1px solid var(--border);
+	background: #fff;
+	color: var(--accent-strong);
+	font-weight: 700;
+	font-size: 0.92rem;
+	text-decoration: none;
+	transition: background-color 0.15s ease;
+}
+
+.wing-learn-nav-list a:hover {
+	background: #eaf7f1;
+}
+
+.wing-learn-nav-list a.is-active,
+.wing-learn-nav-list a[aria-current="page"] {
+	background: #e6f5ee;
+	border-color: #8dc9b0;
+	box-shadow: inset 0 0 0 1px #8dc9b0;
+}
+
+.wing-learn-content {
+	display: grid;
+	gap: 16px;
+}
+
+.wing-learn-title {
+	font-size: 1.4rem;
+	margin: 0 0 4px;
+	color: var(--accent-strong);
+}
+
+.wing-learn-section {
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	padding: 14px 16px;
+	background: #fdfefe;
+}
+
+.wing-learn-section-heading {
+	font-size: 1rem;
+	margin: 0 0 8px;
+	color: var(--accent-strong);
+	border-left: 4px solid #91cdb4;
+	padding-left: 8px;
+}
+
+.wing-learn-section p {
+	margin: 0;
+	line-height: 1.75;
+}
+
+.wing-learn-placeholder {
+	padding: 16px;
+	border: 1px dashed var(--border);
+	border-radius: 12px;
+	background: #f7fcf9;
+	color: var(--muted);
+}
+
 .history-compare {
 	margin: 10px 0 14px;
 	padding: 12px;
