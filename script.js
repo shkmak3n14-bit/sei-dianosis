@@ -1,5 +1,7 @@
-const DIAGNOSIS_STORAGE_KEY = "sieDiagnosisState";
+﻿const DIAGNOSIS_STORAGE_KEY = "sieDiagnosisState";
 const WING_STORAGE_KEY = "sieWingState";
+const WING_HISTORY_STORAGE_KEY = "sieWingHistory";
+const MAX_WING_HISTORY_ITEMS = 30;
 
 let currentDiagnosisResult = null;
 
@@ -61,8 +63,8 @@ const ENNEAGRAM_TYPES = [
 			"ミスをすると必要以上に落ち込み、自分に厳しくなる。",
 			"自分の弱さや未熟さを受け入れにくく、理想の自分との差に苦しむ。",
 			// #◆ 刃の循環構造（あなたが提案した最重要ポイント）#
-			"完璧にできないと自分を責め、その厳しさが他人にも向いてしまうことがある。",
-			"完璧にできないと感じると、行動に踏み出しづらくなることがある。",
+			"完璧にできないと自分を責め、その厳しさが他人にも向いてしまう。",
+			"完璧にできないと感じると、行動に踏み出しづらくなる。",
 			// ※「やらない理由を考える」は心理的安全性の観点で安全版に調整
 			// #◆ 改善志向・完璧主義#
 			"改善点が自然と目につき、より良くしたい気持ちが湧きやすい。",
@@ -72,7 +74,7 @@ const ENNEAGRAM_TYPES = [
 			// #◆ 社会的な硬さ（外的指標）#
 			"冗談が通じない、融通が利かないと言われた経験がある。",
 			// #◆ 責任感・義務感の重さ#
-			"責任感が強く、必要以上に重荷を背負ってしまうことがある。"
+			"責任感が強く、必要以上に重荷を背負ってしまう。"
 		]
 	},
 	{
@@ -80,36 +82,35 @@ const ENNEAGRAM_TYPES = [
 		name: "助ける人",
 		questions: [
 			// ◆ 他者中心の感情処理（タイプ2の核）
-			"相手の気持ちを察しようとすることがある",
-			"自分の気持ちよりも、まず相手がどう感じるかを優先してしまうことがある",
-			"相手の気持ちや反応に強く影響され、行動が左右されることがある",
-			"関係がどう見えるかを気にしてしまうことがある",
+			"相手の気持ちを察しようとする",
+			"自分の気持ちよりも、まず相手がどう感じるかを優先してしまう",
+			"相手の気持ちや反応に強く影響され、行動が左右される",
+			"関係がどう見えるかを気にしてしまう",
 			// ◆ 承認欲求・必要とされたい気持ち（動機の明確化）
-			"人の役に立つと、相手との関係が深まると感じることがある",
-			"人を助けると、自分が必要とされていると感じることがある",
-			"感謝されないと不安になることがある",
-			"人のために動くことで自分の価値を感じることがある",
+			"人の役に立つと、相手との関係が深まると感じる",
+			"人を助けると、自分が必要とされていると感じる",
+			"感謝されないと不安になる",
+			"人のために動くことで自分の価値を感じる",
 			// ◆ 自己犠牲・ニーズの後回し
-			"自分のニーズよりも相手の気持ちや期待を優先してしまい、結果的に自分のことが後回しになることがある",
-			"相手のためなら自分の時間やニーズを後回しにしようとすることがある",
-			"頼られると断りにくいことがある",
+			"相手の気持ちや期待を優先してしまい、結果的に自分のことが後回しになる",
+			"頼られると断りにくい",
 			// ◆ 過剰な援助・境界線の薄さ
-			"困っている人を見ると、理由を考える前に手を差し伸べてしまうことがある",
-			"相手の状況や問題を一緒に考え、何か力になれることを探そうとすることがある",
-			"相手のために頑張りすぎて疲れることがある",
-			"人との距離が自然と近くなり、相手のパーソナルスペースに入っても不快に思われないことがある",
+			"困っている人を見ると、理由を考える前に手を差し伸べてしまう",
+			"相手の状況や問題を一緒に考え、何か力になれることを探そうとする",
+			"相手のために頑張りすぎて疲れる",
+			"人との距離が自然と近くなり、相手のパーソナルスペースに入っても不快に思われない",
 			// ◆ 改善志向の援助（あなたの新しい観点）
-			"人を助けたい気持ちから、相手がもっと良くなる方法が自然と見えることがある",
-			"相手が成長できると思う方法を見つけると、一緒に試してみようと提案したくなることがある",
+			"人を助けたい気持ちから、相手がもっと良くなる方法が自然と見える",
+			"相手が成長できると思う方法を見つけると、一緒に試してみようと提案したくなる",
 			// ◆ 怒りの抑制・関係維持の優先
-			"関係を壊したくなくて怒りより優しさを優先することがある",
+			"関係を壊したくなくて怒りより優しさを優先する",
 			// ◆ 期待への過剰適応（タイプ2の深層）
-			"相手の期待に応えることで関係が深まると感じ、つい頑張りすぎてしまうことがある",
+			"相手の期待に応えることで関係が深まると感じ、つい頑張りすぎてしまう",
 			// ◆ 助ける側でいたい気持ち・弱さの抑制（あなたの新しい観点）
-			"人を助けることは得意だが、自分が助けを求めるのは苦手だと感じることがある",
-			"助けを求めるのが苦手なため、言わなくても気遣ってくれる人に安心感を覚えることがある",
+			"人を助けることは得意だが、自分が助けを求めるのは苦手だと感じる",
+			"助けを求めるのが苦手なため、言わなくても気遣ってくれる人に安心感を覚える",
 			// ◆ 力の流れを読む能力（あなたの新しい観点）
-			"誰かを助けたいという思いから、グループの中で影響力のある人や、自分が支えられる人を直感的に見分けることがある"
+			"誰かを助けたいという思いから、グループの中で影響力のある人や、自分が支えられる人を直感的に見分ける"
 		]
 	},
 	{
@@ -117,36 +118,36 @@ const ENNEAGRAM_TYPES = [
 		name: "達成する人",
 		questions: [
 			// ◆ 成果・達成への強い動機
-			"目標を達成することが大きな喜びになることがある",
-			"成果が出ると気分が上がることがある",
-			"成果が出ないと不安になることがある",
-			"自分の価値を成果で測りがちだと感じることがある",
+			"目標を達成することが大きな喜びになる",
+			"成果が出ると気分が上がる",
+			"成果が出ないと不安になる",
+			"自分の価値を成果で測りがちだと感じる",
 			// ◆ 効率至上主義・段取りの重視
-			"効率的に動くことを好むことがある",
-			"効率の悪さにイライラすることがある",
-			"進めていた段取りや効率が崩れると、成果が遅れそうで強いストレスを感じることがある",
+			"効率的に動くことを好む",
+			"効率の悪さにイライラする",
+			"進めていた段取りや効率が崩れると、成果が遅れそうで強いストレスを感じる",
 			// ◆ 感情の棚上げ・成果優先
-			"感情が湧いても、まずはやるべきことを片付けようとして後回しにしがちだと感じることがある",
-			"感情よりも、成果や評価を優先することが自然に感じられることがある",
+			"感情が湧いても、まずはやるべきことを片付けようとして後回しにしがちだと感じる",
+			"感情よりも、成果や評価を優先することが自然に感じられる",
 			// ◆ 自己像の操作・弱さの抑圧
-			"人からどう見られるかを意識することがある",
-			"弱さを見せると評価やイメージが崩れる気がして、強い自分を保とうとしてしまうことがある",
-			"成功している自分でいたいと感じることがある",
+			"人からどう見られるかを意識する",
+			"弱さを見せると評価やイメージが崩れる気がして、強い自分を保とうとしてしまう",
+			"成功している自分でいたいと感じる",
 			// ◆ 役割適応・自己変形
-			"どんな人にも合わせられると感じ、状況に応じて自分を柔軟に変えられると思うことがある",
-			"周囲の期待に合わせて、自分の見せ方や振る舞いを変えることがある",
+			"どんな人にも合わせられると感じ、状況に応じて自分を柔軟に変えられると思う",
+			"周囲の期待に合わせて、自分の見せ方や振る舞いを変える",
 			// ◆ 衝突回避の“成果優先”ロジック
-			"衝突すると成果が落ちると感じる場面では、効率のために相手に合わせることがある",
+			"衝突すると成果が落ちると感じる場面では、効率のために相手に合わせる",
 			// ◆ 競争心・比較意識
-			"競争心があると感じることがある",
-			"周囲の人と自分の成果を比べてしまうことがある",
+			"競争心があると感じる",
+			"周囲の人と自分の成果を比べてしまう",
 			// ◆ 外面と内面のギャップ
-			"外で役割に合わせて頑張り続けると、家では何もできないほど疲れることがある",
-			"外では気遣いができる人に見られるが、家では疲れ切って動けなくなることがある",
+			"外で役割に合わせて頑張り続けると、家では何もできないほど疲れる",
+			"外では気遣いができる人に見られるが、家では疲れ切って動けなくなる",
 			// ◆ 成果優先による関係の後回し
-			"関係の維持よりも成果を優先してしまい、身近な人への気遣いが後回しになることがある",
+			"関係の維持よりも成果を優先してしまい、身近な人への気遣いが後回しになる",
 			// ◆ 自己像操作の副作用
-			"状況に合わせて自分を変えることがあり、周囲から「自分が無い」と言われることがある"
+			"状況に合わせて自分を変えることがあり、周囲から「自分が無い」と言われる"
 		]
 	},
 	{
@@ -154,37 +155,37 @@ const ENNEAGRAM_TYPES = [
 		name: "個性を求める人",
 		questions: [
 			// ◆ 感情の深さ・複雑さ
-			"感情が深く動くことがある",
-			"感情が複雑で説明しにくいことがある",
-			"感情を言語化するのが難しいことがある",
-			"感情が深く複雑なため、その処理に時間や心身のエネルギーを必要とすることがある",
+			"感情が深く動く",
+			"感情が複雑で説明しにくい",
+			"感情を言語化するのが難しい",
+			"感情が深く複雑なため、その処理に時間や心身のエネルギーを必要とする",
 			// ◆ 自己同一性・自分らしさの保持
-			"自分らしさを大切にしていると感じることがある",
-			"自分の世界観を守りたいと感じることがある",
-			"独自性を保ちたい気持ちが強いと感じることがある",
+			"自分らしさを大切にしていると感じる",
+			"自分の世界観を守りたいと感じる",
+			"独自性を保ちたい気持ちが強いと感じる",
 			// ◆ 特別性への欲求・自己価値の揺れ
 			"特別でありたい気持ちがある",
-			"一番になることより、自分が特別な存在だと感じられることを重視することがある",
-			"その時の感情の状態によって、自分の価値や可能性への見方が大きく変わることがある",
-			"他人と比べて落ち込むことがある",
+			"一番になることより、自分が特別な存在だと感じられることを重視する",
+			"その時の感情の状態によって、自分の価値や可能性への見方が大きく変わる",
+			"他人と比べて落ち込む",
 			// ◆ 内面への没入・自己理解への欲求
-			"自分の内面を深く理解したいと感じることがある",
-			"内面の意味や感情の背景を探ろうとすることがある",
+			"自分の内面を深く理解したいと感じる",
+			"内面の意味や感情の背景を探ろうとする",
 			// ◆ 気分依存・行動の揺れ
-			"その時の気分や内面の状態によって、行動や選択が大きく変わりやすいことがある",
+			"その時の気分や内面の状態によって、行動や選択が大きく変わりやすい",
 			// ◆ 感情と孤独の関係
-			"感情の複雑さや独自性が、周囲との理解のズレにつながることがある",
-			"自分の独自性を大切にするほど、理解されず孤独を感じることがある",
+			"感情の複雑さや独自性が、周囲との理解のズレにつながる",
+			"自分の独自性を大切にするほど、理解されず孤独を感じる",
 			// ◆ 他者の感情への敏感さ
-			"他人の感情の動きや雰囲気の変化に敏感で、その意味を深く感じ取ろうとすることがある",
-			"他者の感情を自分の内面に取り込みやすいと感じることがある",
+			"他人の感情の動きや雰囲気の変化に敏感で、その意味を深く感じ取ろうとする",
+			"他者の感情を自分の内面に取り込みやすいと感じる",
 			// ◆ 美意識・象徴性
-			"お金よりも、手間や気持ちのこもったプレゼントに強く心が動くことがある",
-			"表面的な性的なものより、感情や美しさを伴う深い魅力に惹かれることがある",
+			"お金よりも、手間や気持ちのこもったプレゼントに強く心が動く",
+			"表面的な性的なものより、感情や美しさを伴う深い魅力に惹かれる",
 			// ◆ 感動の深さ・共鳴への欲求
-			"深い感動を誰かと共有できると、強い喜びを感じることがある",
+			"深い感動を誰かと共有できると、強い喜びを感じる",
 			// ◆ 内外のギャップ
-			"他人の相談には冷静に答えられるが、自分の感情は深すぎて抑えにくいと感じることがある"
+			"他人の相談には冷静に答えられるが、自分の感情は深すぎて抑えにくいと感じる"
 		]
 	},
 	{
@@ -192,34 +193,34 @@ const ENNEAGRAM_TYPES = [
 		name: "観察する人",
 		questions: [
 			// ◆ 思考の深さ・理解欲求
-			"一人で考える時間が必要だと感じることがある",
-			"深く理解したい気持ちが強いと感じることがある",
-			"理解できないと不安になることがある",
-			"情報を集めすぎてしまうことがある",
+			"一人で考える時間が必要だと感じる",
+			"深く理解したい気持ちが強いと感じる",
+			"理解できないと不安になる",
+			"情報を集めすぎてしまう",
 			// ◆ 論理優先・感情の切り離し
-			"感情より論理を優先することがある",
-			"感情を切り離してしまうことがある",
-			"他人の強い感情に触れると、どう対応してよいか分からず立ち止まってしまうことがある",
-			"他人の感情に巻き込まれないよう距離を置くことがある",
+			"感情より論理を優先する",
+			"感情を切り離してしまう",
+			"他人の強い感情に触れると、どう対応してよいか分からず立ち止まってしまう",
+			"他人の感情に巻き込まれないよう距離を置く",
 			// ◆ 観察・分析の傾向
 			"人や状況を観察する癖がある",
-			"情報の整理が得意だと感じることがある",
-			"深い洞察があると言われることがある",
+			"情報の整理が得意だと感じる",
+			"深い洞察があると言われる",
 			// ◆ 境界線の強さ・距離感
 			"距離を取りたい気持ちがある",
-			"自分の領域に踏み込まれると不快に感じることがある",
-			"自分の内面を守りたいと感じることがある",
+			"自分の領域に踏み込まれると不快に感じる",
+			"自分の内面を守りたいと感じる",
 			// ◆ エネルギー管理・消耗の回避
-			"体力や感情の消耗を避けたいと感じることがある",
-			"考えるペースを急に乱されると、頭のエネルギーが一気に消耗して疲れやすいことがある",
-			"刺激が多い環境では、思考や感情がすぐに疲れてしまうことがある",
+			"体力や感情の消耗を避けたいと感じる",
+			"考えるペースを急に乱されると、頭のエネルギーが一気に消耗して疲れやすい",
+			"刺激が多い環境では、思考や感情がすぐに疲れてしまう",
 			// ◆ 内向性・世界への距離
-			"自分の世界にこもることがある",
-			"外の世界よりも内面の世界のほうが安心できると感じることがある",
+			"自分の世界にこもる",
+			"外の世界よりも内面の世界のほうが安心できると感じる",
 			// ◆ 相手との接し方（タイプ5の思考センターとしての特徴）
-			"自分では筋の通ったことを言っているつもりなのに、理解してもらえないとイライラすることがある",
-			"論理的な不備を指摘されても、それが理にかなっていれば受け入れやすいと感じることがある",
-			"自分と同じくらいの思考の深さがある人に、自然と親近感がわくことがある"
+			"自分では筋の通ったことを言っているつもりなのに、理解してもらえないとイライラする",
+			"論理的な不備を指摘されても、それが理にかなっていれば受け入れやすいと感じる",
+			"自分と同じくらいの思考の深さがある人に、自然と親近感がわく"
 		]
 	},
 	{
@@ -227,33 +228,33 @@ const ENNEAGRAM_TYPES = [
 		name: "忠実な人",
 		questions: [
 			// ◆ 不安と確認行動
-			"不安になると確認したくなることがある",
-			"自分の判断を疑ってしまうことがある",
+			"不安になると確認したくなる",
+			"自分の判断を疑ってしまう",
 			"自分の考えを疑う癖がある",
-			"予定が曖昧だと落ち着かないことがある",
+			"予定が曖昧だと落ち着かない",
 			// ◆ リスク予測・シミュレーション
-			"複数のリスクや起こりうる状況を想定して考慮に入れることがある",
-			"未来の不安をシミュレーションすることがある",
-			"自分がシミュレーションした通りに物事が進まないと、相手や状況への信頼が揺らぐことがある",
-			"臨機応変に対応するには、事前の十分な準備や計画があることが安心につながると考えることがある",
+			"複数のリスクや起こりうる状況を想定して考慮に入れる",
+			"未来の不安をシミュレーションする",
+			"自分がシミュレーションした通りに物事が進まないと、相手や状況への信頼が揺らぐ",
+			"臨機応変に対応するには、事前の十分な準備や計画があることが安心につながると考える",
 			// ◆ 安心源の探索・信頼の慎重さ
-			"信頼できる人を慎重に選ぶことがある",
-			"安心できる人に依存しやすいことがある",
-			"自分に安心感を与えてくれる人には、かなりの労力をかけてでも尽くしたいと思うことがある",
-			"たくさんの備えやリスクヘッジを持っている人を見ると、「この人についていけば安心だ」と感じることがある",
+			"信頼できる人を慎重に選ぶ",
+			"安心できる人に依存しやすい",
+			"自分に安心感を与えてくれる人には、かなりの労力をかけてでも尽くしたいと思う",
+			"たくさんの備えやリスクヘッジを持っている人を見ると、「この人についていけば安心だ」と感じる",
 			// ◆ 権威への両価性
-			"権威に対して安心と不安が同時に出ることがある",
+			"権威に対して安心と不安が同時に出る",
 			// ◆ 過剰警戒・反応の読み取り
-			"人の反応の変化に敏感で、そこから信頼や安全が揺らいでいないか読み取ろうとしてしまうことがある",
-			"他者の評判や社会的評価を、相手との関係における信頼度判断の重要な参考情報として考慮することがある",
+			"人の反応の変化に敏感で、そこから信頼や安全が揺らいでいないか読み取ろうとしてしまう",
+			"他者の評判や社会的評価を、相手との関係における信頼度判断の重要な参考情報として考慮する",
 			// ◆ ルール・秩序への依存
-			"安心できるルールを求めることがある",
-			"安心できる環境を求めることがある",
+			"安心できるルールを求める",
+			"安心できる環境を求める",
 			// ◆ 不安の対処行動
-			"不安を紛らわせるために行動することがある",
-			"自分の不安を隠そうとすることがある",
+			"不安を紛らわせるために行動する",
+			"自分の不安を隠そうとする",
 			// ◆ 行動停止
-			"不安が強いと行動が止まることがある"
+			"不安が強いと行動が止まる"
 		]
 	},
 	{
@@ -261,27 +262,27 @@ const ENNEAGRAM_TYPES = [
 		name: "熱中する人",
 		questions: [
 			// ◆ 楽しさ・刺激の追求
-			"楽しいことを求める気持ちが強いことがある",
-			"刺激を求めることがある",
-			"新しいことに飛びつくことがある",
+			"楽しいことを求める気持ちが強い",
+			"刺激を求める",
+			"新しいことに飛びつく",
 			// ◆ 不安の回避・上書き
-			"不安を感じても、他の可能性や楽しい側面に視点を移しやすいことがある",
-			"ネガティブな感情を感じても、別の角度から考え直したり行動に移したりしやすいことがある",
-			"深刻な話題を避けることがある",
-			"自分の不安を隠すことがある",
+			"不安を感じても、他の可能性や楽しい側面に視点を移しやすい",
+			"ネガティブな感情を感じても、別の角度から考え直したり行動に移したりしやすい",
+			"深刻な話題を避ける",
+			"自分の不安を隠す",
 			// ◆ 選択肢の確保・自由の重視
-			"選択肢が多いと安心することがある",
-			"自由を奪われるとストレスを感じることがある",
+			"選択肢が多いと安心する",
+			"自由を奪われるとストレスを感じる",
 			// ◆ 衝動性・行動の軽さ
-			"行動が衝動的になることがある",
-			"いくつかの感情を同時に持つことや、気持ちの切り替えが早いことがある",
+			"行動が衝動的になる",
+			"いくつかの感情を同時に持つことや、気持ちの切り替えが早い",
 			// ◆ 計画・未来への希望
-			"計画を詰めすぎることがある",
-			"未来に希望を持ちやすいことがある",
+			"計画を詰めすぎる",
+			"未来に希望を持ちやすい",
 			// ◆ 人との関わり・気分の上昇
-			"人と一緒にいると気分が上がることがある",
+			"人と一緒にいると気分が上がる",
 			// ◆ 思考の軽さ・議論の回避（あなたの追加観点）
-			"深刻な議論や重い話題になると、話しても無駄だと言われることがある"
+			"深刻な議論や重い話題になると、話しても無駄だと言われる"
 		]
 	},
 	{
@@ -289,29 +290,29 @@ const ENNEAGRAM_TYPES = [
 		name: "挑戦する人",
 		questions: [
 			// ◆ 領域・境界線の防衛
-			"自分の領域を守りたい気持ちが強いことがある",
-			"自分の境界線を守ろうとすることがある",
+			"自分の領域を守りたい気持ちが強い",
+			"自分の境界線を守ろうとする",
 			// ◆ 弱さと主導権・防御本能
-			"弱さを見せると相手に主導権を握られそうで、無防備になることを避けたくなることがある",
-			"自分の立場や意見を守るため、強めのトーンや態度を取ることがある",
+			"弱さを見せると相手に主導権を握られそうで、無防備になることを避けたくなる",
+			"自分の立場や意見を守るため、強めのトーンや態度を取る",
 			// ◆ 行動力・主導権の保持
-			"行動力があると感じることがある",
-			"自分で決めたいと感じることがある",
-			"支配されたり指図されたりすることが嫌いだと感じることがある",
+			"行動力があると感じる",
+			"自分で決めたいと感じる",
+			"支配されたり指図されたりすることが嫌いだと感じる",
 			// ◆ 怒り・瞬間的な感情の強さ
-			"不正さや支配に対して、素早く強く反応することがある",
-			"感情を強く感じ、その気持ちをはっきりと表現することがある",
+			"不正さや支配に対して、素早く強く反応する",
+			"感情を強く感じ、その気持ちをはっきりと表現する",
 			// ◆ 率直さ・場を動かす力
-			"率直に話すことが多いと感じることがある",
-			"強く出ることで場を動かすことがある",
+			"率直に話すことが多いと感じる",
+			"強く出ることで場を動かす",
 			// ◆ 他者の弱さへの感度・守りたい気持ち
-			"他人の弱さに敏感だと感じることがある",
-			"大切な人を守りたい気持ちが強いことがある",
+			"他人の弱さに敏感だと感じる",
+			"大切な人を守りたい気持ちが強い",
 			// ◆ 対立・関係性の扱い
-			"対立を避けないことがある",
-			"友達や恋人など、大切な人との関係が揺らぐと、はっきりさせたくなることがある",
+			"対立を避けない",
+			"友達や恋人など、大切な人との関係が揺らぐと、はっきりさせたくなる",
 			// ◆ 無視・向き合い方
-			"自分が無視されるとつらく感じることがあり、相手のことも無視せず向き合おうとすることがある"
+			"自分が無視されるとつらく感じることがあり、相手のことも無視せず向き合おうとする"
 		]
 	},
 	{
@@ -319,26 +320,26 @@ const ENNEAGRAM_TYPES = [
 		name: "平和を求める人",
 		questions: [
 			// ◆ 争い・衝突の回避（タイプ9の核）
-			"争いを避けたい気持ちが強いことがある",
-			"衝突を避けたいという気持ちから、怒りを感じても表に出さないようにすることがある",
-			"対立しそうな場面では、自分の意見を弱めてしまうことがある",
+			"争いを避けたい気持ちが強い",
+			"衝突を避けたいという気持ちから、怒りを感じても表に出さないようにする",
+			"対立しそうな場面では、自分の意見を弱めてしまう",
 			// ◆ 自己主張の弱さ・ニーズの後回し
-			"どちらでもいいと思うことが多いことがある",
-			"相手の意見や視点を理解し、その方向に同調しやすいことがある",
-			"自分の意見を言うと疲れることがある",
-			"自分の意見やニーズよりも、相手の意見のほうが正しく思えてしまい、結果的に自分の要求を後回しにしやすいことがある",
+			"どちらでもいいと思うことが多い",
+			"相手の意見や視点を理解し、その方向に同調しやすい",
+			"自分の意見を言うと疲れる",
+			"自分の意見やニーズよりも、相手の意見のほうが正しく思えてしまい、結果的に自分の要求を後回しにしやすい",
 			// ◆ 感情の抑圧・麻痺
-			"感情が麻痺することがある",
-			"怒りに気づかず、身体反応で後から気づくことがある",
+			"感情が麻痺する",
+			"怒りに気づかず、身体反応で後から気づく",
 			// ◆ 行動の停滞・エネルギーの低下
-			"行動が遅くなることがある",
-			"変化が苦手だと感じることがある",
+			"行動が遅くなる",
+			"変化が苦手だと感じる",
 			// ◆ 境界線の曖昧さ・自己消失
-			"自分の境界線が曖昧になることがある",
-			"衝突や対立を避けようとする中で、自分の意見や存在感を小さく見せることがある",
-			"自分の存在感が薄くなることがある",
+			"自分の境界線が曖昧になる",
+			"衝突や対立を避けようとする中で、自分の意見や存在感を小さく見せる",
+			"自分の存在感が薄くなる",
 			// ◆ 他者優先・関係の安定化
-			"人の気持ちを優先することがある"
+			"人の気持ちを優先する"
 		]
 	}
 ];
@@ -504,130 +505,134 @@ const TYPE_WING_MAP = {
 
 const WING_QUESTIONS = {
 	"1w9": [
-		"正しくありたい気持ちと、争いを避けたい気持ちが同時に出ることがある。",
-		"自分の意見を言う前に、場の空気を読んでしまう。",
-		"怒りを感じても、穏やかに処理しようとする。",
-		"『こうあるべき』と思うが、強く主張することは少ない。",
-		"自分の基準を守りつつ、周囲と調和したいと思う。"
+		"正しさを大切にするが、対立を長引かせない言い方を選ぶ。",
+		"改善点に気づいても、まず場の空気が荒れない伝え方を考える。",
+		"不満があっても感情を抑え、落ち着いて処理する。",
+		"『こうあるべき』という基準は強いが、押し切るより調整を選ぶ。",
+		"自分の基準を守りながら、周囲との和も同じくらい重視する。"
 	],
 	"1w2": [
-		"正しくありたい気持ちと、人の役に立ちたい気持ちが両方強い。",
-		"相手のために自分の基準を少し曲げることがある。",
-		"人のために頑張りすぎて疲れることがある。",
-		"自分の正しさを、相手のために使おうとする。",
-		"『助けるべきだ』と感じると行動が早くなる。"
+		"正しさを守りつつ、人の役に立つ責任も強く感じる。",
+		"相手を助けるために、手順や基準を整えて動く。",
+		"『助けるべきだ』と感じると、予定より先に手を出す。",
+		"相手の成長のためなら、耳の痛い指摘もする。",
+		"人を支えたあとに『もっとできたはず』と自分を厳しく評価する。"
 	],
 	"2w1": [
-		"人を助けるときに『正しいやり方』を意識することがある。",
-		"相手のために頑張るが、内心では自分に厳しい。",
-		"自分の行動が正しかったか気にすることがある。",
-		"相手のために動くが、ルールや基準も守りたい。",
-		"自分の感情より『役に立てたか』を優先する。"
+		"人を助けるとき、善意だけでなく正しい手順にもこだわる。",
+		"相手のために動いたあと、配慮やマナーが十分だったか振り返る。",
+		"頼まれごとには応えるが、やり方が雑だと気になって直したくなる。",
+		"自分の感情より『相手のためになったか』を優先しやすい。",
+		"優しさと誠実さの両方を満たしたい気持ちが強い。"
 	],
 	"2w3": [
-		"人の役に立つことで評価されたい気持ちがある。",
-		"助けるときに『どう見られるか』を意識することがある。",
-		"相手のために動くが、成果も気になる。",
-		"頼られると嬉しくて頑張りすぎることがある。",
-		"人のために動くことが、自分の価値につながると感じる。"
+		"人を助けるとき、感謝だけでなく成果として見えることも大事にする。",
+		"頼られると嬉しく、期待以上で返そうと動きが速くなる。",
+		"相手の役に立ちながら『有能だと思われたい』気持ちも働く。",
+		"人前では面倒見の良さと実行力の両方を示したくなる。",
+		"貢献が評価されると、自分の価値を強く実感する。"
 	],
 	"3w2": [
-		"人の役に立つことで自分の価値を感じる。",
-		"助ける行動が評価につながると嬉しい。",
-		"相手の期待に応えようとして頑張りすぎることがある。",
-		"自分の成果が人の役に立つと満足感が強い。",
-		"人からの評価を意識して行動することがある。"
+		"成果を出すとき、周囲への貢献として伝わる形を意識する。",
+		"期待されると燃え、相手の期待値を超える結果を狙う。",
+		"人間関係を活かして目標達成を加速させるのが得意だ。",
+		"役に立ったと評価されると、次の行動エネルギーが上がる。",
+		"実績と好印象の両方を同時に取りにいく。"
 	],
 	"3w4": [
-		"成果を出したい気持ちと、独自性を保ちたい気持ちがある。",
-		"人からの評価を気にするが、同時に自分らしさも大事にする。",
-		"感情が深く動くことがあるが、表には出しにくい。",
-		"自分のスタイルで成果を出したいと思う。",
-		"他人と比べて『自分らしさ』を意識することがある。"
+		"成果は欲しいが、量産型ではなく自分の色で勝ちたい。",
+		"評価されたい一方で、表現や美意識の一貫性を崩したくない。",
+		"数字だけ良くても『自分らしくない成功』には満足しにくい。",
+		"競争場面で他者との差別化ポイントを強く意識する。",
+		"感情の起伏を抱えつつ、外では結果を出す役割を維持する。"
 	],
 	"4w3": [
-		"自分らしさを表現したい気持ちが強い。",
-		"感情が深く動くが、成果も意識する。",
-		"自分の作品や表現が評価されると嬉しい。",
-		"他人と比べて落ち込むことがある。",
-		"独自性と成果の両方を求める。"
+		"自分らしい表現をしたうえで、他者からの評価も得たい。",
+		"感情が動くと創造性が高まり、結果として形にしたくなる。",
+		"作品や発信の反応を見て、自己価値が大きく揺れやすい。",
+		"他者比較で落ち込むが、同時に『見返したい』意欲も湧く。",
+		"独自性と達成感のどちらも欠けると不満が残る。"
 	],
 	"4w5": [
-		"自分の感情を深く理解したいと思う。",
-		"一人の時間がないと疲れやすい。",
-		"独自性を保ちつつ、深い理解を求める。",
-		"感情が複雑で、説明しにくいことがある。",
-		"表現よりも『内面の深さ』を重視する。"
+		"感情の意味を掘り下げる時間がないと、内面が落ち着かない。",
+		"刺激の多い場が続くと消耗し、一人で回復する必要がある。",
+		"流行よりも、自分の内面に忠実な理解や表現を選ぶ。",
+		"気持ちを言葉にする前に、頭の中で長く整理する。",
+		"外向きの評価より、内面の整合性や深さを優先する。"
 	],
 	"5w4": [
-		"深い理解を求めるが、感情も強く動くことがある。",
-		"一人で考える時間がとても大事。",
-		"独自の視点を持ちたいと思う。",
-		"感情を表に出しにくいが、内側では強い。",
-		"他人と距離を置きつつ、自分らしさを守りたい。"
+		"知的に理解したい気持ちと、独特な感受性の両方が強い。",
+		"一人で考える時間が削られると、集中力と機嫌が落ちる。",
+		"多数派の結論より、自分で組み立てた独自の見方を重視する。",
+		"感情は深いが、共有する相手とタイミングを厳選する。",
+		"人と距離を取りつつ、作品や思考には個性を残したい。",
+		"理解が進むほど、論理だけでなく美意識や世界観の一貫性も気になる。"
 	],
 	"5w6": [
-		"深く理解したい気持ちと、安心したい気持ちが両方ある。",
-		"情報を集めて安全を確保しようとする。",
-		"不安があると調べすぎてしまうことがある。",
-		"他人との距離を取りつつ、信頼できる人を求める。",
-		"理解と安全の両方を重視する。"
+		"理解の正確さと安全性の両方が担保されるまで動きにくい。",
+		"判断前に前提条件やリスクを細かく洗い出す。",
+		"不確実さが高い場面では、調査や検証の量が増える。",
+		"人間関係は慎重だが、信頼した相手とは情報を共有する。",
+		"『分かること』と『備えること』をセットで考える。",
+		"新しい提案は、魅力より先に再現性と運用リスクを確認したくなる。"
 	],
 	"6w5": [
-		"不安があると情報を集めすぎることがある。",
-		"深く理解することで安心したい。",
-		"信頼できる人を慎重に選ぶ。",
-		"自分の考えを疑ってしまうことがある。",
-		"安心と理解の両方を求める。"
+		"不安を感じると、まず情報収集と裏取りを始める。",
+		"結論を出す前に、根拠の抜け漏れを何度も確認する。",
+		"人を信頼するまで時間がかかり、距離の取り方は慎重だ。",
+		"自分の判断でも『見落としがないか』を繰り返し点検する。",
+		"安心を得るために、理解の深さを先に確保したくなる。"
 	],
 	"6w7": [
-		"不安があると誰かと一緒にいたくなる。",
-		"安心したい気持ちと、楽しみたい気持ちが同時に出る。",
-		"気分転換を求めて行動することがある。",
-		"人と一緒にいると安心する。",
-		"不安を紛らわせるために予定を入れることがある。"
+		"不安を感じると、一人で抱えるより人と話して整理したくなる。",
+		"安心を確保しながら、気分が上がる予定を入れてバランスを取る。",
+		"心配事が続くと、行動量を増やして停滞感を避ける。",
+		"信頼できる仲間が近くにいると、判断と実行が速くなる。",
+		"不安対策と楽しさ確保を同時進行で回す傾向がある。"
 	],
 	"7w6": [
-		"楽しいことを求めるが、安心も重視する。",
-		"計画を立ててリスクを避けようとする。",
-		"不安があると予定を詰めて紛らわせることがある。",
-		"人と一緒にいると気分が上がる。",
-		"楽しさと安全の両方を求める。"
+		"楽しい体験を求めつつ、失敗しないための保険も準備する。",
+		"新しい挑戦でも、逃げ道や代替案を先に考えておく。",
+		"予定を立てるとき、ワクワクと安全性の両方で判断する。",
+		"不安が出ると、仲間と計画を共有して安心材料を増やす。",
+		"自由さより『安心して楽しめる状態』を重視する。"
 	],
 	"7w8": [
-		"楽しいことを求めるが、行動力も強い。",
-		"自分の欲求に正直でいたい。",
-		"退屈が苦手で、刺激を求める。",
-		"強く出ることで場を動かすことがある。",
-		"楽しさと勢いの両方を求める。"
+		"楽しさを見つけると、細かい確認より先に動き出す。",
+		"欲しいものは遠慮せず取りにいき、主導権も握りたくなる。",
+		"退屈や停滞に強いストレスを感じ、刺激のある選択を優先する。",
+		"場が遅いと感じると、強めに方向を決めて前へ進める。",
+		"安全策よりスピードとインパクトを重視する。"
 	],
 	"8w7": [
-		"行動力があり、勢いで進むことがある。",
-		"自分の欲求に正直でいたい。",
-		"楽しさや刺激を求める傾向がある。",
-		"場を引っ張ることが多い。",
-		"強さと楽しさの両方を求める。"
+		"主導権を握って前進し、同時に楽しさや勢いも求める。",
+		"抵抗があっても押し切る力があり、判断は速い。",
+		"エネルギーの高い場を好み、停滞を嫌う。",
+		"遠慮より率直さを優先し、要求をはっきり伝える。",
+		"強さの発揮と体験の充実を同時に取りにいく。"
 	],
 	"8w9": [
-		"強く出ることがあるが、争いは長引かせたくない。",
-		"自分の領域を守りたい気持ちが強い。",
-		"必要なときは強く出るが、普段は穏やか。",
-		"怒りは瞬間的だが、長く続かない。",
-		"強さと平和の両方を求める。"
+		"普段は落ち着いているが、境界を侵されると一気に強く出る。",
+		"対立は望まないが、守るべき対象のためなら引かない。",
+		"怒りは短時間で強く出るが、収まると切り替えが早い。",
+		"主導権は持ちたい一方で、日常は穏やかな流れを好む。",
+		"強さと平穏の両立を重視する。",
+		"決める場面では主張するが、決着後は関係修復に意識を向ける。"
 	],
 	"9w8": [
-		"自分の領域を侵されると瞬間的に強く反応することがある。",
-		"穏やかでいたいが、必要なときは強く出られる。",
-		"相手が強く出てきたとき、踏ん張ることがある。",
-		"大切な人を守るためなら対立を避けないことがある。",
-		"怒りは短いが、瞬間的に強い。"
+		"基本は穏やかだが、押し込まれると急に強く踏ん張る。",
+		"自分や身内の領域が侵される場面では、反応が速くなる。",
+		"普段は譲るが、重要な一点では頑固に守り切る。",
+		"衝突は避けたいが、守る対象のためなら対立も受け入れる。",
+		"怒りは蓄積型ではなく、瞬間的に出て収まりやすい。",
+		"普段は合わせるが、限界を超えると声や態度が急に強くなる。"
 	],
 	"9w1": [
-		"自分の行動が正しかったか後から振り返ることが多い。",
-		"怒りを抑えて穏やかに処理しようとする。",
-		"自分のミスを必要以上に反省してしまうことがある。",
-		"『こうあるべき』という基準が内側に強くある。",
-		"人に迷惑をかけたと感じると長く気にしてしまう。"
+		"穏やかさを保ちつつ、内側では『正しくありたい』基準が強い。",
+		"衝突を避けるために感情を抑え、あとで一人で整理する。",
+		"小さなミスでも『もっと丁寧にできた』と反省が続く。",
+		"人に迷惑をかけた感覚が残ると、長く引きずりやすい。",
+		"平和維持と良心の両立を常に意識する。"
 	]
 };
 
@@ -652,6 +657,196 @@ function compareByNormalizedScore(a, b) {
 	}
 
 	return 0;
+}
+
+function getWingGapSummary(wingScores) {
+	if (!Array.isArray(wingScores) || wingScores.length === 0) {
+		return null;
+	}
+
+	const topWing = wingScores[0];
+	const secondWing = wingScores[1] ?? null;
+
+	if (!secondWing) {
+		return {
+			topWing,
+			secondWing,
+			gapPercent: null,
+			label: "候補が1つのため点差は算出していません。"
+		};
+	}
+
+	const topPercent = topWing.max ? (topWing.score / topWing.max) * 100 : 0;
+	const secondPercent = secondWing.max ? (secondWing.score / secondWing.max) * 100 : 0;
+	const gapPercent = Math.round((topPercent - secondPercent) * 10) / 10;
+	let label = "判定差は小さめです。追加回答が有効です。";
+
+	if (gapPercent >= 10) {
+		label = "判定差は大きく、ウイング傾向は比較的明確です。";
+	} else if (gapPercent >= 5) {
+		label = "判定差は中程度です。";
+	}
+
+	return {
+		topWing,
+		secondWing,
+		gapPercent,
+		label
+	};
+}
+
+function loadWingHistory() {
+	const raw = window.localStorage.getItem(WING_HISTORY_STORAGE_KEY);
+
+	if (!raw) {
+		return [];
+	}
+
+	try {
+		const parsed = JSON.parse(raw);
+		return Array.isArray(parsed) ? parsed : [];
+	} catch {
+		return [];
+	}
+}
+
+function saveWingHistory(history) {
+	window.localStorage.setItem(WING_HISTORY_STORAGE_KEY, JSON.stringify(history));
+}
+
+function getWingPercent(scoreEntry) {
+	if (!scoreEntry || !scoreEntry.max) {
+		return 0;
+	}
+
+	return Math.round(((scoreEntry.score / scoreEntry.max) * 100) * 10) / 10;
+}
+
+function appendWingHistoryEntry(entry) {
+	const current = loadWingHistory();
+	const next = [entry, ...current].slice(0, MAX_WING_HISTORY_ITEMS);
+
+	saveWingHistory(next);
+	return next;
+}
+
+function getWingComparisonText(currentEntry, previousEntry, scopeLabel) {
+	if (!currentEntry || !previousEntry) {
+		return "比較対象が1件のみのため、次回回答後に前後比較を表示します。";
+	}
+
+	const currentTop = getWingPercent(currentEntry.scores[0]);
+	const previousTop = getWingPercent(previousEntry.scores[0]);
+	const currentGap = typeof currentEntry.gapPercent === "number" ? currentEntry.gapPercent : 0;
+	const previousGap = typeof previousEntry.gapPercent === "number" ? previousEntry.gapPercent : 0;
+	const topDelta = Math.round((currentTop - previousTop) * 10) / 10;
+	const gapDelta = Math.round((currentGap - previousGap) * 10) / 10;
+	const topWingChanged = currentEntry.topWingCode !== previousEntry.topWingCode;
+	const topDeltaLabel = `${topDelta > 0 ? "+" : ""}${topDelta}%`;
+	const gapDeltaLabel = `${gapDelta > 0 ? "+" : ""}${gapDelta}%`;
+	const wingChangeLabel = topWingChanged
+		? `1位ウイングが ${previousEntry.topWingCode} から ${currentEntry.topWingCode} に変化しました。`
+		: `1位ウイングは ${currentEntry.topWingCode} のままです。`;
+	const prefix = scopeLabel ? `${scopeLabel}の前回比` : "前回比";
+
+	return `${prefix}: 1位一致度 ${topDeltaLabel} / 1位-2位点差 ${gapDeltaLabel}。${wingChangeLabel}`;
+}
+
+function formatHistoryDate(isoText) {
+	const date = new Date(isoText);
+
+	if (Number.isNaN(date.getTime())) {
+		return "日時不明";
+	}
+
+	return date.toLocaleString("ja-JP", {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit"
+	});
+}
+
+function getHistoryFilterMeta(currentType, filterValue) {
+	if (filterValue === "all") {
+		return {
+			label: "全タイプ",
+			predicate: (entry) => !!entry
+		};
+	}
+
+	if (typeof filterValue === "string" && filterValue.startsWith("type:")) {
+		const parsedType = Number(filterValue.replace("type:", ""));
+
+		if (Number.isInteger(parsedType) && parsedType >= 1 && parsedType <= 9) {
+			return {
+				label: `タイプ${parsedType}`,
+				predicate: (entry) => !!entry && entry.type === parsedType
+			};
+		}
+	}
+
+	return {
+		label: `今回タイプ（タイプ${currentType}）`,
+		predicate: (entry) => !!entry && entry.type === currentType
+	};
+}
+
+function renderWingHistory(type, elements, filterValue = "current") {
+	const { historySection, historySummary, historyCompare, historyList, historyFilterHint } = elements;
+
+	if (!historySection || !historySummary || !historyCompare || !historyList) {
+		return;
+	}
+
+	const allHistory = loadWingHistory();
+	const filterMeta = getHistoryFilterMeta(type, filterValue);
+	const filteredHistory = allHistory
+		.filter((entry) => filterMeta.predicate(entry) && Array.isArray(entry.scores) && entry.scores.length > 0)
+		.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+
+	if (historyFilterHint) {
+		historyFilterHint.textContent = `表示対象: ${filterMeta.label}`;
+	}
+
+	if (filteredHistory.length === 0) {
+		historySection.hidden = false;
+		historySummary.textContent = `${filterMeta.label}の履歴はまだありません。`;
+		historyCompare.innerHTML = "<p>この表示条件では前後比較を作れません。</p>";
+		historyList.innerHTML = '<p class="history-empty">別の表示対象を選ぶか、判定を実行して履歴を作成してください。</p>';
+		return;
+	}
+
+	historySection.hidden = false;
+	historySummary.textContent = `${filterMeta.label}の履歴は ${filteredHistory.length} 件です。直近3件を表示しています。`;
+
+	const latest = filteredHistory[0];
+	const previous = filteredHistory[1] ?? null;
+	historyCompare.innerHTML = `<p>${getWingComparisonText(latest, previous, filterMeta.label)}</p>`;
+
+	const recentThree = filteredHistory.slice(0, 3);
+	historyList.innerHTML = recentThree
+		.map((entry, index) => {
+			const first = entry.scores[0];
+			const second = entry.scores[1] ?? null;
+			const firstPercent = getWingPercent(first);
+			const secondPercent = second ? getWingPercent(second) : 0;
+			const gapText = typeof entry.gapPercent === "number" ? `${entry.gapPercent}%` : "-";
+			const typeLine = filterValue === "all" ? `<p class="history-type">タイプ${entry.type}</p>` : "";
+
+			return `
+				<article class="history-card">
+					<h3>${index === 0 ? "最新" : `${index + 1}件前`}</h3>
+					${typeLine}
+					<p class="history-date">${formatHistoryDate(entry.createdAt)}</p>
+					<p>1位: ${entry.topWingCode}（一致度 ${firstPercent}%）</p>
+					<p>${second ? `2位: ${second.wingCode}（一致度 ${secondPercent}%）` : "2位: -"}</p>
+					<p>1位と2位の一致度差: ${gapText}</p>
+				</article>
+			`;
+		})
+		.join("");
 }
 
 function initializeDiagnosisForm(diagnosisForm) {
@@ -1087,6 +1282,12 @@ function initializeWPage() {
 	const wingResult = document.getElementById("wing-result");
 	const wingResultSummary = document.getElementById("wing-result-summary");
 	const wingResultDetail = document.getElementById("wing-result-detail");
+	const wingHistory = document.getElementById("wing-history");
+	const wingHistorySummary = document.getElementById("wing-history-summary");
+	const wingHistoryCompare = document.getElementById("wing-history-compare");
+	const wingHistoryList = document.getElementById("wing-history-list");
+	const wingHistoryFilter = document.getElementById("wing-history-filter");
+	const wingHistoryFilterHint = document.getElementById("wing-history-filter-hint");
 	const storedState = loadStoredDiagnosisState();
 
 	if (!wPage) {
@@ -1126,6 +1327,19 @@ function initializeWPage() {
 		wingIntro.textContent = `タイプ${topResult.type}のウイング候補（${wingCodes.join(" / ")}）に回答してください。`;
 	}
 
+	if (wingHistoryFilter) {
+		wingHistoryFilter.value = "current";
+		wingHistoryFilter.addEventListener("change", () => {
+			renderWingHistory(topResult.type, {
+				historySection: wingHistory,
+				historySummary: wingHistorySummary,
+				historyCompare: wingHistoryCompare,
+				historyList: wingHistoryList,
+				historyFilterHint: wingHistoryFilterHint
+			}, wingHistoryFilter.value);
+		});
+	}
+
 	if (wingForm) {
 		wingForm.innerHTML = buildWingFormMarkup(wingCodes);
 
@@ -1156,16 +1370,37 @@ function initializeWPage() {
 			});
 
 			wingScores.sort(compareByNormalizedScore);
-			const topWing = wingScores[0];
-			const secondWing = wingScores[1];
+			const gapSummary = getWingGapSummary(wingScores);
+			const topWing = gapSummary ? gapSummary.topWing : wingScores[0];
+			const secondWing = gapSummary ? gapSummary.secondWing : wingScores[1];
 			const wingState = {
 				type: topResult.type,
 				wings: wingCodes,
 				scores: wingScores,
 				answers: collectWingAnswers(wingForm, wingCodes)
 			};
+			const historyEntry = {
+				type: topResult.type,
+				createdAt: new Date().toISOString(),
+				topWingCode: topWing ? topWing.wingCode : "",
+				gapPercent: gapSummary ? gapSummary.gapPercent : null,
+				scores: wingScores.map((entry) => ({
+					wingCode: entry.wingCode,
+					score: entry.score,
+					max: entry.max,
+					normalized: entry.normalized
+				}))
+			};
 
 			saveWingState(wingState);
+			appendWingHistoryEntry(historyEntry);
+			renderWingHistory(topResult.type, {
+				historySection: wingHistory,
+				historySummary: wingHistorySummary,
+				historyCompare: wingHistoryCompare,
+				historyList: wingHistoryList,
+				historyFilterHint: wingHistoryFilterHint
+			}, wingHistoryFilter ? wingHistoryFilter.value : "current");
 
 			if (wingResultSummary && topWing) {
 				wingResultSummary.textContent = `ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
@@ -1174,11 +1409,15 @@ function initializeWPage() {
 			if (wingResultDetail && topWing) {
 				const topPercent = Math.round((topWing.score / topWing.max) * 100);
 				const secondPercent = secondWing ? Math.round((secondWing.score / secondWing.max) * 100) : 0;
+				const gapLine = gapSummary && typeof gapSummary.gapPercent === "number"
+					? `<p>1位と2位の一致度差: ${gapSummary.gapPercent}%（${gapSummary.label}）</p>`
+					: "";
 
 				wingResultDetail.innerHTML = `
 					<p>タイプ${topResult.type}の候補: ${wingCodes.join(" / ")}</p>
 					<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
 					${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
+					${gapLine}
 				`;
 			}
 
@@ -1204,6 +1443,7 @@ function initializeWPage() {
 
 		const topWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[0] : null;
 		const secondWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[1] : null;
+		const gapSummary = getWingGapSummary(Array.isArray(storedWingState.scores) ? storedWingState.scores : []);
 
 		if (wingResultSummary && topWing) {
 			wingResultSummary.textContent = `前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`;
@@ -1212,19 +1452,38 @@ function initializeWPage() {
 		if (wingResultDetail && topWing) {
 			const topPercent = Math.round((topWing.score / topWing.max) * 100);
 			const secondPercent = secondWing ? Math.round((secondWing.score / secondWing.max) * 100) : 0;
+			const gapLine = gapSummary && typeof gapSummary.gapPercent === "number"
+				? `<p>1位と2位の一致度差: ${gapSummary.gapPercent}%（${gapSummary.label}）</p>`
+				: "";
 
 			wingResultDetail.innerHTML = `
 				<p>タイプ${topResult.type}の候補: ${wingCodes.join(" / ")}</p>
 				<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
 				${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
+				${gapLine}
 			`;
 		}
 
 		if (wingResult) {
 			wingResult.hidden = false;
 		}
+
+		renderWingHistory(topResult.type, {
+			historySection: wingHistory,
+			historySummary: wingHistorySummary,
+			historyCompare: wingHistoryCompare,
+			historyList: wingHistoryList,
+			historyFilterHint: wingHistoryFilterHint
+		}, wingHistoryFilter ? wingHistoryFilter.value : "current");
 	} else {
 		clearWingState();
+		renderWingHistory(topResult.type, {
+			historySection: wingHistory,
+			historySummary: wingHistorySummary,
+			historyCompare: wingHistoryCompare,
+			historyList: wingHistoryList,
+			historyFilterHint: wingHistoryFilterHint
+		}, wingHistoryFilter ? wingHistoryFilter.value : "current");
 	}
 
 	if (wBackLink) {
@@ -1360,3 +1619,4 @@ function updateAnsweredCount(formElement, answeredCountElement, totalQuestions) 
 	const answeredQuestions = Math.min(checkedCount, totalQuestions);
 	answeredCountElement.textContent = String(answeredQuestions);
 }
+

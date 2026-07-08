@@ -28,6 +28,30 @@
 			<div id="wing-result-detail" class="result-detail"></div>
 		</section>
 
+		<section id="wing-history" class="result" hidden>
+			<h2>回答履歴と前後比較</h2>
+			<div class="history-toolbar" role="group" aria-label="履歴表示フィルタ">
+				<label for="wing-history-filter">表示対象</label>
+				<select id="wing-history-filter" class="history-select">
+					<option value="current">今回タイプのみ</option>
+					<option value="all">全タイプ</option>
+					<option value="type:1">タイプ1</option>
+					<option value="type:2">タイプ2</option>
+					<option value="type:3">タイプ3</option>
+					<option value="type:4">タイプ4</option>
+					<option value="type:5">タイプ5</option>
+					<option value="type:6">タイプ6</option>
+					<option value="type:7">タイプ7</option>
+					<option value="type:8">タイプ8</option>
+					<option value="type:9">タイプ9</option>
+				</select>
+				<p id="wing-history-filter-hint" class="history-filter-hint"></p>
+			</div>
+			<p id="wing-history-summary"></p>
+			<div id="wing-history-compare" class="history-compare"></div>
+			<div id="wing-history-list" class="history-list"></div>
+		</section>
+
 		<div class="w-actions">
 			<a id="w-back-link" class="primary-btn" href="diagnosis.html">診断ページへ戻る</a>
 			<a class="ghost-btn" href="index.html">トップへ戻る</a>
