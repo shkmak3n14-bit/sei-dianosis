@@ -91,16 +91,16 @@ const ENNEAGRAM_TYPES = [
 			"人のために動くことで自分の価値を感じることがある",
 			// ◆ 自己犠牲・ニーズの後回し
 			"自分のニーズよりも相手の気持ちや期待を優先してしまい、結果的に自分のことが後回しになることがある",
-			"相手のために自分を犠牲にしてしまうことがある",
+			"相手のためなら自分の時間やニーズを後回しにしようとすることがある",
 			"頼られると断りにくいことがある",
 			// ◆ 過剰な援助・境界線の薄さ
 			"困っている人を見ると、理由を考える前に手を差し伸べてしまうことがある",
-			"相手の問題を自分が解決しようとすることがある",
+			"相手の状況や問題を一緒に考え、何か力になれることを探そうとすることがある",
 			"相手のために頑張りすぎて疲れることがある",
 			"人との距離が自然と近くなり、相手のパーソナルスペースに入っても不快に思われないことがある",
 			// ◆ 改善志向の援助（あなたの新しい観点）
 			"人を助けたい気持ちから、相手がもっと良くなる方法が自然と見えることがある",
-			"相手が良くなると思うと、その方向へそっと導きたくなることがある",
+			"相手が成長できると思う方法を見つけると、一緒に試してみようと提案したくなることがある",
 			// ◆ 怒りの抑制・関係維持の優先
 			"関係を壊したくなくて怒りより優しさを優先することがある",
 			// ◆ 期待への過剰適応（タイプ2の深層）
@@ -157,7 +157,7 @@ const ENNEAGRAM_TYPES = [
 			"感情が深く動くことがある",
 			"感情が複雑で説明しにくいことがある",
 			"感情を言語化するのが難しいことがある",
-			"感情が強すぎて疲れることがある",
+			"感情が深く複雑なため、その処理に時間や心身のエネルギーを必要とすることがある",
 			// ◆ 自己同一性・自分らしさの保持
 			"自分らしさを大切にしていると感じることがある",
 			"自分の世界観を守りたいと感じることがある",
@@ -165,7 +165,7 @@ const ENNEAGRAM_TYPES = [
 			// ◆ 特別性への欲求・自己価値の揺れ
 			"特別でありたい気持ちがある",
 			"一番になることより、自分が特別な存在だと感じられることを重視することがある",
-			"自分の価値を感情で測ることがある",
+			"その時の感情の状態によって、自分の価値や可能性への見方が大きく変わることがある",
 			"他人と比べて落ち込むことがある",
 			// ◆ 内面への没入・自己理解への欲求
 			"自分の内面を深く理解したいと感じることがある",
@@ -173,7 +173,7 @@ const ENNEAGRAM_TYPES = [
 			// ◆ 気分依存・行動の揺れ
 			"その時の気分や内面の状態によって、行動や選択が大きく変わりやすいことがある",
 			// ◆ 感情と孤独の関係
-			"感情が孤独感につながることがある",
+			"感情の複雑さや独自性が、周囲との理解のズレにつながることがある",
 			"自分の独自性を大切にするほど、理解されず孤独を感じることがある",
 			// ◆ 他者の感情への敏感さ
 			"他人の感情の動きや雰囲気の変化に敏感で、その意味を深く感じ取ろうとすることがある",
@@ -232,10 +232,10 @@ const ENNEAGRAM_TYPES = [
 			"自分の考えを疑う癖がある",
 			"予定が曖昧だと落ち着かないことがある",
 			// ◆ リスク予測・シミュレーション
-			"リスクを考えすぎることがある",
+			"複数のリスクや起こりうる状況を想定して考慮に入れることがある",
 			"未来の不安をシミュレーションすることがある",
 			"自分がシミュレーションした通りに物事が進まないと、相手や状況への信頼が揺らぐことがある",
-			"「臨機応変」とは、その場のノリではなく、事前の準備だと感じることがある",
+			"臨機応変に対応するには、事前の十分な準備や計画があることが安心につながると考えることがある",
 			// ◆ 安心源の探索・信頼の慎重さ
 			"信頼できる人を慎重に選ぶことがある",
 			"安心できる人に依存しやすいことがある",
@@ -245,7 +245,7 @@ const ENNEAGRAM_TYPES = [
 			"権威に対して安心と不安が同時に出ることがある",
 			// ◆ 過剰警戒・反応の読み取り
 			"人の反応の変化に敏感で、そこから信頼や安全が揺らいでいないか読み取ろうとしてしまうことがある",
-			"人の噂や多くの人の評価を、その人が安全かどうか判断する材料として重視してしまうことがある",
+			"他者の評判や社会的評価を、相手との関係における信頼度判断の重要な参考情報として考慮することがある",
 			// ◆ ルール・秩序への依存
 			"安心できるルールを求めることがある",
 			"安心できる環境を求めることがある",
@@ -265,8 +265,8 @@ const ENNEAGRAM_TYPES = [
 			"刺激を求めることがある",
 			"新しいことに飛びつくことがある",
 			// ◆ 不安の回避・上書き
-			"不安を楽しさで上書きしようとすることがある",
-			"ネガティブ感情を避けることがある",
+			"不安を感じても、他の可能性や楽しい側面に視点を移しやすいことがある",
+			"ネガティブな感情を感じても、別の角度から考え直したり行動に移したりしやすいことがある",
 			"深刻な話題を避けることがある",
 			"自分の不安を隠すことがある",
 			// ◆ 選択肢の確保・自由の重視
@@ -274,7 +274,7 @@ const ENNEAGRAM_TYPES = [
 			"自由を奪われるとストレスを感じることがある",
 			// ◆ 衝動性・行動の軽さ
 			"行動が衝動的になることがある",
-			"感情を軽く扱うことがある",
+			"いくつかの感情を同時に持つことや、気持ちの切り替えが早いことがある",
 			// ◆ 計画・未来への希望
 			"計画を詰めすぎることがある",
 			"未来に希望を持ちやすいことがある",
@@ -293,14 +293,14 @@ const ENNEAGRAM_TYPES = [
 			"自分の境界線を守ろうとすることがある",
 			// ◆ 弱さと主導権・防御本能
 			"弱さを見せると相手に主導権を握られそうで、無防備になることを避けたくなることがある",
-			"弱さを隠すために強く出ることがある",
+			"自分の立場や意見を守るため、強めのトーンや態度を取ることがある",
 			// ◆ 行動力・主導権の保持
 			"行動力があると感じることがある",
 			"自分で決めたいと感じることがある",
 			"支配されたり指図されたりすることが嫌いだと感じることがある",
 			// ◆ 怒り・瞬間的な感情の強さ
-			"怒りが瞬間的に出ることがある",
-			"感情が瞬間的に強く出ることがある",
+			"不正さや支配に対して、素早く強く反応することがある",
+			"感情を強く感じ、その気持ちをはっきりと表現することがある",
 			// ◆ 率直さ・場を動かす力
 			"率直に話すことが多いと感じることがある",
 			"強く出ることで場を動かすことがある",
@@ -320,11 +320,11 @@ const ENNEAGRAM_TYPES = [
 		questions: [
 			// ◆ 争い・衝突の回避（タイプ9の核）
 			"争いを避けたい気持ちが強いことがある",
-			"衝突を避けるため、怒りを無意識に押し込めることがある",
+			"衝突を避けたいという気持ちから、怒りを感じても表に出さないようにすることがある",
 			"対立しそうな場面では、自分の意見を弱めてしまうことがある",
 			// ◆ 自己主張の弱さ・ニーズの後回し
 			"どちらでもいいと思うことが多いことがある",
-			"人の意見に合わせてしまうことがある",
+			"相手の意見や視点を理解し、その方向に同調しやすいことがある",
 			"自分の意見を言うと疲れることがある",
 			"自分の意見やニーズよりも、相手の意見のほうが正しく思えてしまい、結果的に自分の要求を後回しにしやすいことがある",
 			// ◆ 感情の抑圧・麻痺
@@ -335,7 +335,7 @@ const ENNEAGRAM_TYPES = [
 			"変化が苦手だと感じることがある",
 			// ◆ 境界線の曖昧さ・自己消失
 			"自分の境界線が曖昧になることがある",
-			"平和を守るために自分を消すことがある",
+			"衝突や対立を避けようとする中で、自分の意見や存在感を小さく見せることがある",
 			"自分の存在感が薄くなることがある",
 			// ◆ 他者優先・関係の安定化
 			"人の気持ちを優先することがある"
@@ -631,6 +631,29 @@ const WING_QUESTIONS = {
 	]
 };
 
+function compareByNormalizedScore(a, b) {
+	const normalizedA = typeof a.normalized === "number" ? a.normalized : (a.max ? a.score / a.max : 0);
+	const normalizedB = typeof b.normalized === "number" ? b.normalized : (b.max ? b.score / b.max : 0);
+
+	if (normalizedB !== normalizedA) {
+		return normalizedB - normalizedA;
+	}
+
+	if (b.score !== a.score) {
+		return b.score - a.score;
+	}
+
+	if (typeof a.type === "number" && typeof b.type === "number") {
+		return a.type - b.type;
+	}
+
+	if (typeof a.wingCode === "string" && typeof b.wingCode === "string") {
+		return a.wingCode.localeCompare(b.wingCode);
+	}
+
+	return 0;
+}
+
 function initializeDiagnosisForm(diagnosisForm) {
 	const answeredCountElement = document.getElementById("answered-count");
 	const totalCountElement = document.getElementById("total-count");
@@ -678,7 +701,7 @@ function initializeDiagnosisForm(diagnosisForm) {
 		}
 
 		if (resultSummary) {
-			resultSummary.textContent = `タイプ${previewType}のプレビュー表示です。`;
+			resultSummary.textContent = `タイプ${previewType}のプレビュー結果を表示しています。`;
 		}
 
 		return;
@@ -785,16 +808,18 @@ function initializeDiagnosisForm(diagnosisForm) {
 
 				return sum + Number(selected ? selected.value : 0);
 			}, 0);
+			const max = entry.questions.length * RESPONSE_OPTIONS.length;
 
 			return {
 				type: entry.type,
 				name: entry.name,
 				score,
-				max: entry.questions.length * RESPONSE_OPTIONS.length
+				max,
+				normalized: max ? score / max : 0
 			};
 		});
 
-		scores.sort((a, b) => b.score - a.score);
+		scores.sort(compareByNormalizedScore);
 		const answers = collectAnswers(diagnosisForm);
 		const topThree = scores.slice(0, 3);
 		currentDiagnosisResult = {
@@ -805,7 +830,7 @@ function initializeDiagnosisForm(diagnosisForm) {
 		saveDiagnosisState(currentDiagnosisResult);
 
 		if (resultSummary) {
-			resultSummary.textContent = `最も傾向が強いのは タイプ${topThree[0].type}（${topThree[0].name}）です。2位・3位の結果は上部リンクで切り替えられます。`;
+			resultSummary.textContent = `一致度が最も高いのは タイプ${topThree[0].type}（${topThree[0].name}）です。2位・3位の結果は上部リンクで切り替えられます。`;
 		}
 
 		renderDiagnosisResult(currentDiagnosisResult, 0, {
@@ -850,9 +875,10 @@ function createPreviewResultState(previewType) {
 			type: entry.type,
 			name: entry.name,
 			score,
-			max
+			max,
+			normalized: max ? score / max : 0
 		};
-	}).sort((a, b) => b.score - a.score);
+	}).sort(compareByNormalizedScore);
 
 	return {
 		scores,
@@ -955,7 +981,7 @@ function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturity
 			<h3>ストレス時の矢／成長時の矢</h3>
 			<p>${profile.arrows}</p>
 
-			<h3>好循環度（%）</h3>
+			<h3>一致度（%）</h3>
 			<p>${cyclePercent}%</p>
 
 			<h3>強みの活かし方（実践例）</h3>
@@ -1085,12 +1111,12 @@ function initializeWPage() {
 	}, 0);
 
 	if (wSummary) {
-		wSummary.textContent = `${selectedRankIndex + 1}位の結果を確認しました。タイプ${topResult.type}（${profile.title}）が最有力です。`;
+		wSummary.textContent = `${selectedRankIndex + 1}位の結果を確認しました。一致度が最も高いのはタイプ${topResult.type}（${profile.title}）です。`;
 	}
 
 	if (wDetail) {
 		wDetail.innerHTML = `
-			<p>好循環度: ${percentage}%</p>
+			<p>一致度: ${percentage}%</p>
 			<p>${profile.overview}</p>
 			<p>ウイング判定では、タイプ${topResult.type}に対応する ${wingCodes.join(" と ")} のみ、合計${totalWingQuestions}問を表示します。</p>
 		`;
@@ -1119,15 +1145,17 @@ function initializeWPage() {
 
 					return sum + Number(selected ? selected.value : 0);
 				}, 0);
+				const max = questions.length * RESPONSE_OPTIONS.length;
 
 				return {
 					wingCode,
 					score,
-					max: questions.length * RESPONSE_OPTIONS.length
+					max,
+					normalized: max ? score / max : 0
 				};
 			});
 
-			wingScores.sort((a, b) => b.score - a.score);
+			wingScores.sort(compareByNormalizedScore);
 			const topWing = wingScores[0];
 			const secondWing = wingScores[1];
 			const wingState = {
@@ -1140,7 +1168,7 @@ function initializeWPage() {
 			saveWingState(wingState);
 
 			if (wingResultSummary && topWing) {
-				wingResultSummary.textContent = `ウイング判定は ${topWing.wingCode} が最有力です。`;
+				wingResultSummary.textContent = `ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
 			}
 
 			if (wingResultDetail && topWing) {
@@ -1178,7 +1206,7 @@ function initializeWPage() {
 		const secondWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[1] : null;
 
 		if (wingResultSummary && topWing) {
-			wingResultSummary.textContent = `前回のウイング判定では ${topWing.wingCode} が最有力でした。`;
+			wingResultSummary.textContent = `前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`;
 		}
 
 		if (wingResultDetail && topWing) {
