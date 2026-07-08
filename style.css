@@ -415,6 +415,41 @@ h3 {
 	margin: 6px 0;
 }
 
+.profile-layer-toolbar {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 8px 12px;
+	align-items: center;
+	margin: 10px 0 14px;
+	padding: 10px 12px;
+	border: 1px solid #c9e3d7;
+	border-radius: 12px;
+	background: #ffffff;
+}
+
+.profile-layer-toolbar label {
+	font-weight: 700;
+	color: var(--accent-strong);
+}
+
+.share-card {
+	border: 1px solid #c9e3d7;
+	border-radius: 12px;
+	padding: 14px;
+	background: #fff;
+}
+
+.share-card h3 {
+	margin: 0 0 10px;
+	font-size: 1.05rem;
+	color: var(--accent-strong);
+}
+
+.share-card p {
+	margin: 0 0 8px;
+	font-size: 0.95rem;
+}
+
 .history-compare {
 	margin: 10px 0 14px;
 	padding: 12px;
@@ -537,6 +572,10 @@ h3 {
 	}
 
 	.history-toolbar {
+		grid-template-columns: 1fr;
+	}
+
+	.profile-layer-toolbar {
 		grid-template-columns: 1fr;
 	}
 
