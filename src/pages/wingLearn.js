@@ -3,6 +3,43 @@
  */
 import { WING_DETAIL_PROFILES } from "./wing.js";
 
+function buildSectionBodyMarkup(section) {
+	const parts = [];
+
+	if (section.body) {
+		parts.push(`<p>${section.body}</p>`);
+	}
+
+	if (Array.isArray(section.items) && section.items.length > 0) {
+		const listClass = section.listStyle === "check" ? "wing-learn-checklist" : "wing-learn-list";
+
+		parts.push(`
+			<ul class="${listClass}">
+				${section.items.map((item) => `<li>${item}</li>`).join("")}
+			</ul>
+		`);
+	}
+
+	if (section.footer) {
+		parts.push(`<p>${section.footer}</p>`);
+	}
+
+	return parts.join("");
+}
+
+function buildSectionsMarkup(sections) {
+	return sections
+		.map((section) => `
+			<section class="wing-learn-section">
+				<h2 class="wing-learn-section-heading">${section.heading}</h2>
+				<div class="wing-learn-section-body">
+					${buildSectionBodyMarkup(section)}
+				</div>
+			</section>
+		`)
+		.join("");
+}
+
 export function initializeWingLearnPage() {
 	const contentEl = document.getElementById("wing-learn-content");
 	const backLink = document.getElementById("wing-learn-back");
@@ -16,6 +53,11 @@ export function initializeWingLearnPage() {
 
 	availableCodes.forEach((code) => {
 		const navItem = document.getElementById(`nav-${code}`);
+		const profile = WING_DETAIL_PROFILES[code];
+
+		if (navItem && profile?.title) {
+			navItem.textContent = profile.title;
+		}
 
 		if (navItem) {
 			if (code === wingCode) {
@@ -36,22 +78,16 @@ export function initializeWingLearnPage() {
 		contentEl.innerHTML = `
 			<div class="wing-learn-placeholder">
 				<p>上のリンクからウイングを選んでください。</p>
-				<p>現在、詳細解説がある対象は タイプ9（ウイング弱/ほぼ無し）・9w1・9w8・8w9 です。</p>
+				<p>現在、詳細解説がある対象は タイプ8（ウイング弱/ほぼ無し）・8w9・タイプ9（ウイング弱/ほぼ無し）・9w1・9w8 です。</p>
 			</div>
 		`;
 		return;
 	}
 
 	const detail = WING_DETAIL_PROFILES[wingCode];
-	const sectionsMarkup = detail.sections.map((section) => `
-		<section class="wing-learn-section">
-			<h2 class="wing-learn-section-heading">${section.heading}</h2>
-			<p>${section.body}</p>
-		</section>
-	`).join("");
 
 	contentEl.innerHTML = `
-		<h2 class="wing-learn-title">${detail.title}</h2>
-		${sectionsMarkup}
+		<h1 class="wing-learn-title">${detail.title}</h1>
+		${buildSectionsMarkup(detail.sections)}
 	`;
 }

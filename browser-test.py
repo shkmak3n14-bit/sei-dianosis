@@ -59,8 +59,20 @@ TESTS = [
         "name": "wing_learn_9w1",
         "url": f"{BASE}/wing-learn.html?wing=9w1",
         "checks": [
-            ("#wing-learn-content .wing-learn-title", "contains:ウイング1"),
+            ("h1.wing-learn-title", "contains:タイプ9w1（やわらかく整える人）"),
             ("#nav-9w1.is-active", "exists"),
+        ],
+        "actions": [],
+        "after": [],
+    },
+    {
+        "name": "wing_learn_9w8",
+        "url": f"{BASE}/wing-learn.html?wing=9w8",
+        "checks": [
+            ("h1.wing-learn-title", "contains:タイプ9w8（穏やかさと芯の強さ）"),
+            ("#nav-9w8.is-active", "exists"),
+            (".wing-learn-checklist li", "count_gte:5"),
+            (".wing-learn-list", "count_gte:3"),
         ],
         "actions": [],
         "after": [],
