@@ -78,7 +78,7 @@ export function initializeWingLearnPage() {
 		contentEl.innerHTML = `
 			<div class="wing-learn-placeholder">
 				<p>上のリンクからウイングを選んでください。</p>
-				<p>現在、詳細解説がある対象は タイプ8（ウイング弱/ほぼ無し）・8w9・タイプ9（ウイング弱/ほぼ無し）・9w1・9w8 です。</p>
+				<p>現在、詳細解説がある対象は タイプ8（ウイング弱/ほぼ無し）・8w9・タイプ9w弱/ほぼ無し（平和でありたい人）・9w1（やわらかく整える人）・9w8（穏やかで芯の強い人） です。</p>
 			</div>
 		`;
 		return;

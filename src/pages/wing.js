@@ -476,7 +476,7 @@ export const WING_DETAIL_PROFILES = {
 		]
 	},
 	"9-flat": {
-		title: "タイプ9（ウイング弱/ほぼ無し）",
+		title: "タイプ9w弱/ほぼ無し（平和でありたい人）",
 		sections: [
 			{
 				heading: "1. 概要",
@@ -566,7 +566,7 @@ export const WING_DETAIL_PROFILES = {
 		]
 	},
 	"9w8": {
-		title: "タイプ9w8（穏やかさと芯の強さ）",
+		title: "タイプ9w8（穏やかで芯の強い人）",
 		sections: [
 			{
 				heading: "1. 概要",
