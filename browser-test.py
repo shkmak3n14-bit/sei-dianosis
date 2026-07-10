@@ -56,11 +56,44 @@ TESTS = [
         "after": [],
     },
     {
+        "name": "type_learn_9",
+        "url": f"{BASE}/type-learn.html?type=9",
+        "checks": [
+            ("h1.wing-learn-title", "contains:タイプ9（平和でありたい人）"),
+            ("#nav-type-9.is-active", "exists"),
+            (".type-wing-derivatives", "contains:このタイプから派生するウイング"),
+            (".type-wing-derivatives", "contains:9w8"),
+            (".type-wing-derivatives", "contains:9w1"),
+        ],
+        "actions": [],
+        "after": [],
+    },
+    {
+        "name": "type_learn_default",
+        "url": f"{BASE}/type-learn.html",
+        "checks": [
+            ("#type-learn-content", "contains:上のリンクからタイプを選んでください"),
+        ],
+        "actions": [],
+        "after": [],
+    },
+    {
+        "name": "flat_redirect_to_type_learn",
+        "url": f"{BASE}/wing-learn.html?wing=9-flat",
+        "checks": [
+            ("h1.wing-learn-title", "contains:タイプ9（平和でありたい人）"),
+            ("#nav-type-9.is-active", "exists"),
+        ],
+        "actions": [],
+        "after": [],
+    },
+    {
         "name": "wing_learn_9w1",
         "url": f"{BASE}/wing-learn.html?wing=9w1",
         "checks": [
             ("h1.wing-learn-title", "contains:タイプ9w1（やわらかく整える人）"),
             ("#nav-9w1.is-active", "exists"),
+            (".detail-link", "contains:タイプ9（メイン）の詳細へ"),
         ],
         "actions": [],
         "after": [],
@@ -69,7 +102,7 @@ TESTS = [
         "name": "wing_learn_9w8",
         "url": f"{BASE}/wing-learn.html?wing=9w8",
         "checks": [
-            ("h1.wing-learn-title", "contains:タイプ9w8（穏やかさと芯の強さ）"),
+            ("h1.wing-learn-title", "contains:タイプ9w8（穏やかで芯の強い人）"),
             ("#nav-9w8.is-active", "exists"),
             (".wing-learn-checklist li", "count_gte:5"),
             (".wing-learn-list", "count_gte:3"),

@@ -45,6 +45,16 @@ export function initializeWingLearnPage() {
 	const backLink = document.getElementById("wing-learn-back");
 	const params = new URLSearchParams(window.location.search);
 	const wingCode = params.get("wing") ?? "";
+	const flatToType = {
+		"8-flat": 8,
+		"9-flat": 9
+	};
+
+	if (Object.prototype.hasOwnProperty.call(flatToType, wingCode)) {
+		window.location.replace(`type-learn.html?type=${flatToType[wingCode]}`);
+		return;
+	}
+
 	const availableCodes = Object.keys(WING_DETAIL_PROFILES);
 
 	if (backLink) {
@@ -78,16 +88,22 @@ export function initializeWingLearnPage() {
 		contentEl.innerHTML = `
 			<div class="wing-learn-placeholder">
 				<p>上のリンクからウイングを選んでください。</p>
-				<p>現在、詳細解説がある対象は タイプ8（ウイング弱/ほぼ無し）・8w9・タイプ9w弱/ほぼ無し（平和でありたい人）・9w1（やわらかく整える人）・9w8（穏やかで芯の強い人） です。</p>
+				<p>ウイングはメインタイプから派生します。タイプ本体は <a href="type-learn.html">タイプ詳細解説</a> を先に読むと分かりやすいです。</p>
+				<p>現在、ウイング詳細がある対象は 8w9・9w1・9w8 です。</p>
 			</div>
 		`;
 		return;
 	}
 
 	const detail = WING_DETAIL_PROFILES[wingCode];
+	const parentTypeMatch = /^(\d)w\d$/.exec(wingCode);
+	const parentTypeLink = parentTypeMatch
+		? `<p class="detail-link-row"><a href="type-learn.html?type=${parentTypeMatch[1]}" class="detail-link">← タイプ${parentTypeMatch[1]}（メイン）の詳細へ</a></p>`
+		: "";
 
 	contentEl.innerHTML = `
 		<h1 class="wing-learn-title">${detail.title}</h1>
+		${parentTypeLink}
 		${buildSectionsMarkup(detail.sections)}
 	`;
 }

@@ -5,17 +5,24 @@
 import { initializeDiagnosisForm } from "./pages/diagnosis.js";
 import { initializeWPage } from "./pages/wing.js";
 import { initializeWingLearnPage } from "./pages/wingLearn.js";
+import { initializeTypeLearnPage } from "./pages/typeLearn.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 	const startButton = document.getElementById("start-diagnosis");
 	const diagnosisForm = document.getElementById("diagnosis-form");
 	const wPage = document.getElementById("w-page");
 	const wingLearnPage = document.getElementById("wing-learn-page");
+	const typeLearnPage = document.getElementById("type-learn-page");
 
 	if (startButton) {
 		startButton.addEventListener("click", () => {
 			window.location.href = "diagnosis.html";
 		});
+	}
+
+	if (typeLearnPage) {
+		initializeTypeLearnPage();
+		return;
 	}
 
 	if (wingLearnPage) {

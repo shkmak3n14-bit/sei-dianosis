@@ -10,7 +10,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT)
 
 BASE = "http://127.0.0.1:8765"
-PAGES = ["index.html", "diagnosis.html", "w.html", "wing-learn.html"]
+PAGES = ["index.html", "diagnosis.html", "w.html", "wing-learn.html", "type-learn.html"]
 ENTRY = "src/main.js"
 
 

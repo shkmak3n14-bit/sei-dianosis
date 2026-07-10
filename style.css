@@ -172,6 +172,21 @@ h3 {
 	transform: translateY(-1px);
 }
 
+.type-overview-item {
+	margin: 0 0 20px;
+	padding-bottom: 8px;
+}
+
+.type-overview-item .type-detail-btn {
+	padding: 8px 16px;
+	font-size: 0.9rem;
+	margin-top: 4px;
+}
+
+.type-wing-derivatives .sidebar-links {
+	margin-top: 8px;
+}
+
 .progress-panel {
 	position: sticky;
 	top: 12px;
