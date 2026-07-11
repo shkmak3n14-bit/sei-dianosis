@@ -1,75 +1,46 @@
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RadioButton, Text } from 'react-native-paper';
-import { PrimaryButton } from '../components/PrimaryButton';
+import { CharacterPromptHeader } from '../character_view/CharacterPromptHeader';
 import { ScreenContainer } from '../components/ScreenContainer';
+import { TopicChoiceList } from '../components/TopicChoiceList';
 import type { SelfUnderstandingStackParamList } from '../flow/types';
 import { selfUnderstandingMock } from '../mocks/selfUnderstandingMock';
-import { sieColors } from '../theme';
 
 type Props = NativeStackScreenProps<SelfUnderstandingStackParamList, 'UnderstandingCheck'>;
 
-/** 3. 理解度チェック画面（選択式） */
+/**
+ * 3. 理解度チェック画面（選択式）
+ * キャラが「どの部分を詳しく知りたい？」と尋ね、トピックをタップ選択する。
+ */
 export function UnderstandingCheckScreen({ navigation }: Props) {
-  const { understandingQuestion, understandingOptions } = selfUnderstandingMock;
+  const { understandingCheck } = selfUnderstandingMock;
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
+  const handleSelect = (optionId: string) => {
+    setSelectedId(optionId);
+    // タップで選択 → 深掘りへ（選択結果は後で core 連携時に利用）
+    navigation.navigate('DeepDiveCards', { topicId: optionId });
+  };
+
   return (
-    <ScreenContainer>
-      <Text variant="titleMedium" style={styles.title}>
-        {understandingQuestion}
-      </Text>
+    <ScreenContainer contentStyle={styles.content}>
+      <CharacterPromptHeader
+        name={understandingCheck.characterName}
+        bubbleText={understandingCheck.bubbleText}
+      />
 
-      <RadioButton.Group
-        onValueChange={setSelectedId}
-        value={selectedId ?? ''}
-      >
-        <View style={styles.options}>
-          {understandingOptions.map((option) => (
-            <View key={option.id} style={styles.optionRow}>
-              <RadioButton.Item
-                label={option.label}
-                value={option.id}
-                color={sieColors.accent}
-                labelStyle={styles.optionLabel}
-                style={styles.optionItem}
-              />
-            </View>
-          ))}
-        </View>
-      </RadioButton.Group>
-
-      <PrimaryButton
-        label="深掘りカードへ"
-        disabled={!selectedId}
-        onPress={() => navigation.navigate('DeepDiveCards')}
+      <TopicChoiceList
+        options={understandingCheck.options}
+        selectedId={selectedId}
+        onSelect={handleSelect}
       />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: sieColors.text,
-    fontWeight: '700',
-    lineHeight: 26,
-  },
-  options: {
-    gap: 8,
-  },
-  optionRow: {
-    backgroundColor: sieColors.surface,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: sieColors.border,
-    overflow: 'hidden',
-  },
-  optionItem: {
-    paddingVertical: 4,
-  },
-  optionLabel: {
-    color: sieColors.text,
-    fontSize: 15,
+  content: {
+    gap: 20,
   },
 });

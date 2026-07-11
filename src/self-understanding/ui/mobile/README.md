@@ -6,7 +6,7 @@ Expo + React Native + TypeScript + React Native Paper
 
 1. `ResultCardsScreen` — 診断結果カード（入口）
 2. `CharacterIntroScreen` — キャラ登場（下から半画面スライドイン）
-3. `UnderstandingCheckScreen` — 理解度チェック
+3. `UnderstandingCheckScreen` — 理解度チェック（トピック選択）
 4. `DeepDiveCardsScreen` — 深掘りカード
 5. `ChatScreen` — キャラチャット（本体）
 

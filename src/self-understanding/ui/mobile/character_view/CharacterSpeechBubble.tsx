@@ -13,7 +13,7 @@ export function CharacterSpeechBubble({ text, tailAlign = 'center' }: Props) {
   return (
     <View style={styles.wrap}>
       <View style={styles.bubble}>
-        <Text style={styles.text}>{text}</Text>
+        <Text style={[styles.text, tailAlign !== 'center' && styles.textStart]}>{text}</Text>
       </View>
       <View
         style={[
@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  textStart: {
+    textAlign: 'left',
   },
   tail: {
     width: 14,

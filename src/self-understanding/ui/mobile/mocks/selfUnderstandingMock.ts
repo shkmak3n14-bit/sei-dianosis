@@ -33,13 +33,17 @@ export const selfUnderstandingMock: SelfUnderstandingMock = {
     bubbleText: 'この結果、ちょっと難しかった？',
     ctaLabel: '気になる部分を選ぶ',
   },
-  understandingQuestion: 'いまの説明で、いちばんしっくりくるのはどれですか？',
-  understandingOptions: [
-    { id: 'a', label: '性格の説明が近い' },
-    { id: 'b', label: 'こういう時がある、が近い' },
-    { id: 'c', label: '助かる対応が近い' },
-    { id: 'd', label: 'まだピンとこない' },
-  ],
+  understandingCheck: {
+    characterName: 'サイ',
+    bubbleText: 'どの部分を詳しく知りたい？',
+    options: [
+      { id: 'traits', label: '性格の特徴' },
+      { id: 'behavior', label: '行動パターン' },
+      { id: 'stress', label: 'ストレス時の反応' },
+      { id: 'difference', label: '他タイプとの違い' },
+      { id: 'misread', label: '誤解されやすいポイント' },
+    ],
+  },
   deepDiveCards: [
     {
       id: 'values',

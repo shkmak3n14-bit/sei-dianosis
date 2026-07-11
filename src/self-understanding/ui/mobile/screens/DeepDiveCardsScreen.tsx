@@ -11,13 +11,15 @@ import { sieColors } from '../theme';
 type Props = NativeStackScreenProps<SelfUnderstandingStackParamList, 'DeepDiveCards'>;
 
 /** 4. 深掘りカード画面（分割表示） */
-export function DeepDiveCardsScreen({ navigation }: Props) {
-  const { deepDiveCards } = selfUnderstandingMock;
+export function DeepDiveCardsScreen({ navigation, route }: Props) {
+  const { deepDiveCards, understandingCheck } = selfUnderstandingMock;
+  const topicId = route.params?.topicId;
+  const selectedTopic = understandingCheck.options.find((option) => option.id === topicId);
 
   return (
     <ScreenContainer>
       <Text variant="titleMedium" style={styles.title}>
-        もう少しだけ、分けて見てみよう
+        {selectedTopic ? `${selectedTopic.label}を深掘り` : 'もう少しだけ、分けて見てみよう'}
       </Text>
       <Text style={styles.subtitle}>カードごとに、自分の傾向を確認できます。</Text>
 

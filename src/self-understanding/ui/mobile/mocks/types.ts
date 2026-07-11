@@ -34,6 +34,14 @@ export type UnderstandingOption = {
   label: string;
 };
 
+/** 理解度チェック画面用 */
+export type UnderstandingCheck = {
+  characterName: string;
+  /** 例: 「どの部分を詳しく知りたい？」 */
+  bubbleText: string;
+  options: UnderstandingOption[];
+};
+
 export type DeepDiveCard = {
   id: string;
   title: string;
@@ -50,8 +58,7 @@ export type SelfUnderstandingMock = {
   resultCard: DiagnosisResultCard;
   characterPeek: CharacterPeek;
   characterIntro: CharacterIntro;
-  understandingQuestion: string;
-  understandingOptions: UnderstandingOption[];
+  understandingCheck: UnderstandingCheck;
   deepDiveCards: DeepDiveCard[];
   chatMessages: ChatMessage[];
 };
