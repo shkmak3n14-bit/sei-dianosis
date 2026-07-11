@@ -89,7 +89,7 @@ export function initializeWingLearnPage() {
 			<div class="wing-learn-placeholder">
 				<p>上のリンクからウイングを選んでください。</p>
 				<p>ウイングはメインタイプから派生します。タイプ本体は <a href="type-learn.html">タイプ詳細解説</a> を先に読むと分かりやすいです。</p>
-				<p>現在、ウイング詳細がある対象は 8w9・9w1・9w8 です。</p>
+				<p>現在、ウイング詳細がある対象は 8w7・8w9・9w1・9w8 です。</p>
 			</div>
 		`;
 		return;
