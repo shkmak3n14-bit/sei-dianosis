@@ -20,17 +20,19 @@ self-understanding/
 │   ├── questions/
 │   └── diagnosis_engine/
 └── ui/
-    └── mobile/           # スマホ向けUI（実装先行）
-        ├── components/
+    └── mobile/           # Expo + RN Paper（実装先行）→ ui/mobile/README.md
+        ├── screens/      # 5画面（結果カード〜チャット）
         ├── cards/
-        ├── chat/
         ├── character_view/
-        └── flow/
+        ├── chat/
+        ├── components/
+        ├── flow/
+        └── mocks/        # ダミーデータ（後で core 接続）
 ```
 
 ## 実装順序
 
-1. **UI 先行**（`ui/mobile/`）
+1. **UI 先行**（`ui/mobile/`）— mock で画面確認
 2. Core は責務定義を先に記録し、後から実装（`core/README.md`）
 
 ## 制約
