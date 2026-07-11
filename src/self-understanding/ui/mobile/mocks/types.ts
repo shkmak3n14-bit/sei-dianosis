@@ -45,7 +45,16 @@ export type UnderstandingCheck = {
 export type DeepDiveCard = {
   id: string;
   title: string;
-  body: string;
+  /** カード内の箇条書き */
+  bullets: string[];
+};
+
+/** 深掘りカード画面用 */
+export type DeepDiveScreen = {
+  characterName: string;
+  /** 例: 「これ、あなたの経験と近い？」 */
+  bubbleText: string;
+  cards: DeepDiveCard[];
 };
 
 export type ChatMessage = {
@@ -59,6 +68,6 @@ export type SelfUnderstandingMock = {
   characterPeek: CharacterPeek;
   characterIntro: CharacterIntro;
   understandingCheck: UnderstandingCheck;
-  deepDiveCards: DeepDiveCard[];
+  deepDive: DeepDiveScreen;
   chatMessages: ChatMessage[];
 };

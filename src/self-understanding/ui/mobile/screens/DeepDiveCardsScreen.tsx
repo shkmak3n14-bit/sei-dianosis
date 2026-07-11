@@ -1,50 +1,47 @@
 import { StyleSheet, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text } from 'react-native-paper';
 import { DeepDiveCardView } from '../cards/DeepDiveCardView';
-import { PrimaryButton } from '../components/PrimaryButton';
+import { CharacterPeekBubble } from '../character_view/CharacterPeekBubble';
 import { ScreenContainer } from '../components/ScreenContainer';
 import type { SelfUnderstandingStackParamList } from '../flow/types';
 import { selfUnderstandingMock } from '../mocks/selfUnderstandingMock';
-import { sieColors } from '../theme';
 
 type Props = NativeStackScreenProps<SelfUnderstandingStackParamList, 'DeepDiveCards'>;
 
-/** 4. 深掘りカード画面（分割表示） */
-export function DeepDiveCardsScreen({ navigation, route }: Props) {
-  const { deepDiveCards, understandingCheck } = selfUnderstandingMock;
-  const topicId = route.params?.topicId;
-  const selectedTopic = understandingCheck.options.find((option) => option.id === topicId);
+/**
+ * 4. 深掘りカード画面（分割表示）
+ * トピックごとのカードを並べ、画面下でキャラが経験の近さを尋ねる。
+ */
+export function DeepDiveCardsScreen({ navigation }: Props) {
+  const { deepDive } = selfUnderstandingMock;
+
+  const goChat = () => {
+    navigation.navigate('Chat');
+  };
 
   return (
-    <ScreenContainer>
-      <Text variant="titleMedium" style={styles.title}>
-        {selectedTopic ? `${selectedTopic.label}を深掘り` : 'もう少しだけ、分けて見てみよう'}
-      </Text>
-      <Text style={styles.subtitle}>カードごとに、自分の傾向を確認できます。</Text>
-
+    <ScreenContainer
+      contentStyle={styles.content}
+      footer={
+        <CharacterPeekBubble
+          name={deepDive.characterName}
+          bubbleText={deepDive.bubbleText}
+          onPress={goChat}
+        />
+      }
+    >
       <View style={styles.list}>
-        {deepDiveCards.map((card) => (
-          <DeepDiveCardView key={card.id} title={card.title} body={card.body} />
+        {deepDive.cards.map((card) => (
+          <DeepDiveCardView key={card.id} title={card.title} bullets={card.bullets} />
         ))}
       </View>
-
-      <PrimaryButton
-        label="サイと話してみる"
-        onPress={() => navigation.navigate('Chat')}
-      />
     </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    color: sieColors.text,
-    fontWeight: '700',
-  },
-  subtitle: {
-    color: sieColors.muted,
-    marginTop: -8,
+  content: {
+    paddingBottom: 8,
   },
   list: {
     gap: 12,

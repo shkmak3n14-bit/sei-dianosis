@@ -44,23 +44,36 @@ export const selfUnderstandingMock: SelfUnderstandingMock = {
       { id: 'misread', label: '誤解されやすいポイント' },
     ],
   },
-  deepDiveCards: [
-    {
-      id: 'values',
-      title: '大切にしていること',
-      body: '誠実さ、秩序、調和。雑さや不公平さには敏感になりやすいです。',
-    },
-    {
-      id: 'stress',
-      title: 'ストレス時の反応',
-      body: '表では冷静でも、内側で自己批判と不満が溜まり、発言が減ることがあります。',
-    },
-    {
-      id: 'misread',
-      title: '誤解されやすいポイント',
-      body: '融通が利かない・厳しい、と見られやすい一方で、本当は場を守りたい気持ちが強いです。',
-    },
-  ],
+  deepDive: {
+    characterName: 'サイ',
+    bubbleText: 'これ、あなたの経験と近い？',
+    cards: [
+      {
+        id: 'traits',
+        title: '性格の特徴',
+        bullets: [
+          'あなたは正しさと穏やかさを両立しようとする傾向があります',
+          '理由は、場を乱さずに品質を守りたいという価値観が強いからです',
+        ],
+      },
+      {
+        id: 'behavior',
+        title: '行動パターン',
+        bullets: [
+          '基準が曖昧な場面では、まず整えてから動こうとします',
+          '対立を長引かせず、静かに改善案を出すことが多いです',
+        ],
+      },
+      {
+        id: 'stress',
+        title: 'ストレス時の反応',
+        bullets: [
+          'ストレスがかかると表では冷静でも、内側で自己批判が強まりやすくなります',
+          '発言が減り、細部へのこだわりが増えることがあります',
+        ],
+      },
+    ],
+  },
   chatMessages: [
     {
       id: 'm1',
