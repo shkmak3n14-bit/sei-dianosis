@@ -1,6 +1,6 @@
 ﻿/**
  * @deprecated このファイルは後方互換用に残しています。
- * 新しいエントリーポイントは src/main.js です（ES Modules）。
+ * 新しいエントリーポイントは src/type-engine/main.js です（ES Modules）。
  */
 const DIAGNOSIS_STORAGE_KEY = "sieDiagnosisState";
 const WING_STORAGE_KEY = "sieWingState";
