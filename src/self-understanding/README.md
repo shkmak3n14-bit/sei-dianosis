@@ -13,20 +13,25 @@
 
 ```
 self-understanding/
-├── core/                 # ドメインロジック（UI非依存）
-│   ├── logic/            # 判定・進行ロジック
-│   ├── data/             # 静的データ・設定
-│   ├── character/        # キャラクター定義・振る舞い
-│   ├── questions/        # 自己理解用の設問
-│   └── diagnosis_engine/ # 診断エンジン連携・結果解釈
+├── core/                 # ドメインロジック（UI非依存）→ 詳細は core/README.md
+│   ├── logic/
+│   ├── data/
+│   ├── character/
+│   ├── questions/
+│   └── diagnosis_engine/
 └── ui/
-    └── mobile/           # スマホ向けUI
-        ├── components/   # 汎用UI部品
-        ├── cards/        # カード表示
-        ├── chat/         # チャットUI
-        ├── character_view/ # キャラクター表示
-        └── flow/         # 画面フロー・遷移
+    └── mobile/           # スマホ向けUI（実装先行）
+        ├── components/
+        ├── cards/
+        ├── chat/
+        ├── character_view/
+        └── flow/
 ```
+
+## 実装順序
+
+1. **UI 先行**（`ui/mobile/`）
+2. Core は責務定義を先に記録し、後から実装（`core/README.md`）
 
 ## 制約
 
