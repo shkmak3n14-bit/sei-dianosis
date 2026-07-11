@@ -28,8 +28,11 @@ export const selfUnderstandingMock: SelfUnderstandingMock = {
     name: 'サイ',
     bubbleText: '気になるところ、ある？',
   },
-  introMessage:
-    'こんにちは。私はサイ。ここからは、診断結果をもとにあなたの自己理解を少しずつ深めていきましょう。',
+  characterIntro: {
+    name: 'サイ',
+    bubbleText: 'この結果、ちょっと難しかった？',
+    ctaLabel: '気になる部分を選ぶ',
+  },
   understandingQuestion: 'いまの説明で、いちばんしっくりくるのはどれですか？',
   understandingOptions: [
     { id: 'a', label: '性格の説明が近い' },

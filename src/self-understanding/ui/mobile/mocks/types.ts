@@ -20,6 +20,15 @@ export type CharacterPeek = {
   bubbleText: string;
 };
 
+/** キャラ登場画面（導入）用 */
+export type CharacterIntro = {
+  name: string;
+  /** 例: 「この結果、ちょっと難しかった？」 */
+  bubbleText: string;
+  /** 例: 「気になる部分を選ぶ」 */
+  ctaLabel: string;
+};
+
 export type UnderstandingOption = {
   id: string;
   label: string;
@@ -40,7 +49,7 @@ export type ChatMessage = {
 export type SelfUnderstandingMock = {
   resultCard: DiagnosisResultCard;
   characterPeek: CharacterPeek;
-  introMessage: string;
+  characterIntro: CharacterIntro;
   understandingQuestion: string;
   understandingOptions: UnderstandingOption[];
   deepDiveCards: DeepDiveCard[];
