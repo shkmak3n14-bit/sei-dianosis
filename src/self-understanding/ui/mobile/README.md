@@ -8,7 +8,7 @@ Expo + React Native + TypeScript + React Native Paper
 2. `CharacterIntroScreen` — キャラ登場（下から半画面スライドイン）
 3. `UnderstandingCheckScreen` — 理解度チェック（トピック選択）
 4. `DeepDiveCardsScreen` — 深掘りカード（分割表示＋下部吹き出し）
-5. `ChatScreen` — キャラチャット（本体）
+5. `ChatScreen` — キャラチャット（固定アイコン＋選択／自由入力の深掘り）
 
 データは `mocks/` のダミー。後で `core` と接続します。
 

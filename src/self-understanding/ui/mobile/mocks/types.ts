@@ -57,11 +57,8 @@ export type DeepDiveScreen = {
   cards: DeepDiveCard[];
 };
 
-export type ChatMessage = {
-  id: string;
-  role: 'character' | 'user';
-  text: string;
-};
+export type { ChatChoice, ChatFlow, ChatInputMode, ChatMessage, ChatStep } from './chatTypes';
+import type { ChatFlow } from './chatTypes';
 
 export type SelfUnderstandingMock = {
   resultCard: DiagnosisResultCard;
@@ -69,5 +66,5 @@ export type SelfUnderstandingMock = {
   characterIntro: CharacterIntro;
   understandingCheck: UnderstandingCheck;
   deepDive: DeepDiveScreen;
-  chatMessages: ChatMessage[];
+  chatFlow: ChatFlow;
 };

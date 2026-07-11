@@ -74,21 +74,45 @@ export const selfUnderstandingMock: SelfUnderstandingMock = {
       },
     ],
   },
-  chatMessages: [
-    {
-      id: 'm1',
-      role: 'character',
-      text: 'さっきのカードで、気になったところはある？短くで大丈夫だよ。',
-    },
-    {
-      id: 'm2',
-      role: 'user',
-      text: '「こういう時があります」が一番近い気がする。',
-    },
-    {
-      id: 'm3',
-      role: 'character',
-      text: 'なるほど。その「時」って、最近だとどんな場面だった？',
-    },
-  ],
+  chatFlow: {
+    characterName: 'サイ',
+    steps: [
+      {
+        id: 'similarity',
+        prompt: 'この説明、あなたの経験と似てる？',
+        inputMode: 'choice',
+        choices: [
+          { id: 'yes', label: 'はい' },
+          { id: 'no', label: 'いいえ' },
+          { id: 'unsure', label: 'どちらとも言えない' },
+        ],
+      },
+      {
+        id: 'recent',
+        prompt: '最近こういう場面あった？',
+        inputMode: 'choiceOrText',
+        choices: [
+          { id: 'work', label: '仕事であった' },
+          { id: 'home', label: '家であった' },
+          { id: 'other', label: '別の場面だった' },
+        ],
+      },
+      {
+        id: 'feeling',
+        prompt: 'その時どう感じた？',
+        inputMode: 'text',
+      },
+      {
+        id: 'more',
+        prompt: 'その感覚、もう少し話してみる？',
+        inputMode: 'choice',
+        choices: [
+          { id: 'continue', label: 'もう少し話す' },
+          { id: 'pause', label: 'いったんここまで' },
+        ],
+      },
+    ],
+    completedMessage:
+      'ありがとう。今日の手がかりはここまでにしておこう。また続きを話したくなったら戻ってきてね。',
+  },
 };
