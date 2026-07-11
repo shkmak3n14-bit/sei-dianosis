@@ -1,1 +1,1 @@
-# sei-dianosis
+# sie-dianosis
