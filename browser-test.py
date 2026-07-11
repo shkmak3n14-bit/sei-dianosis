@@ -104,8 +104,8 @@ TESTS = [
         "checks": [
             ("h1.wing-learn-title", "contains:タイプ9w8（穏やかで芯の強い人）"),
             ("#nav-9w8.is-active", "exists"),
-            (".wing-learn-checklist li", "count_gte:5"),
-            (".wing-learn-list", "count_gte:3"),
+            (".wing-learn-section-heading", "contains:何を大切にしているか"),
+            (".wing-learn-section-body", "contains:境界線"),
         ],
         "actions": [],
         "after": [],

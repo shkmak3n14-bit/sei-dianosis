@@ -2,6 +2,13 @@
  * ウイング判定ページ（w.html）の初期化・データ・UI操作
  */
 import { TYPE_PROFILES } from "../data/typeProfiles.js";
+import { TYPE1_WING_DETAIL_PROFILES } from "../data/wingDetails/type1.js";
+import { TYPE2_WING_DETAIL_PROFILES } from "../data/wingDetails/type2.js";
+import { TYPE3_WING_DETAIL_PROFILES } from "../data/wingDetails/type3.js";
+import { TYPE4_WING_DETAIL_PROFILES } from "../data/wingDetails/type4.js";
+import { TYPE5_WING_DETAIL_PROFILES } from "../data/wingDetails/type5.js";
+import { TYPE6_WING_DETAIL_PROFILES } from "../data/wingDetails/type6.js";
+import { TYPE7_WING_DETAIL_PROFILES } from "../data/wingDetails/type7.js";
 import { TYPE8_WING_DETAIL_PROFILES } from "../data/wingDetails/type8.js";
 import {
 	loadStoredDiagnosisState,
@@ -489,32 +496,15 @@ export const WING_DETAIL_PROFILES = {
 			},
 			{
 				heading: "3. 何を大切にしているか",
-				items: [
-					"安心",
-					"平和",
-					"自分のペース",
-					"境界線",
-					"身内の安全"
-				],
-				footer: "「揉めたくない」が本音でも、「舐められたくない」「踏み込まれたくない」も同時にあります。"
+				body: "安心、平和、自分のペース、境界線、身内の安全を大切にしやすいです。「揉めたくない」が本音でも、「舐められたくない」「踏み込まれたくない」も同時にあります。"
 			},
 			{
 				heading: "4. 無理が出やすい場面・強く反応しやすいこと",
-				items: [
-					"強引にコントロールされること",
-					"何度も境界を無視されること",
-					"大事な人や自分の居場所が軽く扱われること"
-				],
-				footer: "こうした場面では、普段の穏やかさから急に強い反応へ切り替わることがあります。"
+				body: "強引にコントロールされること、何度も境界を無視されること、大事な人や自分の居場所が軽く扱われることに強く反応しやすいです。こうした場面では、普段の穏やかさから急に強い反応へ切り替わることがあります。"
 			},
 			{
 				heading: "5. 好循環には何が必要か",
-				items: [
-					"安心して力を抜けること",
-					"自分のペースが守られること",
-					"必要な時に遠慮なく「嫌だ」と言えること"
-				],
-				footer: "人に合わせすぎず、自分の感覚も尊重される環境では、9w8の包容力と底力が安定して働きます。"
+				body: "安心して力を抜けること。自分のペースが守られること。必要な時に遠慮なく「嫌だ」と言えること。人に合わせすぎず、自分の感覚も尊重される環境では、9w8の包容力と底力が安定して働きます。"
 			},
 			{
 				heading: "6. 学びには何が必要か",
@@ -526,23 +516,11 @@ export const WING_DETAIL_PROFILES = {
 			},
 			{
 				heading: "8. 悪循環の入口で起きやすいこと",
-				items: [
-					"面倒を避けて先送りする",
-					"言うべきことを言わずに溜める",
-					"普段は大丈夫そうに見えて、内側では鈍い苛立ちがたまる",
-					"限界を超えたところで急に強く出て、自分でも驚くことがある"
-				]
+				body: "面倒を避けて先送りする。言うべきことを言わずに溜める。普段は大丈夫そうに見えて、内側では鈍い苛立ちがたまる。限界を超えたところで急に強く出て、自分でも驚くことがあります。"
 			},
 			{
 				heading: "9. 「今ちょっと危ないかも」と気づくためのチェックポイント",
-				listStyle: "check",
-				items: [
-					"「どうでもいい」と言う回数が増えていないか",
-					"本当は嫌なのに流していないか",
-					"黙っているが、体は固くなっていないか",
-					"小さなことに急にムッとしやすくなっていないか",
-					"人を避けたい気持ちと、強く押し返したい気持ちが同時に出ていないか"
-				]
+				body: "「どうでもいい」と言う回数が増えていないか。本当は嫌なのに流していないか。黙っているが、体は固くなっていないか。小さなことに急にムッとしやすくなっていないか。人を避けたい気持ちと、強く押し返したい気持ちが同時に出ていないか。"
 			},
 			{
 				heading: "10. 悪循環から立て直すために必要なこと",
@@ -550,6 +528,13 @@ export const WING_DETAIL_PROFILES = {
 			}
 		]
 	},
+	...TYPE1_WING_DETAIL_PROFILES,
+	...TYPE2_WING_DETAIL_PROFILES,
+	...TYPE3_WING_DETAIL_PROFILES,
+	...TYPE4_WING_DETAIL_PROFILES,
+	...TYPE5_WING_DETAIL_PROFILES,
+	...TYPE6_WING_DETAIL_PROFILES,
+	...TYPE7_WING_DETAIL_PROFILES,
 	...TYPE8_WING_DETAIL_PROFILES
 };
 
