@@ -376,32 +376,55 @@ function clearDiagnosisResultUI(elements) {
 	}
 }
 
+/**
+ * 設問ごとの回答をタイプ別に収集する。
+ * 未選択は 0。形式: number[][]（タイプ → 設問）
+ */
 function collectAnswers(formElement) {
-	return Array.from(formElement.querySelectorAll("fieldset")).map((fieldset) => {
-		return Array.from(fieldset.querySelectorAll('input[type="radio"]')).reduce((selectedValue, input) => {
-			if (input.checked) {
-				return Number(input.value);
-			}
+	return ENNEAGRAM_TYPES.map((entry) => {
+		return entry.questions.map((_questionText, questionIndex) => {
+			const questionName = `type${entry.type}-q${questionIndex + 1}`;
+			const selected = formElement.querySelector(`input[name="${questionName}"]:checked`);
 
-			return selectedValue;
-		}, 0);
+			return selected ? Number(selected.value) : 0;
+		});
 	});
 }
 
+/**
+ * 設問ごとの回答を復元する。
+ * 旧形式（タイプごとに数値1つ）は、各タイプのQ1だけが選ばれる不具合の原因になるため無視する。
+ */
 function restoreAnswers(formElement, answers) {
-	const fieldsets = Array.from(formElement.querySelectorAll("fieldset"));
+	if (!Array.isArray(answers) || answers.length === 0) {
+		return;
+	}
 
-	fieldsets.forEach((fieldset, index) => {
-		const value = answers[index];
+	// 旧形式: [1, 1, ...] のようにタイプ数ぶんの数値配列
+	if (typeof answers[0] === "number") {
+		return;
+	}
 
-		if (typeof value !== "number") {
+	ENNEAGRAM_TYPES.forEach((entry, typeIndex) => {
+		const typeAnswers = answers[typeIndex];
+
+		if (!Array.isArray(typeAnswers)) {
 			return;
 		}
 
-		const target = fieldset.querySelector(`input[type="radio"][value="${value}"]`);
+		typeAnswers.forEach((value, questionIndex) => {
+			if (typeof value !== "number" || value < 1) {
+				return;
+			}
 
-		if (target) {
-			target.checked = true;
-		}
+			const questionName = `type${entry.type}-q${questionIndex + 1}`;
+			const target = formElement.querySelector(
+				`input[name="${questionName}"][value="${value}"]`
+			);
+
+			if (target) {
+				target.checked = true;
+			}
+		});
 	});
 }

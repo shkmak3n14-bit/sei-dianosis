@@ -170,274 +170,6 @@ const WING_QUESTIONS = {
 	]
 };
 
-const WING_LONG_PROFILES = {
-	"1w9": {
-		title: "タイプ1ウイング9",
-		overview: "正しさを大切にしながら、場の平和も守ろうとするタイプです。厳密さと穏やかさの両立を目指します。",
-		manifestation: "改善点には敏感ですが、強く押すより静かに整える動きになりやすいです。対立は最小化しつつ品質を上げようとします。",
-		values: "誠実さ、秩序、調和、丁寧な進め方を大切にします。",
-		redline: "不誠実な進行、雑な判断、無責任な押し切りが続くと強く消耗します。",
-		goodCycle: "判断基準を言語化し、相手の事情も尊重して合意を作ると、信頼される調整役になります。",
-		learning: "落ち着いて論点を整理できる人（5、6、成熟した9）から学びが深まりやすいです。",
-		growth: "前進を促してくれるが威圧しない人（3、健全な8）と組むと、実行力が伸びます。",
-		stress: "我慢が続くと、表面は静かなまま内側で自己批判と不満が強まります。",
-		check: "『別に大丈夫』と言いながら身体が固い、細部への苛立ちが増える、訂正だけして本音を言えていない。",
-		recovery: "まず不満を1つ短文で言葉にし、次に『修正案を1つ』だけ提案します。溜め込む前の小出しが回復の鍵です。"
-	},
-	"1w2": {
-		title: "タイプ1ウイング2",
-		overview: "正しさと貢献意識が強く、役に立つ形で改善を進めたいタイプです。",
-		manifestation: "基準を守りつつ人を支えるため、指導や伴走に力を出します。頼られると責任がさらに強まります。",
-		values: "正確さ、誠実さ、役に立つこと、相手の成長を重視します。",
-		redline: "感謝のない依頼、丸投げ、善意の利用が続くと怒りと疲労が蓄積します。",
-		goodCycle: "役割範囲を明確にし、支援と自己管理を両立できると、信頼される育成者になります。",
-		learning: "境界線を明確にできる人（8、5、成熟した1）が学びを進めます。",
-		growth: "成果を測りながら前進させる人（3、6）と組むと、支援が持続可能になります。",
-		stress: "『私がやらなければ』が強くなり、過剰介入と自己否定が同時に進みます。",
-		check: "頼まれごとを即答で受ける、疲れているのに手放せない、評価不足に敏感になる。",
-		recovery: "引き受ける前に『今週の余力』を確認し、1件だけ断る練習をします。助け方の上限設定が好転につながります。"
-	},
-	"2w1": {
-		title: "タイプ2ウイング1",
-		overview: "人を支えたい気持ちに、正しさと誠実さの基準が加わるタイプです。",
-		manifestation: "親切さに加え、やり方の丁寧さや公平性まで気を配ります。見えない裏方仕事を引き受けがちです。",
-		values: "思いやり、礼節、役立つこと、良心に沿う行動を大切にします。",
-		redline: "無礼な依頼、配慮の欠如、手順軽視が続くと強い摩耗が起きます。",
-		goodCycle: "助ける範囲と基準を先に共有すると、温かさと品質が両立します。",
-		learning: "感情と境界の両方を扱える人（9、5、成熟した1）が学びを促します。",
-		growth: "実行優先で背中を押す人（3、8）と組むと、先延ばしを防げます。",
-		stress: "『ちゃんと助けなければ』が過熱し、自己否定と他者評価の揺れが強まります。",
-		check: "頼まれていない支援が増える、感謝不足に傷つく、正しさで自分を追い詰める。",
-		recovery: "支援前に『これは私の役割か』を確認し、1日1回は自分の希望を先に言語化します。"
-	},
-	"2w3": {
-		title: "タイプ2ウイング3",
-		overview: "人の役に立ちながら成果も出したい、対人力と実行力の高いタイプです。",
-		manifestation: "気配りとスピードを両立し、期待に応える動きが得意です。評価が追い風になると非常に強いです。",
-		values: "貢献、成果、信頼、好印象の維持を重視します。",
-		redline: "努力の不可視化、曖昧な評価、一方的な要求が続くと消耗が加速します。",
-		goodCycle: "目標と支援範囲を数値化すると、頑張りすぎを防ぎつつ高い成果が出ます。",
-		learning: "冷静に優先順位を引ける人（5、1、6）から学びやすいです。",
-		growth: "率直に本音確認してくれる人（8、4）と組むと自己同一性が安定します。",
-		stress: "必要とされたい気持ちと評価不安が重なり、過活動と空虚感が出やすくなります。",
-		check: "断れない、実績アピールが増える、疲労を隠す、反応待ちで気分が揺れる。",
-		recovery: "成果目標と休息目標を同時に設定し、『頼まれていない追加対応』を1つ減らします。"
-	},
-	"3w2": {
-		title: "タイプ3ウイング2",
-		overview: "達成意欲に対人配慮が加わり、成果と関係を同時に作るタイプです。",
-		manifestation: "相手の期待を読み、役立つ結果を素早く返します。場の空気を掴んで推進役になりやすいです。",
-		values: "成果、貢献、信頼、機会創出を大切にします。",
-		redline: "無意味な停滞、評価の不透明さ、努力の否認でモチベーションが急落します。",
-		goodCycle: "目標と人間関係の両方を設計できると、チーム成果を大きく押し上げます。",
-		learning: "内省を促し本音を扱える人（4、9、成熟した6）が学びを深めます。",
-		growth: "論点を絞る人（1、5）と組むと、速度と精度のバランスが整います。",
-		stress: "成果維持への焦りで感情を切り離し、役割演技が過剰になります。",
-		check: "休んでも頭が止まらない、結果以外の会話が減る、評価への過敏さが増える。",
-		recovery: "毎日5分だけ感情を記録し、結果ではなく『本当に大切な理由』を言葉に戻します。"
-	},
-	"3w4": {
-		title: "タイプ3ウイング4",
-		overview: "成果志向に独自性へのこだわりが加わる、表現力の高い達成タイプです。",
-		manifestation: "実績を出しつつ、他者との差別化や美意識を重視します。質と印象の両方を取りにいきます。",
-		values: "達成、独自性、審美性、自己表現の一貫性を大切にします。",
-		redline: "凡庸化、テンプレ対応、評価の浅さに強い不満が出ます。",
-		goodCycle: "成果基準と創造基準を分けて運用すると、過不足なく力を発揮できます。",
-		learning: "現実的な優先順位を示す人（1、6、5）が実行の安定を助けます。",
-		growth: "受容的で深い対話ができる人（4、9、2）が内面の揺れを整えます。",
-		stress: "比較意識が強まり、承認欲求と自己否定が往復しやすくなります。",
-		check: "見え方調整に時間を使いすぎる、着手が遅れる、批評への防衛が強くなる。",
-		recovery: "『完成度より提出』の小目標を置き、評価軸を3つに固定して振れ幅を減らします。"
-	},
-	"4w3": {
-		title: "タイプ4ウイング3",
-		overview: "感受性の深さと成果への意識を併せ持つ、表現型の実行タイプです。",
-		manifestation: "内面の体験を作品や成果に変換しようとします。反応があると推進力が増します。",
-		values: "本物感、独自性、達成感、他者との意味ある共鳴を重視します。",
-		redline: "表面的評価、比較による矮小化、感性の軽視が続くと失速します。",
-		goodCycle: "感情を素材化し、期限と形式を決めると、創造性が現実成果に結びつきます。",
-		learning: "構造化を支える人（1、5、6）から実務面の学びが得られます。",
-		growth: "実行を促す人（3、8）と、感情を受け止める人（9、2）の両輪が有効です。",
-		stress: "比較と自己否定が強まり、気分依存で行動が止まりやすくなります。",
-		check: "他者反応に気分が支配される、未完了が増える、自己価値が日ごとに乱高下する。",
-		recovery: "感情を書き出した後に『次の具体行動1つ』を必ず実行し、現実接続を戻します。"
-	},
-	"4w5": {
-		title: "タイプ4ウイング5",
-		overview: "深い感情理解と知的探究が結びついた、内省性の高いタイプです。",
-		manifestation: "一人で深く考え、意味を掘り下げる時間を必要とします。表現は厳選された形になりやすいです。",
-		values: "内面の真実、独自の世界観、深い理解、静かな誠実さを重視します。",
-		redline: "浅い共感、過干渉、急な社交圧でエネルギーが急低下します。",
-		goodCycle: "内省時間を確保しつつ、外部との接点を小さく継続すると創造が安定します。",
-		learning: "現実接続を支える人（1、6、成熟した3）から実装面の学びが得られます。",
-		growth: "温かく待てる人（9、2）と論点整理できる人（5）との関係が刺激になります。",
-		stress: "孤立と過思考が進み、行動より解釈に閉じこもりやすくなります。",
-		check: "返信回避、考察だけで終わる、体力低下を無視して内省を続ける。",
-		recovery: "一人時間を守ったうえで、外部に出す行動を1つだけ設定します。未完成共有が回復の導線です。"
-	},
-	"5w4": {
-		title: "タイプ5ウイング4",
-		overview: "分析力に独自の感性が加わる、専門性と個性を併せ持つタイプです。",
-		manifestation: "理解の深さを重視しながら、自分ならではの視点や表現を保持します。",
-		values: "知的整合性、独自性、境界線、集中できる静けさを大切にします。",
-		redline: "表層的議論、感情の押し付け、思考時間の侵害で強く閉じます。",
-		goodCycle: "探究テーマを絞り、定期的に外へ出力すると価値が伝わりやすくなります。",
-		learning: "実行の筋道を示す人（1、3、6）が学びを前進させます。",
-		growth: "受容的対話ができる人（9、2、4）から感情統合の刺激を受けやすいです。",
-		stress: "距離を取りすぎて孤立し、理解は深まるのに現実影響が減ります。",
-		check: "準備中が長期化、共有回避、他者との温度差への苛立ちが増える。",
-		recovery: "『十分理解したら公開』ではなく『途中公開して検証』へ切り替えるのが好転点です。"
-	},
-	"5w6": {
-		title: "タイプ5ウイング6",
-		overview: "知的探究と安全志向が結びついた、精密で慎重な分析タイプです。",
-		manifestation: "情報収集、検証、リスク点検を丁寧に行い、再現性の高い判断を目指します。",
-		values: "正確性、安全性、予測可能性、信頼できる根拠を重視します。",
-		redline: "根拠不明の指示、場当たり運用、検証なしの即断が続くと不安が増大します。",
-		goodCycle: "調査範囲と期限を決めると、精度を保ったまま実行速度を上げられます。",
-		learning: "決断を支える人（8、3、成熟した1）から学びやすいです。",
-		growth: "心理的安全を作る人（9、2）と組むと、共有行動が増えて成果化します。",
-		stress: "不確実性で再確認が止まらず、行動開始が遅れます。",
-		check: "同じ確認を繰り返す、最悪想定が拡大する、対人接点を減らしすぎる。",
-		recovery: "判断期限を先に置き、『必要十分な根拠3点』で着手します。完全性より検証循環を優先します。"
-	},
-	"6w5": {
-		title: "タイプ6ウイング5",
-		overview: "不安管理に分析力が加わる、慎重で論理的な守り手タイプです。",
-		manifestation: "先回りでリスクを検討し、事実確認を丁寧に行います。簡単には信用せず根拠で判断します。",
-		values: "安全、信頼、一貫性、検証可能性を大切にします。",
-		redline: "情報の不透明さ、説明不足、責任の曖昧さが続くと警戒が強まります。",
-		goodCycle: "懸念を構造化して共有できると、チームの事故予防装置として機能します。",
-		learning: "意思決定を前へ進める人（3、8）から実行の学びが得られます。",
-		growth: "受容的で落ち着いた人（9、2）と関わると過緊張が緩みます。",
-		stress: "疑念が連鎖し、確認過多と行動遅延が同時に進みます。",
-		check: "『まだ不十分』が増える、相談先を固定できない、同じ資料を何度も見直す。",
-		recovery: "不安を『事実・推測・対策』に分け、最小実行を1つ決めます。小さな成功で信頼を再構築します。"
-	},
-	"6w7": {
-		title: "タイプ6ウイング7",
-		overview: "安全を求めつつ前向きさも持つ、対話型の現実派タイプです。",
-		manifestation: "不安を一人で抱えず、人と相談しながら動きます。準備しつつ楽しさも確保しようとします。",
-		values: "安心、仲間意識、柔軟性、先回りの備えを重視します。",
-		redline: "孤立、曖昧な指示、サポート不在で不安が急上昇します。",
-		goodCycle: "相談相手と進捗リズムを固定すると、慎重さと行動力が両立します。",
-		learning: "論点を絞る人（1、5、成熟した3）から判断力を学べます。",
-		growth: "挑戦を後押しする人（7、8）と組むと停滞を破りやすいです。",
-		stress: "気分転換で不安を上書きし続け、重要判断を先送りしやすくなります。",
-		check: "予定を詰めすぎる、確認依存が増える、考えを一人で閉じられない。",
-		recovery: "安心行動と前進行動を1つずつ決め、同日に実行します。『備えるだけ』を止めるのが転換点です。"
-	},
-	"7w6": {
-		title: "タイプ7ウイング6",
-		overview: "楽しさ追求に安全確認が加わる、機動力の高いバランスタイプです。",
-		manifestation: "新規性を求めつつ、保険や代替案も準備します。仲間との計画で勢いが出ます。",
-		values: "自由、希望、安心して楽しめる状態、選択肢の確保を重視します。",
-		redline: "拘束、悲観の固定化、逃げ道のない設計が続くと反発が強まります。",
-		goodCycle: "完了条件を先に決めると、発想力が成果へつながります。",
-		learning: "深掘りを促す人（5、1、6）から集中力を学びやすいです。",
-		growth: "実行を牽引する人（3、8）との協働で着地力が高まります。",
-		stress: "不安回避で予定を増やし、注意資源が分散します。",
-		check: "着手は早いが完了が遅い、重い話題を避ける、切替で疲労をごまかす。",
-		recovery: "同時進行を3件以内に絞り、最も重い案件を最初の25分だけ実行します。"
-	},
-	"7w8": {
-		title: "タイプ7ウイング8",
-		overview: "楽しさと推進力が強く、勢いで道を切り開くパワフルなタイプです。",
-		manifestation: "機会を見つけると即行動し、場を動かす力があります。主導権を握るほど力が出ます。",
-		values: "自由、スピード、影響力、体験の濃さを大切にします。",
-		redline: "停滞、過度な管理、選択肢の剥奪で強い反発が出ます。",
-		goodCycle: "勢いに検証役を一人置くと、突破力が成果と信頼に変わります。",
-		learning: "構造と優先順位を示す人（1、5、6）から安定運用を学べます。",
-		growth: "受容的にブレーキをかける人（9、2）と組むと継続力が上がります。",
-		stress: "退屈回避で刺激を追いすぎ、対人圧が上がりやすくなります。",
-		check: "待てない、結論を急ぐ、反論への苛立ちが強い、完了前に次へ飛ぶ。",
-		recovery: "行動前に『目的・副作用・終わり方』を30秒確認し、1つ終えるまで新規着手を止めます。"
-	},
-	"8w7": {
-		title: "タイプ8ウイング7",
-		overview: "強い主導性に機動力が加わる、推進力の高いチャレンジャータイプです。",
-		manifestation: "決断が速く、障害を押し切って前進します。場の停滞を嫌い、方向を明確に示します。",
-		values: "主導権、公正、自由、成果のスピードを重視します。",
-		redline: "支配、欺瞞、責任回避、遅い意思決定が続くと攻勢が強まります。",
-		goodCycle: "率直さに配慮を足すと、強さが保護と育成に変わります。",
-		learning: "受容と間を作れる人（9、2、5）が学びを深めます。",
-		growth: "精度を担保する人（1、6）と組むと長期成果が安定します。",
-		stress: "防衛反応で押し込みが増え、対話より制圧に傾きます。",
-		check: "説明を飛ばす、相手の遅さに過敏、任せるより握る選択が増える。",
-		recovery: "指示前に相手事情を1つ聞き、結論を『共同決定』の形に言い換えます。"
-	},
-	"8w9": {
-		title: "タイプ8ウイング9",
-		overview: "強さと落ち着きを併せ持ち、静かに場を守る統率タイプです。",
-		manifestation: "普段はどっしり構えますが、境界侵害には明確に止めに入ります。感情より態度で意思を示しやすいです。",
-		values: "自立、主導権、平穏、信頼、守る責任を重視します。",
-		redline: "回りくどい操作、境界無視、責任放棄が続くと強い反発が出ます。",
-		goodCycle: "目的と役割を明確化し、強さを保護行動へ使うと周囲の安心が増えます。",
-		learning: "感情の言語化を促す人（2、4、9）から対人の幅を学べます。",
-		growth: "構造と検証を担う人（1、5、6）と組むと判断の再現性が上がります。",
-		stress: "防衛優先で対話が減り、無言の圧や切断行動が増えやすくなります。",
-		check: "相手の話を最後まで聞かない、任せられない、怒りで疲労を覆う。",
-		recovery: "怒りの下にある感情を1語で特定し、要求を『してほしい行動』で具体化します。"
-	},
-	"9w8": {
-		title: "タイプ9ウイング8",
-		overview: "穏やかさを土台にしながら、必要時に強く踏ん張れるタイプです。",
-		manifestation: "普段は合わせられますが、境界が破られると急に強く反応します。重要点では粘り強いです。",
-		values: "安心、平和、自分のペース、境界線、身内の保護を重視します。",
-		redline: "強制、侵入、繰り返しの圧力が続くと内側の怒りが急上昇します。",
-		goodCycle: "早めの本音共有と境界表明ができると、包容力と実行力が同時に活きます。",
-		learning: "論点を静かに明確化する人（1、5、6）から学びが深まります。",
-		growth: "前進を促す人（3、8）と組むと先送りを防げます。",
-		stress: "我慢を重ねて突然強く出る、という反動パターンが起こりやすいです。",
-		check: "『どうでもいい』が増える、返答が遅れる、小刺激に過剰反応する。",
-		recovery: "爆発前に不快感を数値化し、境界線を短く伝えます。小さな自己主張の継続が回復を作ります。"
-	},
-	"9w1": {
-		title: "タイプ9ウイング1",
-		overview: "穏やかさと良心の強さを併せ持ち、静かに整えることを好むタイプです。",
-		manifestation: "対立を避けながら丁寧さを保とうとします。乱れや不誠実さには内心で強く反応します。",
-		values: "平和、誠実、丁寧さ、良心に沿う判断を大切にします。",
-		redline: "雑な進行、急な圧力、理不尽な要求が続くと無力感が蓄積します。",
-		goodCycle: "小さく意見を言う習慣を持つと、調停力と実行力が安定します。",
-		learning: "境界と優先順位を示せる人（1、5、8）から学びが進みます。",
-		growth: "行動を後押しする人（3、6）と組むと停滞を抜けやすくなります。",
-		stress: "本音を飲み込み続け、先延ばしと自己批判が強まります。",
-		check: "『合わせる』が増える、決められない、疲れているのに休めない。",
-		recovery: "今の希望を1文で書き、最優先タスクを1つだけ先に実行します。自己消失を防ぐ小行動が鍵です。"
-	}
-};
-
-function renderWingLongProfile(wingCode) {
-	const profile = WING_LONG_PROFILES[wingCode];
-
-	if (!profile) {
-		return "";
-	}
-
-	const hasDetail = Object.prototype.hasOwnProperty.call(WING_DETAIL_PROFILES, wingCode);
-	const detailLinkMarkup = hasDetail
-		? `<p class="detail-link-row"><a href="wing-learn.html?wing=${encodeURIComponent(wingCode)}" class="detail-link">詳細版を読む →</a></p>`
-		: "";
-
-	return `
-		<article class="report-card">
-			<h3>本文版ウイング解説</h3>
-			${detailLinkMarkup}
-			<p><strong>1. メインタイプ＋ウイング:</strong> ${profile.title}</p>
-			<p><strong>2. 概要:</strong> ${profile.overview}</p>
-			<p><strong>3. ウイングの現れ方:</strong> ${profile.manifestation}</p>
-			<p><strong>4. 何を大切にしているのか:</strong> ${profile.values}</p>
-			<p><strong>5. 無理が出やすい場面:</strong> ${profile.redline}</p>
-			<p><strong>6. 好循環には何が必要か:</strong> ${profile.goodCycle}</p>
-			<p><strong>7. 学びには何が必要か:</strong> ${profile.learning}</p>
-			<p><strong>8. 成長のキッカケ/刺激:</strong> ${profile.growth}</p>
-			<p><strong>9. 悪循環の入口/高ストレス状態:</strong> ${profile.stress}</p>
-			<p><strong>10. 自認チェックポイント:</strong> ${profile.check}</p>
-			<p><strong>11. 悪循環を好転するために必要なこと:</strong> ${profile.recovery}</p>
-		</article>
-	`;
-}
-
 export const WING_DETAIL_PROFILES = {
 	...TYPE1_WING_DETAIL_PROFILES,
 	...TYPE2_WING_DETAIL_PROFILES,
@@ -450,70 +182,65 @@ export const WING_DETAIL_PROFILES = {
 	...TYPE9_WING_DETAIL_PROFILES
 };
 
-function getWingProfileLayerHint(layer) {
-	if (layer === "mobile") {
-		return "要点版。スマホで読みやすい短文表示です。";
+function buildWingDetailSectionBodyMarkup(section) {
+	const parts = [];
+
+	if (section.body) {
+		parts.push(`<p>${section.body}</p>`);
 	}
 
-	if (layer === "card") {
-		return "共有版。関わり方のすり合わせに使いやすい表示です。";
+	if (Array.isArray(section.items) && section.items.length > 0) {
+		const listClass = section.listStyle === "check" ? "wing-learn-checklist" : "wing-learn-list";
+
+		parts.push(`
+			<ul class="${listClass}">
+				${section.items.map((item) => `<li>${item}</li>`).join("")}
+			</ul>
+		`);
 	}
 
-	return "詳細版。10項目の本文をそのまま表示します。";
+	if (section.footer) {
+		parts.push(`<p>${section.footer}</p>`);
+	}
+
+	return parts.join("");
 }
 
-function renderWingMobileProfile(wingCode) {
-	const profile = WING_LONG_PROFILES[wingCode];
+/**
+ * ウイング詳細解説と同じ本文（タイトル＋項目1〜10）を表示する。
+ * 判定結果画面では「←タイプ○（メイン）の詳細へ」は出さない。
+ */
+function renderWingDetailProfile(wingCode) {
+	const detail = WING_DETAIL_PROFILES[wingCode];
 
-	if (!profile) {
-		return "";
+	if (!detail) {
+		return `
+			<article class="report-card">
+				<p>ウイング ${wingCode} の詳細解説は準備中です。</p>
+			</article>
+		`;
 	}
 
+	const sectionsMarkup = (detail.sections ?? [])
+		.map((section) => `
+			<section class="wing-learn-section">
+				<h3 class="wing-learn-section-heading">${section.heading}</h3>
+				<div class="wing-learn-section-body">
+					${buildWingDetailSectionBodyMarkup(section)}
+				</div>
+			</section>
+		`)
+		.join("");
+
 	return `
-		<article class="report-card">
-			<h3>スマホ要約版</h3>
-			<p><strong>タイプ:</strong> ${profile.title}</p>
-			<p><strong>ふだんの傾向:</strong> ${profile.overview} ${profile.manifestation}</p>
-			<p><strong>大切にしていること:</strong> ${profile.values}</p>
-			<p><strong>無理が出やすい場面:</strong> ${profile.redline}</p>
-			<p><strong>しんどい時のサイン:</strong> ${profile.check}</p>
-			<p><strong>好転の一歩:</strong> ${profile.recovery}</p>
+		<article class="report-card type-detail-report">
+			<h3 class="wing-learn-title">${detail.title}</h3>
+			${sectionsMarkup}
 		</article>
 	`;
 }
 
-function renderWingShareCardProfile(wingCode) {
-	const profile = WING_LONG_PROFILES[wingCode];
-
-	if (!profile) {
-		return "";
-	}
-
-	return `
-		<article class="share-card">
-			<h3>共有カード版: ${profile.title}</h3>
-			<p><strong>ふだんの私:</strong> ${profile.overview}</p>
-			<p><strong>誤解されやすいポイント:</strong> ${profile.stress}</p>
-			<p><strong>しんどい時のサイン:</strong> ${profile.check}</p>
-			<p><strong>してほしい関わり方:</strong> ${profile.growth}</p>
-			<p><strong>一言メッセージ:</strong> ${profile.recovery}</p>
-		</article>
-	`;
-}
-
-function renderWingLayerProfile(wingCode, layer) {
-	if (layer === "mobile") {
-		return renderWingMobileProfile(wingCode);
-	}
-
-	if (layer === "card") {
-		return renderWingShareCardProfile(wingCode);
-	}
-
-	return renderWingLongProfile(wingCode);
-}
-
-function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary, layer) {
+function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary) {
 	if (!topWing) {
 		return "";
 	}
@@ -523,14 +250,13 @@ function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, ga
 	const gapLine = gapSummary && typeof gapSummary.gapPercent === "number"
 		? `<p>1位と2位の一致度差: ${gapSummary.gapPercent}%（${gapSummary.label}）</p>`
 		: "";
-	const wingLayerProfile = renderWingLayerProfile(topWing.wingCode, layer);
 
 	return `
 		<p>タイプ${topType}の候補: ${wingCodes.join(" / ")}</p>
 		<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
 		${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
 		${gapLine}
-		${wingLayerProfile}
+		${renderWingDetailProfile(topWing.wingCode)}
 	`;
 }
 
@@ -772,8 +498,6 @@ export function initializeWPage() {
 	const wingResult = document.getElementById("wing-result");
 	const wingResultSummary = document.getElementById("wing-result-summary");
 	const wingResultDetail = document.getElementById("wing-result-detail");
-	const wingProfileLayer = document.getElementById("wing-profile-layer");
-	const wingProfileLayerHint = document.getElementById("wing-profile-layer-hint");
 	const wingHistory = document.getElementById("wing-history");
 	const wingHistorySummary = document.getElementById("wing-history-summary");
 	const wingHistoryCompare = document.getElementById("wing-history-compare");
@@ -795,7 +519,6 @@ export function initializeWPage() {
 
 	const selectedRankIndex = Number.isInteger(storedState.selectedRankIndex) ? storedState.selectedRankIndex : 0;
 	const topResult = storedState.scores[selectedRankIndex] ?? storedState.scores[0];
-	let currentWingResultView = null;
 	const profile = TYPE_PROFILES[topResult.type];
 	const percentage = Math.round((topResult.score / topResult.max) * 100);
 	const wingCodes = TYPE_WING_MAP[topResult.type] ?? [];
@@ -818,33 +541,6 @@ export function initializeWPage() {
 
 	if (wingIntro) {
 		wingIntro.textContent = `タイプ${topResult.type}のウイング候補（${wingCodes.join(" / ")}）に回答してください。`;
-	}
-
-	if (wingProfileLayer) {
-		wingProfileLayer.value = "long";
-
-		if (wingProfileLayerHint) {
-			wingProfileLayerHint.textContent = getWingProfileLayerHint(wingProfileLayer.value);
-		}
-
-		wingProfileLayer.addEventListener("change", () => {
-			if (wingProfileLayerHint) {
-				wingProfileLayerHint.textContent = getWingProfileLayerHint(wingProfileLayer.value);
-			}
-
-			if (!currentWingResultView || !wingResultDetail) {
-				return;
-			}
-
-			wingResultDetail.innerHTML = buildWingResultDetailMarkup(
-				currentWingResultView.topType,
-				currentWingResultView.wingCodes,
-				currentWingResultView.topWing,
-				currentWingResultView.secondWing,
-				currentWingResultView.gapSummary,
-				wingProfileLayer.value
-			);
-		});
 	}
 
 	if (wingHistoryFilter) {
@@ -926,23 +622,13 @@ export function initializeWPage() {
 				wingResultSummary.textContent = `ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
 			}
 
-			currentWingResultView = {
-				topType: topResult.type,
-				wingCodes,
-				topWing,
-				secondWing,
-				gapSummary
-			};
-
 			if (wingResultDetail && topWing) {
-				const selectedLayer = wingProfileLayer ? wingProfileLayer.value : "long";
 				wingResultDetail.innerHTML = buildWingResultDetailMarkup(
 					topResult.type,
 					wingCodes,
 					topWing,
 					secondWing,
-					gapSummary,
-					selectedLayer
+					gapSummary
 				);
 			}
 
@@ -974,23 +660,13 @@ export function initializeWPage() {
 			wingResultSummary.textContent = `前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`;
 		}
 
-		currentWingResultView = {
-			topType: topResult.type,
-			wingCodes,
-			topWing,
-			secondWing,
-			gapSummary
-		};
-
 		if (wingResultDetail && topWing) {
-			const selectedLayer = wingProfileLayer ? wingProfileLayer.value : "long";
 			wingResultDetail.innerHTML = buildWingResultDetailMarkup(
 				topResult.type,
 				wingCodes,
 				topWing,
 				secondWing,
-				gapSummary,
-				selectedLayer
+				gapSummary
 			);
 		}
 
