@@ -2,7 +2,7 @@
  * 診断ページ（diagnosis.html）の初期化とUI操作
  */
 import { ENNEAGRAM_TYPES } from "../data/enneagramTypes.js";
-import { TYPE_PROFILES } from "../data/typeProfiles.js";
+import { TYPE_DETAIL_PROFILES } from "../data/typeDetailProfiles.js";
 import {
 	getCurrentDiagnosisResult,
 	setCurrentDiagnosisResult,
@@ -14,7 +14,6 @@ import {
 	RESPONSE_OPTIONS,
 	getPreviewTypeFromQuery,
 	compareByNormalizedScore,
-	getMaturityLabel,
 	updateAnsweredCount
 } from "../core/utils.js";
 
@@ -240,14 +239,13 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 	});
 
 	const selectedResult = rankedScores[safeRankIndex] ?? null;
-	const profile = selectedResult ? TYPE_PROFILES[selectedResult.type] : null;
+	const detailProfile = selectedResult ? TYPE_DETAIL_PROFILES[selectedResult.type] : null;
 	const cyclePercent = selectedResult ? Math.round((selectedResult.score / selectedResult.max) * 100) : 0;
-	const maturityLabel = getMaturityLabel(cyclePercent);
 	const visibleRanks = Array.from({ length: 3 }, (_, index) => rankedScores[index] ?? null);
 
 	if (elements.resultDetail) {
-		elements.resultDetail.innerHTML = selectedResult && profile
-			? buildDetailedReportMarkup(selectedResult, profile, cyclePercent, maturityLabel, safeRankIndex)
+		elements.resultDetail.innerHTML = selectedResult && detailProfile
+			? buildDetailedReportMarkup(detailProfile, cyclePercent, safeRankIndex)
 			: `<article class="report-card"><p>該当するタイプがありません。</p></article>`;
 	}
 
@@ -311,58 +309,51 @@ function getRankedScores(scores) {
 	});
 }
 
-function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturityLabel, selectedRankIndex) {
+function buildDetailSectionBodyMarkup(section) {
+	const parts = [];
+
+	if (section.body) {
+		parts.push(`<p>${section.body}</p>`);
+	}
+
+	if (Array.isArray(section.items) && section.items.length > 0) {
+		const listClass = section.listStyle === "check" ? "wing-learn-checklist" : "wing-learn-list";
+
+		parts.push(`
+			<ul class="${listClass}">
+				${section.items.map((item) => `<li>${item}</li>`).join("")}
+			</ul>
+		`);
+	}
+
+	if (section.footer) {
+		parts.push(`<p>${section.footer}</p>`);
+	}
+
+	return parts.join("");
+}
+
+/**
+ * 学習メニュー「タイプ詳細解説」と同じ本文（項目1〜10）を表示する。
+ * ウイング診断前のため「このタイプから派生するウイング」は含めない。
+ */
+function buildDetailedReportMarkup(detailProfile, cyclePercent, selectedRankIndex) {
+	const sectionsMarkup = (detailProfile.sections ?? [])
+		.map((section) => `
+			<section class="wing-learn-section">
+				<h3 class="wing-learn-section-heading">${section.heading}</h3>
+				<div class="wing-learn-section-body">
+					${buildDetailSectionBodyMarkup(section)}
+				</div>
+			</section>
+		`)
+		.join("");
+
 	return `
-		<article class="report-card">
-			<p class="report-rank">${selectedRankIndex + 1}位</p>
-			<h3>タイプNo</h3>
-			<p>タイプ${dominantType.type}</p>
-
-			<h3>タイプ名（完全でありたい人など）</h3>
-			<p>タイプ${dominantType.type}（${profile.title}）</p>
-
-			<h3>200字概要</h3>
-			<p>${profile.overview}</p>
-
-			<h3>センター（本能・感情・思考）と理由</h3>
-			<p>${profile.center}</p>
-			<p>${profile.centerReason}</p>
-
-			<h3>大切にしているもの／レッドライン</h3>
-			<p>${profile.valuesRedline}</p>
-
-			<h3>認知のクセ（そのタイプが世界をどう見ているか）</h3>
-			<p>${profile.cognitiveBias}</p>
-
-			<h3>幼少期に形成されやすいコアストーリー</h3>
-			<p>${profile.coreStory}</p>
-
-			<h3>他者からどう見られやすいか（外的印象）</h3>
-			<p>${profile.externalImpression}</p>
-
-			<h3>好循環でのあなた</h3>
-			<p>${profile.goodCycle}</p>
-
-			<h3>悪循環でのあなた</h3>
-			<p>${profile.badCycle}</p>
-
-			<h3>ストレス時の矢／成長時の矢</h3>
-			<p>${profile.arrows}</p>
-
-			<h3>一致度（%）</h3>
-			<p>${cyclePercent}%</p>
-
-			<h3>強みの活かし方（実践例）</h3>
-			<p>${profile.strengthPractice}</p>
-
-			<h3>コミュニケーションの相性（良い／悪い）</h3>
-			<p>${profile.compatibility}</p>
-
-			<h3>何をすれば好転するか（具体的アドバイス）</h3>
-			<p>${profile.advice}</p>
-
-			<h3>成熟度レベルの簡易指標</h3>
-			<p>${maturityLabel}</p>
+		<article class="report-card type-detail-report">
+			<p class="report-rank">${selectedRankIndex + 1}位（一致度 ${cyclePercent}%）</p>
+			<h3 class="wing-learn-title">${detailProfile.title}</h3>
+			${sectionsMarkup}
 		</article>
 	`;
 }
