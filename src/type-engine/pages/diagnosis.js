@@ -22,8 +22,6 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	const answeredCountElement = document.getElementById("answered-count");
 	const totalCountElement = document.getElementById("total-count");
 	const resultSection = document.getElementById("diagnosis-result");
-	const resultSummary = document.getElementById("result-summary");
-	const resultRankNav = document.getElementById("result-rank-nav");
 	const resultDetail = document.getElementById("result-detail");
 	const resultCards = document.getElementById("result-cards");
 	const resultActions = document.getElementById("result-actions");
@@ -32,6 +30,12 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	const acceptButton = document.getElementById("diagnosis-accept-btn");
 	const totalQuestions = ENNEAGRAM_TYPES.reduce((sum, entry) => sum + entry.questions.length, 0);
 	const previewType = getPreviewTypeFromQuery();
+	const resultElements = {
+		resultSection,
+		resultDetail,
+		resultCards,
+		resultActions
+	};
 
 	if (totalCountElement) {
 		totalCountElement.textContent = String(totalQuestions);
@@ -40,14 +44,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	if (previewType) {
 		const previewState = createPreviewResultState(previewType);
 		setCurrentDiagnosisResult(previewState);
-		renderDiagnosisResult(previewState, 0, {
-			resultSection,
-			resultSummary,
-			resultRankNav,
-			resultDetail,
-			resultCards,
-			resultActions
-		});
+		renderDiagnosisResult(previewState, 0, resultElements);
 
 		if (diagnosisForm) {
 			diagnosisForm.hidden = true;
@@ -62,10 +59,6 @@ export function initializeDiagnosisForm(diagnosisForm) {
 
 		if (actions) {
 			actions.hidden = true;
-		}
-
-		if (resultSummary) {
-			resultSummary.textContent = `タイプ${previewType}のプレビュー結果を表示しています。`;
 		}
 
 		return;
@@ -116,7 +109,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	});
 
 	diagnosisForm.addEventListener("reset", () => {
-		clearDiagnosisResultUI({ resultSection, resultSummary, resultRankNav, resultDetail, resultCards, resultActions });
+		clearDiagnosisResultUI(resultElements);
 		setCurrentDiagnosisResult(null);
 		clearStoredDiagnosisState();
 
@@ -184,31 +177,19 @@ export function initializeDiagnosisForm(diagnosisForm) {
 		});
 
 		scores.sort(compareByNormalizedScore);
+		const rankedScores = getRankedScores(scores);
 		const answers = collectAnswers(diagnosisForm);
-		const topThree = scores.slice(0, 3);
 		setCurrentDiagnosisResult({
-			scores,
+			scores: rankedScores,
 			answers,
 			selectedRankIndex: 0
 		});
 		saveDiagnosisState(getCurrentDiagnosisResult());
-
-		if (resultSummary) {
-			resultSummary.textContent = `一致度が最も高いのは タイプ${topThree[0].type}（${topThree[0].name}）です。2位・3位の結果は上部リンクで切り替えられます。`;
-		}
-
-		renderDiagnosisResult(getCurrentDiagnosisResult(), 0, {
-			resultSection,
-			resultSummary,
-			resultRankNav,
-			resultDetail,
-			resultCards,
-			resultActions
-		});
+		renderDiagnosisResult(getCurrentDiagnosisResult(), 0, resultElements);
 	});
 
-	if (resultRankNav) {
-		resultRankNav.addEventListener("click", (event) => {
+	if (resultCards) {
+		resultCards.addEventListener("click", (event) => {
 			const link = event.target.closest("a[data-rank]");
 
 			if (!link || !getCurrentDiagnosisResult()) {
@@ -217,14 +198,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 
 			event.preventDefault();
 			const selectedRankIndex = Number(link.dataset.rank);
-			renderDiagnosisResult(getCurrentDiagnosisResult(), selectedRankIndex, {
-				resultSection,
-				resultSummary,
-				resultRankNav,
-				resultDetail,
-				resultCards,
-				resultActions
-			});
+			renderDiagnosisResult(getCurrentDiagnosisResult(), selectedRankIndex, resultElements);
 		});
 	}
 }
@@ -256,33 +230,40 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 		return;
 	}
 
+	const rankedScores = getRankedScores(resultState.scores);
+	const safeRankIndex = rankedScores[selectedRankIndex] ? selectedRankIndex : 0;
+
 	setCurrentDiagnosisResult({
 		...resultState,
-		selectedRankIndex
+		scores: rankedScores,
+		selectedRankIndex: safeRankIndex
 	});
 
-	const selectedResult = resultState.scores[selectedRankIndex] ?? resultState.scores[0];
-	const profile = TYPE_PROFILES[selectedResult.type];
-	const cyclePercent = Math.round((selectedResult.score / selectedResult.max) * 100);
+	const selectedResult = rankedScores[safeRankIndex] ?? null;
+	const profile = selectedResult ? TYPE_PROFILES[selectedResult.type] : null;
+	const cyclePercent = selectedResult ? Math.round((selectedResult.score / selectedResult.max) * 100) : 0;
 	const maturityLabel = getMaturityLabel(cyclePercent);
-	const visibleRanks = resultState.scores.slice(0, 3);
+	const visibleRanks = Array.from({ length: 3 }, (_, index) => rankedScores[index] ?? null);
 
-	if (elements.resultRankNav) {
-		elements.resultRankNav.innerHTML = visibleRanks
-			.map((item, index) => {
-				const activeClass = index === selectedRankIndex ? "is-active" : "";
-				return `<a href="#diagnosis-result" class="rank-link ${activeClass}" data-rank="${index}">${index + 1}位を見る</a>`;
-			})
-			.join("");
-	}
-
-	if (elements.resultDetail && profile) {
-		elements.resultDetail.innerHTML = buildDetailedReportMarkup(selectedResult, profile, cyclePercent, maturityLabel, selectedRankIndex);
+	if (elements.resultDetail) {
+		elements.resultDetail.innerHTML = selectedResult && profile
+			? buildDetailedReportMarkup(selectedResult, profile, cyclePercent, maturityLabel, safeRankIndex)
+			: `<article class="report-card"><p>該当するタイプがありません。</p></article>`;
 	}
 
 	if (elements.resultCards) {
 		elements.resultCards.innerHTML = visibleRanks
 			.map((item, index) => {
+				if (!item) {
+					return `
+						<article class="result-card">
+							<h3>${index + 1}位 該当なし</h3>
+							<p class="score">- / - 点</p>
+							<p>一致度: -</p>
+						</article>
+					`;
+				}
+
 				const percentage = Math.round((item.score / item.max) * 100);
 
 				return `
@@ -298,13 +279,36 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 	}
 
 	if (elements.resultActions) {
-		elements.resultActions.hidden = false;
+		elements.resultActions.hidden = !selectedResult;
 	}
 
 	if (elements.resultSection) {
 		elements.resultSection.hidden = false;
 		elements.resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
 	}
+}
+
+/**
+ * 「ほとんどない」のみのタイプは順位対象外にする。
+ * （最低点だけのタイプは一致度25%になり、見かけ上の2位・3位になってしまうため）
+ */
+function getRankedScores(scores) {
+	if (!Array.isArray(scores)) {
+		return [];
+	}
+
+	const minOptionValue = RESPONSE_OPTIONS[0]?.value ?? 1;
+
+	return scores.filter((entry) => {
+		if (!entry || !entry.max) {
+			return false;
+		}
+
+		const questionCount = entry.max / RESPONSE_OPTIONS.length;
+		const minimumScore = questionCount * minOptionValue;
+
+		return entry.score > minimumScore;
+	});
 }
 
 function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturityLabel, selectedRankIndex) {
@@ -366,14 +370,6 @@ function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturity
 function clearDiagnosisResultUI(elements) {
 	if (elements.resultSection) {
 		elements.resultSection.hidden = true;
-	}
-
-	if (elements.resultSummary) {
-		elements.resultSummary.textContent = "";
-	}
-
-	if (elements.resultRankNav) {
-		elements.resultRankNav.innerHTML = "";
 	}
 
 	if (elements.resultDetail) {
