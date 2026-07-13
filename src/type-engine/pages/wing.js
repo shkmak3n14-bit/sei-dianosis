@@ -24,6 +24,7 @@ import {
 	compareByNormalizedScore,
 	formatHistoryDate
 } from "../core/utils.js";
+import { classifyWingResult } from "../core/wingClassification.js";
 
 const TYPE_WING_MAP = {
 	1: ["1w9", "1w2"],
@@ -240,7 +241,7 @@ function renderWingDetailProfile(wingCode) {
 	`;
 }
 
-function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary) {
+function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary, summaryText) {
 	if (!topWing) {
 		return "";
 	}
@@ -250,13 +251,19 @@ function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, ga
 	const gapLine = gapSummary && typeof gapSummary.gapPercent === "number"
 		? `<p>1位と2位の一致度差: ${gapSummary.gapPercent}%（${gapSummary.label}）</p>`
 		: "";
+	const heading =
+		summaryText ||
+		`ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
 
 	return `
-		<p>タイプ${topType}の候補: ${wingCodes.join(" / ")}</p>
-		<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
-		${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
-		${gapLine}
 		${renderWingDetailProfile(topWing.wingCode)}
+		<div class="wing-score-summary">
+			<p>${heading}</p>
+			<p>タイプ${topType}の候補: ${wingCodes.join(" / ")}</p>
+			<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
+			${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
+			${gapLine}
+		</div>
 	`;
 }
 
@@ -589,17 +596,32 @@ export function initializeWPage() {
 			const gapSummary = getWingGapSummary(wingScores);
 			const topWing = gapSummary ? gapSummary.topWing : wingScores[0];
 			const secondWing = gapSummary ? gapSummary.secondWing : wingScores[1];
+			const classification = classifyWingResult({
+				mainType: topResult.type,
+				topWing,
+				secondWing,
+				gapPercent: gapSummary ? gapSummary.gapPercent : null
+			});
 			const wingState = {
 				type: topResult.type,
 				wings: wingCodes,
 				scores: wingScores,
-				answers: collectWingAnswers(wingForm, wingCodes)
+				answers: collectWingAnswers(wingForm, wingCodes),
+				classification
 			};
 			const historyEntry = {
 				type: topResult.type,
 				createdAt: new Date().toISOString(),
 				topWingCode: topWing ? topWing.wingCode : "",
 				gapPercent: gapSummary ? gapSummary.gapPercent : null,
+				classification: classification
+					? {
+							classification: classification.classification,
+							strengthBand: classification.strengthBand,
+							profileKey: classification.profileKey,
+							gapPercent: classification.gapPercent
+						}
+					: null,
 				scores: wingScores.map((entry) => ({
 					wingCode: entry.wingCode,
 					score: entry.score,
@@ -618,8 +640,9 @@ export function initializeWPage() {
 				historyFilterHint: wingHistoryFilterHint
 			}, wingHistoryFilter ? wingHistoryFilter.value : "current");
 
-			if (wingResultSummary && topWing) {
-				wingResultSummary.textContent = `ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
+			if (wingResultSummary) {
+				wingResultSummary.textContent = "";
+				wingResultSummary.hidden = true;
 			}
 
 			if (wingResultDetail && topWing) {
@@ -628,7 +651,8 @@ export function initializeWPage() {
 					wingCodes,
 					topWing,
 					secondWing,
-					gapSummary
+					gapSummary,
+					`ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`
 				);
 			}
 
@@ -655,9 +679,25 @@ export function initializeWPage() {
 		const topWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[0] : null;
 		const secondWing = Array.isArray(storedWingState.scores) ? storedWingState.scores[1] : null;
 		const gapSummary = getWingGapSummary(Array.isArray(storedWingState.scores) ? storedWingState.scores : []);
+		const classification =
+			storedWingState.classification ??
+			classifyWingResult({
+				mainType: topResult.type,
+				topWing,
+				secondWing,
+				gapPercent: gapSummary ? gapSummary.gapPercent : null
+			});
 
-		if (wingResultSummary && topWing) {
-			wingResultSummary.textContent = `前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`;
+		if (!storedWingState.classification && classification) {
+			saveWingState({
+				...storedWingState,
+				classification
+			});
+		}
+
+		if (wingResultSummary) {
+			wingResultSummary.textContent = "";
+			wingResultSummary.hidden = true;
 		}
 
 		if (wingResultDetail && topWing) {
@@ -666,7 +706,8 @@ export function initializeWPage() {
 				wingCodes,
 				topWing,
 				secondWing,
-				gapSummary
+				gapSummary,
+				`前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`
 			);
 		}
 
