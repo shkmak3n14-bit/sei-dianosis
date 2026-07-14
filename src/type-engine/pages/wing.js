@@ -2,6 +2,7 @@
  * ウイング判定ページ（w.html）の初期化・データ・UI操作
  */
 import { TYPE_PROFILES } from "../data/typeProfiles.js";
+import { TYPE_DETAIL_PROFILES } from "../data/typeDetailProfiles.js";
 import { TYPE1_WING_DETAIL_PROFILES } from "../data/wingDetails/type1.js";
 import { TYPE2_WING_DETAIL_PROFILES } from "../data/wingDetails/type2.js";
 import { TYPE3_WING_DETAIL_PROFILES } from "../data/wingDetails/type3.js";
@@ -208,16 +209,88 @@ function buildWingDetailSectionBodyMarkup(section) {
 }
 
 /**
- * ウイング詳細解説と同じ本文（タイトル＋項目1〜10）を表示する。
+ * 分類結果に応じたウイング説明を表示する。
+ * - 強・中: 分類ラベルの直後に強度説明、その後に方向ウイング本文
+ * - ○w弱（ほぼ無し）: 強度説明の下に【再掲】＋メインタイプ詳細
+ * - ○w○（弱）で flat 本文未整備: 準備中表示
  * 判定結果画面では「←タイプ○（メイン）の詳細へ」は出さない。
  */
-function renderWingDetailProfile(wingCode) {
-	const detail = WING_DETAIL_PROFILES[wingCode];
-
-	if (!detail) {
+function renderWingDetailProfile(classification) {
+	if (!classification) {
 		return `
 			<article class="report-card">
-				<p>ウイング ${wingCode} の詳細解説は準備中です。</p>
+				<p>ウイング分類結果がありません。</p>
+			</article>
+		`;
+	}
+
+	const profileKey = classification.profileKey;
+	const detail = WING_DETAIL_PROFILES[profileKey];
+	const classificationLabel = classification.classification;
+	const isAlmostNoneFlat =
+		classification.strengthBand === "almost_none" ||
+		String(classificationLabel).includes("w弱（ほぼ無し）");
+	const strengthNoteMarkup =
+		classification.appendStrengthNote || isAlmostNoneFlat
+			? `
+			<section class="wing-learn-section wing-strength-note">
+				<h3 class="wing-learn-section-heading">ウイング強度</h3>
+				<div class="wing-learn-section-body">
+					<p>この結果のウイング強度は「${classification.strengthLabel}」です。${classification.strengthDescription}状態です。</p>
+				</div>
+			</section>
+		`
+			: "";
+
+	if (isAlmostNoneFlat) {
+		const typeDetail = TYPE_DETAIL_PROFILES[classification.mainType];
+		const typeTitle = typeDetail?.title ?? `タイプ${classification.mainType}`;
+		const typeSectionsMarkup = typeDetail
+			? (typeDetail.sections ?? [])
+					.map((section) => `
+			<section class="wing-learn-section">
+				<h3 class="wing-learn-section-heading">${section.heading}</h3>
+				<div class="wing-learn-section-body">
+					${buildWingDetailSectionBodyMarkup(section)}
+				</div>
+			</section>
+		`)
+					.join("")
+			: `
+			<section class="wing-learn-section">
+				<div class="wing-learn-section-body">
+					<p>このタイプの詳細解説は準備中です。</p>
+				</div>
+			</section>
+		`;
+
+		return `
+			<article class="report-card type-detail-report">
+				<p class="report-rank">${classificationLabel}</p>
+				${strengthNoteMarkup}
+				<p class="wing-reprint-label">【再掲】</p>
+				<h3 class="wing-learn-title">${typeTitle}</h3>
+				${typeSectionsMarkup}
+			</article>
+		`;
+	}
+
+	if (!detail) {
+		const fallbackTitle =
+			classification.strengthBand === "weak"
+				? `タイプ${classification.mainType}w弱`
+				: classificationLabel;
+
+		return `
+			<article class="report-card type-detail-report">
+				<p class="report-rank">${classificationLabel}</p>
+				${strengthNoteMarkup}
+				<h3 class="wing-learn-title">${fallbackTitle}</h3>
+				<section class="wing-learn-section">
+					<div class="wing-learn-section-body">
+						<p>この分類の詳細解説は準備中です（フェーズ3で追加予定）。</p>
+					</div>
+				</section>
 			</article>
 		`;
 	}
@@ -235,13 +308,15 @@ function renderWingDetailProfile(wingCode) {
 
 	return `
 		<article class="report-card type-detail-report">
+			<p class="report-rank">${classificationLabel}</p>
+			${strengthNoteMarkup}
 			<h3 class="wing-learn-title">${detail.title}</h3>
 			${sectionsMarkup}
 		</article>
 	`;
 }
 
-function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary, summaryText) {
+function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, gapSummary, summaryText, classification) {
 	if (!topWing) {
 		return "";
 	}
@@ -251,14 +326,20 @@ function buildWingResultDetailMarkup(topType, wingCodes, topWing, secondWing, ga
 	const gapLine = gapSummary && typeof gapSummary.gapPercent === "number"
 		? `<p>1位と2位の一致度差: ${gapSummary.gapPercent}%（${gapSummary.label}）</p>`
 		: "";
+	const classificationLine = classification
+		? `<p>内部分類: ${classification.classification}</p>`
+		: "";
 	const heading =
 		summaryText ||
-		`ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`;
+		(classification
+			? `ウイング判定の結果は ${classification.classification} です。`
+			: `ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`);
 
 	return `
-		${renderWingDetailProfile(topWing.wingCode)}
+		${renderWingDetailProfile(classification)}
 		<div class="wing-score-summary">
 			<p>${heading}</p>
+			${classificationLine}
 			<p>タイプ${topType}の候補: ${wingCodes.join(" / ")}</p>
 			<p>1位: ${topWing.wingCode}（${topWing.score} / ${topWing.max} 点, 一致度 ${topPercent}%）</p>
 			${secondWing ? `<p>2位: ${secondWing.wingCode}（${secondWing.score} / ${secondWing.max} 点, 一致度 ${secondPercent}%）</p>` : ""}
@@ -652,7 +733,8 @@ export function initializeWPage() {
 					topWing,
 					secondWing,
 					gapSummary,
-					`ウイング判定では、一致度が最も高いのは ${topWing.wingCode} です。`
+					`ウイング判定の結果は ${classification.classification} です。`,
+					classification
 				);
 			}
 
@@ -707,7 +789,8 @@ export function initializeWPage() {
 				topWing,
 				secondWing,
 				gapSummary,
-				`前回のウイング判定では、一致度が最も高かったのは ${topWing.wingCode} でした。`
+				`前回のウイング判定結果は ${classification.classification} でした。`,
+				classification
 			);
 		}
 

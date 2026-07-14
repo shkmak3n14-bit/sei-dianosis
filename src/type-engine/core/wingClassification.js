@@ -123,6 +123,7 @@ export function classifyWingResult(input) {
 	const usesFlatProfile = strengthBand === "weak";
 	const profileKey = usesFlatProfile ? flatKey : directedWingCode;
 	const appendStrengthNote = strengthBand === "strong" || strengthBand === "medium";
+	const strengthDescription = getDirectedStrengthDescription(direction, strengthBand);
 
 	return {
 		version: 1,
@@ -131,12 +132,12 @@ export function classifyWingResult(input) {
 		strength,
 		strengthBand,
 		strengthLabel,
-		strengthDescription: bandMeta.description,
+		strengthDescription,
 		classification,
 		classificationKey: `${directedWingCode}_${strengthBand}`,
 		/** 説明文データ参照キー（フェーズ2で使用）。弱は ○-flat */
 		profileKey,
-		/** 強・中のとき説明文末尾に強度説明を足す（フェーズ2） */
+		/** 強・中のとき分類ラベル直後に強度説明を出す（フェーズ2） */
 		appendStrengthNote,
 		topWingCode: topWing.wingCode,
 		secondWingCode: secondWing?.wingCode ?? null,
@@ -144,6 +145,22 @@ export function classifyWingResult(input) {
 		isClose: false,
 		reason: "directed"
 	};
+}
+
+function getDirectedStrengthDescription(direction, strengthBand) {
+	if (strengthBand === "strong") {
+		return `${direction}の影響が非常に強い`;
+	}
+
+	if (strengthBand === "medium") {
+		return `${direction}の影響が明確にある`;
+	}
+
+	if (strengthBand === "weak") {
+		return `${direction}の影響が少しある`;
+	}
+
+	return WING_STRENGTH_BANDS.almost_none.description;
 }
 
 function createFlatResult({ mainType, topWing, secondWing, gapPercent, strength, reason }) {

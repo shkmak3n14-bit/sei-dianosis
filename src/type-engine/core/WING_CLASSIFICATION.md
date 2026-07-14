@@ -22,7 +22,14 @@ const c = loadWingClassificationForSelfUnderstanding();
 | 中 | 0.26〜0.60 |
 | 強 | 0.61〜1.00 |
 
-## profileKey（説明文選択・フェーズ2で使用）
+## profileKey（説明文選択・フェーズ2）
 
 - 強・中 → `9w8` / `9w1` など（`appendStrengthNote: true`）
+  - 表示: 分類ラベル（例: `9w8（中）`）＋強度説明＋ウイング本文
 - 弱・ほぼ無し → `9-flat` など（説明文変更なし）
+  - 表示: 分類ラベル（例: `9w8（弱）` / `9w弱（ほぼ無し）`）＋ flat 本文
+  - ※ flat 本文未整備のタイプは「準備中」表示（フェーズ3）
+
+## フェーズ2 表示
+
+ウイング判定結果画面で `classification` を使って説明文を切り替える。
