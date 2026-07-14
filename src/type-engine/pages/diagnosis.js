@@ -2,7 +2,7 @@
  * 診断ページ（diagnosis.html）の初期化とUI操作
  */
 import { ENNEAGRAM_TYPES } from "../data/enneagramTypes.js";
-import { TYPE_PROFILES } from "../data/typeProfiles.js";
+import { TYPE_DETAIL_PROFILES } from "../data/typeDetailProfiles.js";
 import {
 	getCurrentDiagnosisResult,
 	setCurrentDiagnosisResult,
@@ -14,7 +14,6 @@ import {
 	RESPONSE_OPTIONS,
 	getPreviewTypeFromQuery,
 	compareByNormalizedScore,
-	getMaturityLabel,
 	updateAnsweredCount
 } from "../core/utils.js";
 
@@ -22,8 +21,6 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	const answeredCountElement = document.getElementById("answered-count");
 	const totalCountElement = document.getElementById("total-count");
 	const resultSection = document.getElementById("diagnosis-result");
-	const resultSummary = document.getElementById("result-summary");
-	const resultRankNav = document.getElementById("result-rank-nav");
 	const resultDetail = document.getElementById("result-detail");
 	const resultCards = document.getElementById("result-cards");
 	const resultActions = document.getElementById("result-actions");
@@ -32,6 +29,12 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	const acceptButton = document.getElementById("diagnosis-accept-btn");
 	const totalQuestions = ENNEAGRAM_TYPES.reduce((sum, entry) => sum + entry.questions.length, 0);
 	const previewType = getPreviewTypeFromQuery();
+	const resultElements = {
+		resultSection,
+		resultDetail,
+		resultCards,
+		resultActions
+	};
 
 	if (totalCountElement) {
 		totalCountElement.textContent = String(totalQuestions);
@@ -40,14 +43,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	if (previewType) {
 		const previewState = createPreviewResultState(previewType);
 		setCurrentDiagnosisResult(previewState);
-		renderDiagnosisResult(previewState, 0, {
-			resultSection,
-			resultSummary,
-			resultRankNav,
-			resultDetail,
-			resultCards,
-			resultActions
-		});
+		renderDiagnosisResult(previewState, 0, resultElements);
 
 		if (diagnosisForm) {
 			diagnosisForm.hidden = true;
@@ -62,10 +58,6 @@ export function initializeDiagnosisForm(diagnosisForm) {
 
 		if (actions) {
 			actions.hidden = true;
-		}
-
-		if (resultSummary) {
-			resultSummary.textContent = `タイプ${previewType}のプレビュー結果を表示しています。`;
 		}
 
 		return;
@@ -116,7 +108,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 	});
 
 	diagnosisForm.addEventListener("reset", () => {
-		clearDiagnosisResultUI({ resultSection, resultSummary, resultRankNav, resultDetail, resultCards, resultActions });
+		clearDiagnosisResultUI(resultElements);
 		setCurrentDiagnosisResult(null);
 		clearStoredDiagnosisState();
 
@@ -184,31 +176,19 @@ export function initializeDiagnosisForm(diagnosisForm) {
 		});
 
 		scores.sort(compareByNormalizedScore);
+		const rankedScores = getRankedScores(scores);
 		const answers = collectAnswers(diagnosisForm);
-		const topThree = scores.slice(0, 3);
 		setCurrentDiagnosisResult({
-			scores,
+			scores: rankedScores,
 			answers,
 			selectedRankIndex: 0
 		});
 		saveDiagnosisState(getCurrentDiagnosisResult());
-
-		if (resultSummary) {
-			resultSummary.textContent = `一致度が最も高いのは タイプ${topThree[0].type}（${topThree[0].name}）です。2位・3位の結果は上部リンクで切り替えられます。`;
-		}
-
-		renderDiagnosisResult(getCurrentDiagnosisResult(), 0, {
-			resultSection,
-			resultSummary,
-			resultRankNav,
-			resultDetail,
-			resultCards,
-			resultActions
-		});
+		renderDiagnosisResult(getCurrentDiagnosisResult(), 0, resultElements);
 	});
 
-	if (resultRankNav) {
-		resultRankNav.addEventListener("click", (event) => {
+	if (resultCards) {
+		resultCards.addEventListener("click", (event) => {
 			const link = event.target.closest("a[data-rank]");
 
 			if (!link || !getCurrentDiagnosisResult()) {
@@ -217,14 +197,7 @@ export function initializeDiagnosisForm(diagnosisForm) {
 
 			event.preventDefault();
 			const selectedRankIndex = Number(link.dataset.rank);
-			renderDiagnosisResult(getCurrentDiagnosisResult(), selectedRankIndex, {
-				resultSection,
-				resultSummary,
-				resultRankNav,
-				resultDetail,
-				resultCards,
-				resultActions
-			});
+			renderDiagnosisResult(getCurrentDiagnosisResult(), selectedRankIndex, resultElements);
 		});
 	}
 }
@@ -256,33 +229,39 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 		return;
 	}
 
+	const rankedScores = getRankedScores(resultState.scores);
+	const safeRankIndex = rankedScores[selectedRankIndex] ? selectedRankIndex : 0;
+
 	setCurrentDiagnosisResult({
 		...resultState,
-		selectedRankIndex
+		scores: rankedScores,
+		selectedRankIndex: safeRankIndex
 	});
 
-	const selectedResult = resultState.scores[selectedRankIndex] ?? resultState.scores[0];
-	const profile = TYPE_PROFILES[selectedResult.type];
-	const cyclePercent = Math.round((selectedResult.score / selectedResult.max) * 100);
-	const maturityLabel = getMaturityLabel(cyclePercent);
-	const visibleRanks = resultState.scores.slice(0, 3);
+	const selectedResult = rankedScores[safeRankIndex] ?? null;
+	const detailProfile = selectedResult ? TYPE_DETAIL_PROFILES[selectedResult.type] : null;
+	const cyclePercent = selectedResult ? Math.round((selectedResult.score / selectedResult.max) * 100) : 0;
+	const visibleRanks = Array.from({ length: 3 }, (_, index) => rankedScores[index] ?? null);
 
-	if (elements.resultRankNav) {
-		elements.resultRankNav.innerHTML = visibleRanks
-			.map((item, index) => {
-				const activeClass = index === selectedRankIndex ? "is-active" : "";
-				return `<a href="#diagnosis-result" class="rank-link ${activeClass}" data-rank="${index}">${index + 1}位を見る</a>`;
-			})
-			.join("");
-	}
-
-	if (elements.resultDetail && profile) {
-		elements.resultDetail.innerHTML = buildDetailedReportMarkup(selectedResult, profile, cyclePercent, maturityLabel, selectedRankIndex);
+	if (elements.resultDetail) {
+		elements.resultDetail.innerHTML = selectedResult && detailProfile
+			? buildDetailedReportMarkup(detailProfile, cyclePercent, safeRankIndex)
+			: `<article class="report-card"><p>該当するタイプがありません。</p></article>`;
 	}
 
 	if (elements.resultCards) {
 		elements.resultCards.innerHTML = visibleRanks
 			.map((item, index) => {
+				if (!item) {
+					return `
+						<article class="result-card">
+							<h3>${index + 1}位 該当なし</h3>
+							<p class="score">- / - 点</p>
+							<p>一致度: -</p>
+						</article>
+					`;
+				}
+
 				const percentage = Math.round((item.score / item.max) * 100);
 
 				return `
@@ -298,7 +277,7 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 	}
 
 	if (elements.resultActions) {
-		elements.resultActions.hidden = false;
+		elements.resultActions.hidden = !selectedResult;
 	}
 
 	if (elements.resultSection) {
@@ -307,58 +286,74 @@ function renderDiagnosisResult(resultState, selectedRankIndex, elements) {
 	}
 }
 
-function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturityLabel, selectedRankIndex) {
+/**
+ * 「ほとんどない」のみのタイプは順位対象外にする。
+ * （最低点だけのタイプは一致度25%になり、見かけ上の2位・3位になってしまうため）
+ */
+function getRankedScores(scores) {
+	if (!Array.isArray(scores)) {
+		return [];
+	}
+
+	const minOptionValue = RESPONSE_OPTIONS[0]?.value ?? 1;
+
+	return scores.filter((entry) => {
+		if (!entry || !entry.max) {
+			return false;
+		}
+
+		const questionCount = entry.max / RESPONSE_OPTIONS.length;
+		const minimumScore = questionCount * minOptionValue;
+
+		return entry.score > minimumScore;
+	});
+}
+
+function buildDetailSectionBodyMarkup(section) {
+	const parts = [];
+
+	if (section.body) {
+		parts.push(`<p>${section.body}</p>`);
+	}
+
+	if (Array.isArray(section.items) && section.items.length > 0) {
+		const listClass = section.listStyle === "check" ? "wing-learn-checklist" : "wing-learn-list";
+
+		parts.push(`
+			<ul class="${listClass}">
+				${section.items.map((item) => `<li>${item}</li>`).join("")}
+			</ul>
+		`);
+	}
+
+	if (section.footer) {
+		parts.push(`<p>${section.footer}</p>`);
+	}
+
+	return parts.join("");
+}
+
+/**
+ * 学習メニュー「タイプ詳細解説」と同じ本文（項目1〜10）を表示する。
+ * ウイング診断前のため「このタイプから派生するウイング」は含めない。
+ */
+function buildDetailedReportMarkup(detailProfile, cyclePercent, selectedRankIndex) {
+	const sectionsMarkup = (detailProfile.sections ?? [])
+		.map((section) => `
+			<section class="wing-learn-section">
+				<h3 class="wing-learn-section-heading">${section.heading}</h3>
+				<div class="wing-learn-section-body">
+					${buildDetailSectionBodyMarkup(section)}
+				</div>
+			</section>
+		`)
+		.join("");
+
 	return `
-		<article class="report-card">
-			<p class="report-rank">${selectedRankIndex + 1}位</p>
-			<h3>タイプNo</h3>
-			<p>タイプ${dominantType.type}</p>
-
-			<h3>タイプ名（完全でありたい人など）</h3>
-			<p>タイプ${dominantType.type}（${profile.title}）</p>
-
-			<h3>200字概要</h3>
-			<p>${profile.overview}</p>
-
-			<h3>センター（本能・感情・思考）と理由</h3>
-			<p>${profile.center}</p>
-			<p>${profile.centerReason}</p>
-
-			<h3>大切にしているもの／レッドライン</h3>
-			<p>${profile.valuesRedline}</p>
-
-			<h3>認知のクセ（そのタイプが世界をどう見ているか）</h3>
-			<p>${profile.cognitiveBias}</p>
-
-			<h3>幼少期に形成されやすいコアストーリー</h3>
-			<p>${profile.coreStory}</p>
-
-			<h3>他者からどう見られやすいか（外的印象）</h3>
-			<p>${profile.externalImpression}</p>
-
-			<h3>好循環でのあなた</h3>
-			<p>${profile.goodCycle}</p>
-
-			<h3>悪循環でのあなた</h3>
-			<p>${profile.badCycle}</p>
-
-			<h3>ストレス時の矢／成長時の矢</h3>
-			<p>${profile.arrows}</p>
-
-			<h3>一致度（%）</h3>
-			<p>${cyclePercent}%</p>
-
-			<h3>強みの活かし方（実践例）</h3>
-			<p>${profile.strengthPractice}</p>
-
-			<h3>コミュニケーションの相性（良い／悪い）</h3>
-			<p>${profile.compatibility}</p>
-
-			<h3>何をすれば好転するか（具体的アドバイス）</h3>
-			<p>${profile.advice}</p>
-
-			<h3>成熟度レベルの簡易指標</h3>
-			<p>${maturityLabel}</p>
+		<article class="report-card type-detail-report">
+			<p class="report-rank">${selectedRankIndex + 1}位（一致度 ${cyclePercent}%）</p>
+			<h3 class="wing-learn-title">${detailProfile.title}</h3>
+			${sectionsMarkup}
 		</article>
 	`;
 }
@@ -366,14 +361,6 @@ function buildDetailedReportMarkup(dominantType, profile, cyclePercent, maturity
 function clearDiagnosisResultUI(elements) {
 	if (elements.resultSection) {
 		elements.resultSection.hidden = true;
-	}
-
-	if (elements.resultSummary) {
-		elements.resultSummary.textContent = "";
-	}
-
-	if (elements.resultRankNav) {
-		elements.resultRankNav.innerHTML = "";
 	}
 
 	if (elements.resultDetail) {
@@ -389,32 +376,55 @@ function clearDiagnosisResultUI(elements) {
 	}
 }
 
+/**
+ * 設問ごとの回答をタイプ別に収集する。
+ * 未選択は 0。形式: number[][]（タイプ → 設問）
+ */
 function collectAnswers(formElement) {
-	return Array.from(formElement.querySelectorAll("fieldset")).map((fieldset) => {
-		return Array.from(fieldset.querySelectorAll('input[type="radio"]')).reduce((selectedValue, input) => {
-			if (input.checked) {
-				return Number(input.value);
-			}
+	return ENNEAGRAM_TYPES.map((entry) => {
+		return entry.questions.map((_questionText, questionIndex) => {
+			const questionName = `type${entry.type}-q${questionIndex + 1}`;
+			const selected = formElement.querySelector(`input[name="${questionName}"]:checked`);
 
-			return selectedValue;
-		}, 0);
+			return selected ? Number(selected.value) : 0;
+		});
 	});
 }
 
+/**
+ * 設問ごとの回答を復元する。
+ * 旧形式（タイプごとに数値1つ）は、各タイプのQ1だけが選ばれる不具合の原因になるため無視する。
+ */
 function restoreAnswers(formElement, answers) {
-	const fieldsets = Array.from(formElement.querySelectorAll("fieldset"));
+	if (!Array.isArray(answers) || answers.length === 0) {
+		return;
+	}
 
-	fieldsets.forEach((fieldset, index) => {
-		const value = answers[index];
+	// 旧形式: [1, 1, ...] のようにタイプ数ぶんの数値配列
+	if (typeof answers[0] === "number") {
+		return;
+	}
 
-		if (typeof value !== "number") {
+	ENNEAGRAM_TYPES.forEach((entry, typeIndex) => {
+		const typeAnswers = answers[typeIndex];
+
+		if (!Array.isArray(typeAnswers)) {
 			return;
 		}
 
-		const target = fieldset.querySelector(`input[type="radio"][value="${value}"]`);
+		typeAnswers.forEach((value, questionIndex) => {
+			if (typeof value !== "number" || value < 1) {
+				return;
+			}
 
-		if (target) {
-			target.checked = true;
-		}
+			const questionName = `type${entry.type}-q${questionIndex + 1}`;
+			const target = formElement.querySelector(
+				`input[name="${questionName}"][value="${value}"]`
+			);
+
+			if (target) {
+				target.checked = true;
+			}
+		});
 	});
 }

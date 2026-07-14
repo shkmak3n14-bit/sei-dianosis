@@ -305,6 +305,16 @@ h3 {
 	margin-bottom: 18px;
 }
 
+.wing-score-summary {
+	margin-top: 18px;
+}
+
+.wing-strength-note {
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid var(--border, #cfe1d8);
+}
+
 .report-card {
 	background: #fff;
 	border: 1px solid #c9e3d7;
