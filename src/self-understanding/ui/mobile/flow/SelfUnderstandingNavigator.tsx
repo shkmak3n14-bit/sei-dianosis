@@ -1,16 +1,17 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { CharacterIntroScreen } from '../screens/CharacterIntroScreen';
-import { ChatScreen } from '../screens/ChatScreen';
+import { AbstractWordExampleScreen } from '../screens/AbstractWordExampleScreen';
+import { AskSaiTemplatesScreen } from '../screens/AskSaiTemplatesScreen';
+import { CategoryItemsScreen } from '../screens/CategoryItemsScreen';
+import ChatScreen from '../chat/ChatScreen';
 import { DeepDiveCardsScreen } from '../screens/DeepDiveCardsScreen';
 import { ResultCardsScreen } from '../screens/ResultCardsScreen';
-import { UnderstandingCheckScreen } from '../screens/UnderstandingCheckScreen';
 import { sieColors } from '../theme';
 import type { SelfUnderstandingStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<SelfUnderstandingStackParamList>();
 
-/** 自己理解モジュールの画面フロー（4画面＋1チャット） */
+/** 自己理解モジュールの画面フロー */
 export function SelfUnderstandingNavigator() {
   return (
     <NavigationContainer>
@@ -29,14 +30,14 @@ export function SelfUnderstandingNavigator() {
           options={{ title: '診断結果' }}
         />
         <Stack.Screen
-          name="CharacterIntro"
-          component={CharacterIntroScreen}
-          options={{ title: 'サイ登場' }}
+          name="CategoryItems"
+          component={CategoryItemsScreen}
+          options={{ title: '項目一覧' }}
         />
         <Stack.Screen
-          name="UnderstandingCheck"
-          component={UnderstandingCheckScreen}
-          options={{ title: '理解度チェック' }}
+          name="AskSaiTemplates"
+          component={AskSaiTemplatesScreen}
+          options={{ title: 'サイに質問する' }}
         />
         <Stack.Screen
           name="DeepDiveCards"
@@ -47,6 +48,11 @@ export function SelfUnderstandingNavigator() {
           name="Chat"
           component={ChatScreen}
           options={{ title: 'サイと話す' }}
+        />
+        <Stack.Screen
+          name="AbstractWordExample"
+          component={AbstractWordExampleScreen}
+          options={{ title: '例え話' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

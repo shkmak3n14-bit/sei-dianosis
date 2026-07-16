@@ -447,6 +447,44 @@ h3 {
 	color: var(--accent-strong);
 }
 
+.ennea-card-9w8 {
+	max-width: 480px;
+	margin: 0 auto;
+	padding: 4px 0 8px;
+}
+
+.ennea-card-header h3 {
+	margin: 0 0 14px;
+	font-size: 1.1rem;
+	line-height: 1.45;
+	color: var(--text);
+}
+
+.ennea-card-9w8 .card {
+	background: #ffffff;
+	border: 1px solid #e4e1d8;
+	border-radius: 16px;
+	padding: 18px 16px;
+	margin-bottom: 12px;
+	box-shadow: 0 8px 24px rgba(31, 41, 51, 0.04);
+}
+
+.ennea-card-9w8 .card h2 {
+	margin: 0 0 10px;
+	font-size: 1.05rem;
+	line-height: 1.4;
+	font-weight: 700;
+	color: var(--accent-strong, #2f6f5e);
+}
+
+.ennea-card-9w8 .card p {
+	margin: 0;
+	white-space: pre-line;
+	font-size: 0.95rem;
+	line-height: 1.75;
+	color: var(--text, #1f2933);
+}
+
 .share-card {
 	border: 1px solid #c9e3d7;
 	border-radius: 12px;

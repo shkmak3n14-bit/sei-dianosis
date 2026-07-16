@@ -3,12 +3,15 @@ import { Text } from 'react-native-paper';
 import { sieColors } from '../theme';
 
 type Props = {
-  role: 'character' | 'user';
   text: string;
+  /** 新チャットフロー用 */
+  sender?: 'user' | 'sie';
+  /** 既存リスト用（後方互換） */
+  role?: 'character' | 'user';
 };
 
-export function ChatBubble({ role, text }: Props) {
-  const isUser = role === 'user';
+export function ChatBubble({ sender, role, text }: Props) {
+  const isUser = sender === 'user' || role === 'user';
 
   return (
     <View style={[styles.row, isUser ? styles.rowUser : styles.rowCharacter]}>
@@ -18,6 +21,8 @@ export function ChatBubble({ role, text }: Props) {
     </View>
   );
 }
+
+export default ChatBubble;
 
 const styles = StyleSheet.create({
   row: {

@@ -1,7 +1,8 @@
 export type SelfUnderstandingStackParamList = {
   ResultCards: undefined;
-  CharacterIntro: undefined;
-  UnderstandingCheck: undefined;
+  CategoryItems: { categoryId: string };
+  AskSaiTemplates: { categoryId: string; itemId: string };
   DeepDiveCards: { topicId?: string } | undefined;
-  Chat: undefined;
+  Chat: { templateText?: string } | undefined;
+  AbstractWordExample: { userQuestion?: string } | undefined;
 };

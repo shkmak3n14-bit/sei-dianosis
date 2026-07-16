@@ -2,13 +2,13 @@
 
 Expo + React Native + TypeScript + React Native Paper
 
-## 画面フロー（4画面＋1チャット）
+## 画面フロー
 
 1. `ResultCardsScreen` — 診断結果カード（入口）
-2. `CharacterIntroScreen` — キャラ登場（下から半画面スライドイン）
-3. `UnderstandingCheckScreen` — 理解度チェック（トピック選択）
-4. `DeepDiveCardsScreen` — 深掘りカード（分割表示＋下部吹き出し）
-5. `ChatScreen` — キャラチャット（固定アイコン＋選択／自由入力の深掘り）
+2. `ChatScreen` — 自由入力（下部サイ吹き出しから遷移）
+3. （以降）カテゴリ判定 → テンプレート返答 / 専門家モード（予定）
+
+関連画面: `CategoryItems` / `AskSaiTemplates` / `DeepDiveCards` / `AbstractWordExample`
 
 データは `mocks/` のダミー。後で `core` と接続します。
 

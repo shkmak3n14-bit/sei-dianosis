@@ -3,24 +3,24 @@ import type { SelfUnderstandingMock } from './types';
 /** UI確認用のダミーデータ。後で core / diagnosis_engine と接続する。 */
 export const selfUnderstandingMock: SelfUnderstandingMock = {
   resultCard: {
-    typeLabel: 'タイプ1',
-    wingCode: '1w9',
-    personalityTitle: 'あなたの性格',
+    typeLabel: 'タイプ9',
+    wingCode: '9w8',
+    personalityTitle: 'タイプ9w8（穏やかで芯の強い人）',
     highlights: [
       {
         id: 'trait',
         label: 'こういう性格です',
-        body: '正しさと穏やかさを大切にし、場を整えながら品質を上げようとする傾向があります。',
+        body: '穏やかさを土台にしながら、必要な場面では強く踏ん張れる静かな強さを持ちます。',
       },
       {
         id: 'moment',
         label: 'こういう時があります',
-        body: '基準が守られない場面では、表面は落ち着いていても内側で緊張や自己批判が強まりやすいです。',
+        body: '境界線を越えられた瞬間に強い反応が出ることがあり、普段の柔らかさとのギャップに自分でも驚くことがあります。',
       },
       {
         id: 'help',
         label: 'こういう対応が助かります',
-        body: '責めずに一緒に整える姿勢、小さな改善案を受け止めてくれる関わり方が安心につながります。',
+        body: '自分のペースを守りつつ、「あなたはどうしたい？」と促してくれる関わり方が安心につながります。',
       },
     ],
   },

@@ -10,10 +10,12 @@ type Props = {
 
 /** キャラのセリフ吹き出し */
 export function CharacterSpeechBubble({ text, tailAlign = 'center' }: Props) {
+  const hugContent = tailAlign !== 'center';
+
   return (
-    <View style={styles.wrap}>
-      <View style={styles.bubble}>
-        <Text style={[styles.text, tailAlign !== 'center' && styles.textStart]}>{text}</Text>
+    <View style={[styles.wrap, hugContent && styles.wrapStart]}>
+      <View style={[styles.bubble, hugContent ? styles.bubbleHug : styles.bubbleFull]}>
+        <Text style={[styles.text, hugContent && styles.textStart]}>{text}</Text>
       </View>
       <View
         style={[
@@ -31,6 +33,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
+  wrapStart: {
+    alignItems: 'flex-start',
+  },
   bubble: {
     backgroundColor: sieColors.surface,
     borderRadius: 18,
@@ -38,8 +43,14 @@ const styles = StyleSheet.create({
     borderColor: sieColors.border,
     paddingHorizontal: 18,
     paddingVertical: 14,
-    width: '100%',
     maxWidth: 320,
+  },
+  bubbleFull: {
+    width: '100%',
+    alignSelf: 'center',
+  },
+  bubbleHug: {
+    alignSelf: 'flex-start',
   },
   text: {
     color: sieColors.text,
@@ -63,10 +74,10 @@ const styles = StyleSheet.create({
   },
   tailLeft: {
     alignSelf: 'flex-start',
-    marginLeft: 36,
+    marginLeft: 28,
   },
   tailRight: {
     alignSelf: 'flex-end',
-    marginRight: 36,
+    marginRight: 28,
   },
 });

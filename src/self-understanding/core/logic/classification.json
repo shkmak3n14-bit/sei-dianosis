@@ -1,0 +1,95 @@
+{
+  "classification": {
+    "abstractWordUnknown": {
+      "label": "抽象語がわからない",
+      "keywords": ["意味", "抽象", "どういうこと", "境界線", "概念"],
+      "emotion": ["混乱"],
+      "context": ["概念説明"]
+    },
+    "questionHowToAsk": {
+      "label": "どう聞けばいいかわからない",
+      "keywords": ["どう聞けば", "質問の仕方", "何を聞けば"],
+      "emotion": ["迷い"],
+      "context": ["質問構造"]
+    },
+    "episodeAnalysis": {
+      "label": "エピソードの分析ができない",
+      "keywords": ["エピソード", "過去の経験", "出来事", "体験"],
+      "emotion": ["整理したい"],
+      "context": ["自己分析"]
+    },
+    "diagnosisDoubt": {
+      "label": "診断結果に違和感がある",
+      "keywords": ["違和感", "しっくりこない", "合ってる?", "納得できない"],
+      "emotion": ["不安", "疑念"],
+      "context": ["診断精度"]
+    },
+    "typeBoundary": {
+      "label": "どっちのタイプ？",
+      "keywords": ["どっち", "違い", "似てる", "境界", "タイプの違い"],
+      "emotion": ["迷い"],
+      "context": ["タイプ比較"]
+    },
+    "needRediagnosis": {
+      "label": "再診断すべきか迷う",
+      "keywords": ["再診断", "やり直し", "もう一度"],
+      "emotion": ["不安"],
+      "context": ["診断再実施"]
+    },
+    "behaviorReason": {
+      "label": "自分の行動の理由が知りたい",
+      "keywords": ["なぜ", "理由", "行動の意味"],
+      "emotion": ["自己理解"],
+      "context": ["行動理由"]
+    },
+    "emotionMovement": {
+      "label": "感情の動きが知りたい",
+      "keywords": ["感情", "気持ち", "よくわからない"],
+      "emotion": ["混乱"],
+      "context": ["感情理解"]
+    },
+    "relationshipTrouble": {
+      "label": "他者との関係の悩み",
+      "keywords": ["相手", "関係", "人間関係", "悩み"],
+      "emotion": ["ストレス"],
+      "context": ["対人関係"]
+    },
+    "angerUnknown": {
+      "label": "怒りがわからない",
+      "keywords": ["怒り", "ムッ", "イラッ", "境界線"],
+      "emotion": ["困惑"],
+      "context": ["怒り理解"]
+    },
+    "guiltUnknown": {
+      "label": "罪悪感がわからない",
+      "keywords": ["罪悪感", "申し訳ない", "責められてる"],
+      "emotion": ["不安", "自己否定"],
+      "context": ["罪悪感理解"]
+    },
+    "stressChange": {
+      "label": "ストレス時の変化が知りたい",
+      "keywords": ["ストレス", "余裕がない", "疲れた"],
+      "emotion": ["疲労"],
+      "context": ["ストレス時の変化"]
+    }
+  },
+  "priority": [
+    "diagnosisDoubt",
+    "typeBoundary",
+    "episodeAnalysis",
+    "behaviorReason",
+    "emotionMovement",
+    "angerUnknown",
+    "guiltUnknown",
+    "stressChange",
+    "relationshipTrouble",
+    "abstractWordUnknown",
+    "questionHowToAsk",
+    "needRediagnosis",
+    "fallbackExpert"
+  ],
+  "fallbackExpert": {
+    "label": "専門家モード",
+    "description": "どのカテゴリにも当てはまらない場合、エニアグラム専門家として自由回答する"
+  }
+}
