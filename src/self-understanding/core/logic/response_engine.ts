@@ -1,6 +1,5 @@
 import { classifyUserInput } from './classifier';
 import { getTemplateByType } from './template_engine';
-import { writeResponse } from './response_writer';
 
 export type GeneratedResponse = {
   type: string;
@@ -22,13 +21,9 @@ export function generateResponse(userInput: string): GeneratedResponse {
   // テンプレート type を優先（relationshipTrouble → relationshipIssue など）
   const responseType = template.type;
 
-  const writtenFlow = template.flow.map((step) =>
-    writeResponse(responseType, step, userInput)
-  );
-
   return {
     type: responseType,
     label: template.label,
-    flow: writtenFlow,
+    flow: template.flow,
   };
 }

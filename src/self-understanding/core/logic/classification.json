@@ -71,6 +71,12 @@
       "keywords": ["ストレス", "余裕がない", "疲れた"],
       "emotion": ["疲労"],
       "context": ["ストレス時の変化"]
+    },
+    "selfConflict": {
+      "label": "自己矛盾の整理",
+      "keywords": ["矛盾", "本音", "建前", "揺れる", "葛藤"],
+      "emotion": ["混乱", "自己否定"],
+      "context": ["内的葛藤"]
     }
   },
   "priority": [
@@ -86,6 +92,7 @@
     "abstractWordUnknown",
     "questionHowToAsk",
     "needRediagnosis",
+    "selfConflict",
     "fallbackExpert"
   ],
   "fallbackExpert": {

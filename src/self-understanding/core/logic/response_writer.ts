@@ -29,6 +29,21 @@ export function writeResponse(type: string, step: string, userInput: string) {
     case 'stressPattern':
       return writeStressPattern(step, userInput);
 
+    case 'questionHowToAsk':
+      return writeQuestionHowToAsk(step, userInput);
+
+    case 'needRediagnosis':
+      return writeNeedRediagnosis(step, userInput);
+
+    case 'behaviorReason':
+      return writeBehaviorReason(step, userInput);
+
+    case 'emotionMovement':
+      return writeEmotionMovement(step, userInput);
+
+    case 'guiltUnknown':
+      return writeGuiltUnknown(step, userInput);
+
     // 必要に応じて他のタイプも追加していく
     default:
       return step; // fallback（まだ文章化していないステップ）
@@ -67,15 +82,21 @@ function writeTypeBoundary(step: string, userInput: string): string {
 /** 診断結果に違和感 — 文章化 */
 function writeDiagnosisDoubt(step: string, userInput: string): string {
   switch (step) {
+    case '違和感の内容を要約する':
     case '疑っている理由を要約する':
       return `「${userInput}」ということは、診断結果にしっくり来ていないということですね。`;
 
+    case '違和感が生まれる典型理由を説明する':
     case '診断が揺れる典型パターンを説明する':
       return '診断が揺れるときは、ストレス状態・役割期待・環境要因が強く影響していることが多いです。';
 
+    case 'タイプ9w8の境界が揺れやすいポイントを説明する':
     case 'ユーザーの特徴と照合する':
       return 'あなたの場合は、普段の行動と診断結果のズレが気になっているように見えます。';
 
+    case '他タイプの可能性を簡単に提示する':
+    case '再診断の導線を提示する':
+    case '追加情報を求める（2〜3問）':
     case '判断材料を提示する':
       return "『普段の自分』と『ストレス下の自分』を分けて考えると、診断のブレが整理されやすいです。";
 
@@ -93,12 +114,16 @@ function writeDiagnosisDoubt(step: string, userInput: string): string {
 /** エピソード分析 — 文章化 */
 function writeEpisodeAnalysis(step: string, userInput: string): string {
   switch (step) {
+    case 'ユーザーのエピソードを要約する':
     case 'エピソードの要点を要約する':
       return `「${userInput}」という幼少期のエピソードについて、まず内容を整理しますね。`;
 
+    case 'エピソード分析の観点を説明する':
+    case '4核分析（動機・願望・恐れ・行動）で分解する':
     case '感情の核を抽出する':
       return 'この出来事であなたが感じた感情は、一次感情（本音）と二次感情（反応）に分けて考えると整理しやすいです。';
 
+    case 'タイプ9w8の構造と照合する':
     case '行動パターンを抽出する':
       return 'その場面であなたが取った行動には、幼少期から続く“自動反応パターン”が表れている可能性があります。';
 
@@ -111,9 +136,11 @@ function writeEpisodeAnalysis(step: string, userInput: string): string {
     case 'タイプの補正ポイントを提示する':
       return 'この出来事の解釈から、タイプ判定の補正ができます。特に“何を守ろうとしていたか”が重要な判断材料になります。';
 
+    case 'まとめ（そのエピソードが何を示すか）':
     case 'まとめ':
       return '幼少期のエピソードは、現在の性格の“根っこ”を理解するための重要な手がかりです。今のあなたの傾向と照らし合わせながら、さらに深めていきましょう。';
 
+    case '必要なら追加のエピソードを求める':
     case '必要なら追加質問':
       return 'この出来事の中で、特に印象に残っている感情や場面はどこですか？';
 
@@ -125,21 +152,26 @@ function writeEpisodeAnalysis(step: string, userInput: string): string {
 /** 怒りがわからない — 文章化 */
 function writeAngerUnknown(step: string, userInput: string): string {
   switch (step) {
+    case '怒りの疑問を要約する':
     case '怒りの原因を要約する':
       return `「${userInput}」ということは、怒りの理由が自分でも分からない状態ですね。`;
 
+    case '怒りがわかりづらい理由（9の傾向）を説明する':
     case '怒りが分からなくなる典型パターンを説明する':
       return '怒りが分からなくなるときは、感情が一次感情ではなく二次感情として出ていることが多いです。';
 
+    case '9w8の怒りの構造（境界線・瞬間的反応）を説明する':
     case 'ユーザーの特徴と照合する':
       return 'あなたの場合は、まず状況を落ち着かせようとする傾向が強いため、怒りが後から出てくる可能性があります。';
 
+    case '体感の例を提示する':
     case '判断材料を提示する':
       return "『本当に怒っている対象』と『表面上の怒り』を分けて考えると整理しやすいです。";
 
     case 'まとめ':
       return '怒りが分からないのは“感情が混ざっている”サインです。ゆっくり分解していきましょう。';
 
+    case '次の質問':
     case '必要なら追加質問':
       return '最近、どんな場面で怒りを感じましたか？';
 
@@ -151,24 +183,33 @@ function writeAngerUnknown(step: string, userInput: string): string {
 /** 抽象語がわからない — 文章化 */
 function writeAbstractWordUnknown(step: string, userInput: string): string {
   switch (step) {
+    case 'ユーザーの疑問を短く要約する':
+      return `「${userInput}」という言葉の意味を、あなた向けに整理してみましょう。`;
+
+    case '抽象語が理解しづらい理由を説明する（概念が広い／文脈依存）':
     case '抽象語の意味が人によって違うことを説明する':
       return `「${userInput}」という言葉は、人によって意味が大きく変わる“抽象語”です。まずはその前提を共有しますね。`;
 
+    case '例え話で具体化する':
     case '一般的な意味をざっくり提示する':
       return '抽象語は辞書的な意味よりも、実際の体験や価値観によって形づくられます。一般的な説明はできますが、それだけでは本質に届きません。';
 
+    case 'タイプ9w8に合わせて意味を噛み砕く':
     case '具体例（Aさんのケース）を提示する':
       return "例えば Aさんの場合、この言葉は『自分の領域を守るための線引き』という意味で使われていました。人によってまったく違う使われ方をします。";
 
+    case '必要なら4核分析で補足する':
     case 'ユーザー自身の具体例を尋ねる':
       return 'あなたの場合、この言葉はどんな場面で出てきましたか？具体的な状況を教えてもらえると、あなたにとっての意味を一緒に特定できます。';
 
     case '動機・願望・恐れの観点で整理する意図を説明する':
       return '抽象語の本当の意味は、状況を聞いたうえで“動機・願望・恐れ・行動”の4つの観点から整理すると明確になります。';
 
+    case 'まとめ（その言葉が9w8にどう関係するか）':
     case 'まとめ':
       return '抽象語は“あなたにとっての意味”を特定することが大切です。状況を教えてもらえれば、あなたの心理構造に沿って具体化できます。';
 
+    case '次の質問を提示する':
     case '必要なら追加質問':
       return 'その言葉が出てきた場面を、思い出せる範囲で教えてください。';
 
@@ -309,6 +350,101 @@ function writeStressPattern(step: string, userInput: string): string {
     case '追加の状況確認を行う':
       return 'もしよければ、最近ストレスが強く出た場面を教えてください。さらに精密に分析できます。';
 
+    default:
+      return step;
+  }
+}
+
+function writeQuestionHowToAsk(step: string, userInput: string): string {
+  switch (step) {
+    case 'ユーザーの迷いを要約する':
+      return `「${userInput}」について、どう質問すればよいか迷っていますね。`;
+    case '質問が難しい理由を説明する（抽象度／構造化の難しさ）':
+      return '質問が難しくなるのは、抽象語と具体エピソードが混ざるからです。先に場面を切り出すと整理しやすくなります。';
+    case '質問テンプレートを提示する（3〜5個）':
+      return '例: 「その場面で何を守りたかった？」「本当は何が怖かった？」「体はどう反応した？」';
+    case 'ユーザーの状況に合わせて使い方を説明する':
+      return 'まず1つの場面だけ選び、上のテンプレートを順番に当てると、質問精度が上がります。';
+    case 'まとめ（質問の精度が上がる理由）':
+      return '質問を構造化すると、感情と行動のつながりが見えやすくなります。';
+    case '次の質問を促す':
+      return '最近の1場面を1つ挙げて、最初の質問から試してみますか？';
+    default:
+      return step;
+  }
+}
+
+function writeNeedRediagnosis(step: string, userInput: string): string {
+  switch (step) {
+    case '迷っている理由を要約する':
+      return `再診断すべきか迷っているのですね。「${userInput}」は自然な迷いです。`;
+    case '再診断が必要になる典型ケースを説明する':
+      return '環境変化が大きい時期や、回答時のストレスが強かった場合は再診断が有効です。';
+    case '現状の情報で判断できるポイントを提示する':
+      return '普段の反応とストレス時の反応を分けて見られるかが判断ポイントです。';
+    case '追加で必要な情報を質問する':
+      return '最近繰り返している反応パターンを1つ教えてください。';
+    case '再診断の導線を提示する':
+      return '情報が揃ったら、再診断前に仮説を立ててから進めると精度が上がります。';
+    case 'まとめ':
+      return '再診断は「やり直し」ではなく、現在地を再確認する作業です。';
+    default:
+      return step;
+  }
+}
+
+function writeBehaviorReason(step: string, userInput: string): string {
+  switch (step) {
+    case '行動の内容を要約する':
+      return `「${userInput}」という行動の理由を整理しましょう。`;
+    case 'その行動が起きる心理的背景を説明する':
+      return '行動は多くの場合、恐れを避ける反応と、欲求を満たす反応の重なりで起きます。';
+    case '4核分析で分解する':
+      return '動機・願望・恐れ・行動の4つに分けると、行動の意味が見えやすくなります。';
+    case 'タイプ9w8の構造と照合する':
+      return '9w8では「平穏維持」と「境界防衛」が同時に働くため、行動が揺れて見えることがあります。';
+    case 'まとめ（その行動が示す性質）':
+      return 'その行動は弱さではなく、守ろうとしている価値の表れです。';
+    case '次の質問':
+      return 'その行動が出る直前、何を一番避けたいと感じていましたか？';
+    default:
+      return step;
+  }
+}
+
+function writeEmotionMovement(step: string, userInput: string): string {
+  switch (step) {
+    case '感情の疑問を要約する':
+      return `「${userInput}」について、感情の流れがつかみにくい状態ですね。`;
+    case '感情がわかりづらい理由を説明する（9の傾向）':
+      return 'タイプ9傾向では、衝突回避のために感情を後回しにしやすく、気づきが遅れがちです。';
+    case 'タイプ9w8の感情構造を説明する':
+      return '9w8は普段は穏やかでも、境界が侵されると瞬間的に強い反応が出ることがあります。';
+    case '具体例で補足する':
+      return '例として「最初は我慢→あとで疲労や怒りとして出る」という流れがよく起こります。';
+    case 'まとめ':
+      return '感情は「遅れて出る」前提で追うと、実感と一致しやすくなります。';
+    case '次の質問':
+      return '最近、後から感情が出てきた場面はありましたか？';
+    default:
+      return step;
+  }
+}
+
+function writeGuiltUnknown(step: string, userInput: string): string {
+  switch (step) {
+    case '罪悪感の疑問を要約する':
+      return `「${userInput}」という罪悪感の扱いが難しいのですね。`;
+    case '罪悪感が生まれる心理構造を説明する':
+      return '罪悪感は「期待とのズレ」を察知した時に生まれやすい感情です。';
+    case 'タイプ9w8の罪悪感の特徴を説明する':
+      return '9w8では対立回避と責任感が重なり、自分の境界より相手優先になりやすいです。';
+    case '具体例で補足する':
+      return '断れなかった後に自己否定が強まる、という形で出ることがあります。';
+    case 'まとめ':
+      return '罪悪感は「悪い証拠」ではなく、価値観のセンサーとして扱うと整理しやすくなります。';
+    case '次の質問':
+      return '最近、罪悪感が出た直前にどんな場面がありましたか？';
     default:
       return step;
   }
