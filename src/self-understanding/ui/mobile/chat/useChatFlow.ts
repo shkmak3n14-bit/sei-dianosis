@@ -1,29 +1,20 @@
 import { useState } from 'react';
-import { generateResponse } from '../../../core/logic/response_engine';
-
-export type ChatFlowMessage = {
-  sender: 'user' | 'sie';
-  text: string;
-};
+import { routeResponse } from '../../../core/logic/response_router';
 
 export function useChatFlow() {
-  const [messages, setMessages] = useState<ChatFlowMessage[]>([]);
+  const [messages, setMessages] = useState([]);
 
-  const sendMessage = (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed) {
-      return;
-    }
+  const sendMessage = async (text: string) => {
+    // ユーザーの発言を追加
+    setMessages((prev) => [...prev, { sender: 'user', text }]);
 
     // サイの返答を生成
-    const result = generateResponse(trimmed);
+    const result = routeResponse(text);
 
-    // ユーザー発言 + flow の各ステップをまとめて追加
-    setMessages((prev) => [
-      ...prev,
-      { sender: 'user', text: trimmed },
-      ...result.flow.map((step) => ({ sender: 'sie' as const, text: step })),
-    ]);
+    // flow の各ステップを順番に追加
+    result.messages.forEach((msg) => {
+      setMessages((prev) => [...prev, { sender: 'sie', text: msg }]);
+    });
   };
 
   return { messages, sendMessage };
