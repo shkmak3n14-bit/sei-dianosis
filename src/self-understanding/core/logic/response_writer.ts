@@ -134,27 +134,31 @@ function writeTypeBoundary(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+
   switch (step) {
     case '迷っているタイプを要約する':
-      return `「${userInput}」という相談ですね。あなたのタイプは ${typeName(context)} で、${fear(context)} を恐れやすい傾向があります。`;
+      return `「${userInput}」という相談ですね。今は、どのタイプが自分に一番しっくり来るのかを確かめたい状態だと思います。今の仮説タイプは ${name} です。`;
 
     case 'その2タイプが似ている理由を説明する':
-      return `${typeName(context)} は「${desire(context)}」を軸に動くため、近接タイプと境界や主張の出方が似て見えることがあります。`;
+      return `${name} は、根っこに「${coreDesire}」を満たしたいという動きがあり、近いタイプ同士だとその願望の方向性が似て見えやすくなります。`;
 
     case '違いが出るポイントを比較する（3〜5項目）':
-      return `ただし現れ方は違います。あなたの場合は「${conflict(context)}」という衝突スタイルが差を生むポイントです。`;
+      return `ただ、似ているからこそ違いが出るポイントもあります。特に「${conflictStyle}」のような衝突の仕方や、守ろうとするものの優先順位に差が出やすいです。`;
 
     case 'ユーザーの特徴（9w8）と照合する':
-      return `あなたの場合は、まず「${desire(context)}」が先に来やすいです。これは ${typeName(context)} の特徴です。`;
+      return `あなたの話を聞いていると、まず「${coreDesire}」を守ろうとする動きが先に立っているように感じます。これは ${name} の特徴とよく重なっています。`;
 
     case '判断材料を提示する':
-      return `もし『${desire(context)}』が強いなら ${typeName(context)} 寄り、別の動機が先に立つなら近接タイプの可能性を検討できます。`;
+      return `もし『${coreDesire}』を優先する場面が多いなら ${name} 寄りの可能性が高く、別の願望や動機がいつも前に出るなら、近接タイプも候補に入れて考えてみる価値があります。`;
 
     case 'まとめ':
-      return `つまり、似た力でも“目的”が違います。${typeName(context)} では「${desire(context)}」が判断の軸になります。`;
+      return `つまり、タイプの違いは「どんな力を使うか」だけでなく、「その力を何のために使っているか」という目的の差として現れます。${name} の場合は「${coreDesire}」がその軸になりやすいタイプです。`;
 
     case '必要なら追加質問':
-      return '最近の出来事で、どちらの傾向が出ましたか？';
+      return '最近の出来事で、「あ、これは自分のタイプっぽいな」と感じた場面があれば、1つ教えてもらえますか？';
 
     default:
       return step;
@@ -167,30 +171,35 @@ function writeDiagnosisDoubt(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreDesire = desire(context);
+  const stressPattern = stress(context);
+  const blind = blindSpot(context);
+
   switch (step) {
     case '違和感の内容を要約する':
     case '疑っている理由を要約する':
-      return `「${userInput}」ということは、${typeName(context)} の診断結果にしっくり来ていないということですね。`;
+      return `「${userInput}」ということは、今のタイプ（${name}）に少し違和感がある状態なんですね。まずはその感覚を丁寧に扱っていきましょう。`;
 
     case '違和感が生まれる典型理由を説明する':
     case '診断が揺れる典型パターンを説明する':
-      return `診断が揺れるときは、ストレス状態・役割期待・環境要因が強く影響していることが多いです。${typeName(context)} では特に「${stress(context)}」が出やすいです。`;
+      return `タイプ診断が揺れるときは、ストレス状態や役割期待、環境の影響が強く出ていることが多いです。特に ${name} の人は、ストレスがかかると「${stressPattern}」が表に出やすく、普段の自分と違って見えることがあります。`;
 
     case 'タイプ9w8の境界が揺れやすいポイントを説明する':
     case 'ユーザーの特徴と照合する':
-      return `あなたの場合は、普段の行動と診断結果のズレが気になっているように見えます。盲点は「${blindSpot(context)}」です。`;
+      return `あなたの場合、普段の行動と診断結果のズレが気になっているように見えます。盲点になりやすいのは「${blind}」で、ここが違和感の原因になっている可能性があります。`;
 
     case '他タイプの可能性を簡単に提示する':
     case '再診断の導線を提示する':
     case '追加情報を求める（2〜3問）':
     case '判断材料を提示する':
-      return `『普段の自分』と『ストレス下の自分』を分けて考えると、診断のブレが整理されやすいです。ストレス時は「${stress(context)}」を手がかりにしてください。`;
+      return `診断を整理するときは、「普段の自分」と「ストレス下の自分」を分けて見るのがとても有効です。ストレス時の反応「${stressPattern}」がどれくらい出ているかが、判断材料になります。`;
 
     case 'まとめ':
-      return `診断は“固定のラベル”ではなく“傾向の地図”です。${typeName(context)} としての「${desire(context)}」を軸に見直すと揺れが整理しやすくなります。`;
+      return `タイプ診断は“固定のラベル”ではなく、自分の傾向を理解するための地図です。${name} の軸である「${coreDesire}」を手がかりにすると、違和感の正体が見えやすくなります。`;
 
     case '必要なら追加質問':
-      return 'どの部分が特にしっくり来ていませんか？';
+      return 'どの部分が特にしっくり来ていないと感じていますか？';
 
     default:
       return step;
@@ -203,32 +212,37 @@ function writeEpisodeAnalysis(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+
   switch (step) {
     case 'ユーザーのエピソードを要約する':
     case 'エピソードの要点を要約する':
-      return `「${userInput}」という幼少期のエピソードについて、まず内容を整理しますね。`;
+      return `「${userInput}」という幼少期のエピソードについて、まずは状況を丁寧に整理していきますね。`;
 
     case 'エピソード分析の観点を説明する':
     case '4核分析（動機・願望・恐れ・行動）で分解する':
     case '感情の核を抽出する':
-      return 'この出来事であなたが感じた感情は、一次感情（本音）と二次感情（反応）に分けて考えると整理しやすいです。';
+      return `この出来事を理解するには、当時の「動機」「願望」「恐れ」「行動」を分けて見ると、感情の流れがとても分かりやすくなります。`;
 
     case 'タイプ9w8の構造と照合する':
     case '行動パターンを抽出する':
-      return `その場面であなたが取った行動には、${typeName(context)} の自動反応「${conflict(context)}」が表れている可能性があります。`;
+      return `その場面であなたが取った行動には、${name} の自動反応である「${conflictStyle}」が自然に表れていた可能性があります。これはタイプ特有の反応パターンです。`;
 
     case '価値観の形成につながる部分を説明する':
-      return `幼少期の経験は、現在の価値観の土台になりやすいです。${typeName(context)} では「${desire(context)}」が価値観の核になりがちです。`;
+      return `幼少期の経験は、現在の価値観や“こうあるべき”という信念の土台になりやすいです。${name} の場合は「${coreDesire}」が価値観の中心になりやすい傾向があります。`;
 
     case '恐れ・欲求との関連を説明する':
-      return `このエピソードは、あなたの根底にある恐れ「${fear(context)}」や欲求「${desire(context)}」と強く結びついている可能性があります。`;
+      return `このエピソードは、あなたの根底にある恐れ「${coreFear}」や、満たしたい願望「${coreDesire}」と結びついている可能性があります。幼少期はその構造が最も素直に表れやすい時期です。`;
 
     case 'タイプの補正ポイントを提示する':
-      return `この出来事の解釈から、タイプ判定の補正ができます。特に“何を守ろうとしていたか”が重要で、${typeName(context)} なら「${desire(context)}」が鍵です。`;
+      return `この出来事の解釈から、タイプ判定の補正ができます。特に“何を守ろうとしていたか”が重要で、${name} なら「${coreDesire}」が鍵になります。`;
 
     case 'まとめ（そのエピソードが何を示すか）':
     case 'まとめ':
-      return `幼少期のエピソードは、現在の性格の“根っこ”を理解する手がかりです。${typeName(context)} の傾向と照らし合わせながら、さらに深めていきましょう。`;
+      return `幼少期のエピソードは、現在の性格の“根っこ”を理解するための大切な手がかりです。${name} の傾向と照らし合わせながら、さらに深めていきましょう。`;
 
     case '必要なら追加のエピソードを求める':
     case '必要なら追加質問':
@@ -245,29 +259,34 @@ function writeAngerUnknown(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+  const stressPattern = stress(context);
+
   switch (step) {
     case '怒りの疑問を要約する':
     case '怒りの原因を要約する':
-      return `「${userInput}」ということは、怒りの理由が自分でも分からない状態ですね。`;
+      return `「${userInput}」ということは、怒りの理由が自分でもつかみにくい状態なんですね。まずはその感覚を丁寧に扱っていきましょう。`;
 
     case '怒りがわかりづらい理由（9の傾向）を説明する':
     case '怒りが分からなくなる典型パターンを説明する':
-      return `怒りが分からなくなるときは、感情が一次感情ではなく二次感情として出ていることが多いです。${typeName(context)} では「${conflict(context)}」が怒りを覆いやすいです。`;
+      return `怒りが分からなくなるときは、一次感情（本音）がすぐに出ず、二次感情として別の形で表れることが多いです。${name} の人は「${conflictStyle}」が先に働きやすく、怒りが後ろに隠れやすい傾向があります。`;
 
     case '9w8の怒りの構造（境界線・瞬間的反応）を説明する':
     case 'ユーザーの特徴と照合する':
-      return `あなたの場合は、まず「${desire(context)}」を守ろうとするため、怒りが後から出てくる可能性があります。`;
+      return `あなたの場合、まず「${coreDesire}」を守ろうとする動きが強く出るため、怒りがその場では抑えられ、あとから出てくることがあります。これは ${name} の人に自然に起こりやすい反応です。`;
 
     case '体感の例を提示する':
     case '判断材料を提示する':
-      return `『本当に怒っている対象』と『表面上の怒り』を分けて考えると整理しやすいです。ストレス時は「${stress(context)}」が出やすい点も手がかりです。`;
+      return `『本当に怒っている対象』と『表面上の怒り』がズレていることもあります。ストレスがかかると「${stressPattern}」が出やすくなるので、怒りの方向が分かりづらくなることがあります。`;
 
     case 'まとめ':
-      return '怒りが分からないのは“感情が混ざっている”サインです。ゆっくり分解していきましょう。';
+      return `怒りが分からないのは、感情が混ざっているサインです。ゆっくり分解していくと、本音の部分が見えやすくなります。`;
 
     case '次の質問':
     case '必要なら追加質問':
-      return '最近、どんな場面で怒りを感じましたか？';
+      return '最近、どんな場面で「後から怒りが出てきた」と感じましたか？';
 
     default:
       return step;
@@ -280,36 +299,40 @@ function writeAbstractWordUnknown(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+
   switch (step) {
     case 'ユーザーの疑問を短く要約する':
-      return `「${userInput}」という言葉の意味を、あなた向けに整理してみましょう。`;
+      return `「${userInput}」という言葉について、まずはあなたにとっての意味を一緒に整理していきましょう。`;
 
     case '抽象語が理解しづらい理由を説明する（概念が広い／文脈依存）':
     case '抽象語の意味が人によって違うことを説明する':
-      return `「${userInput}」という言葉は、人によって意味が大きく変わる“抽象語”です。まずはその前提を共有しますね。`;
+      return `「${userInput}」のような抽象語は、使う人や状況によって意味が大きく変わります。辞書的な意味よりも、文脈や体験のほうが影響しやすい言葉なんです。`;
 
     case '例え話で具体化する':
     case '一般的な意味をざっくり提示する':
-      return '抽象語は辞書的な意味よりも、実際の体験や価値観によって形づくられます。一般的な説明はできますが、それだけでは本質に届きません。';
+      return `抽象語は、一般的な説明だけだと本質に届きにくいことがあります。実際には、その人の価値観や経験によって形が変わる“ゆらぎのある言葉”なんです。`;
 
     case 'タイプ9w8に合わせて意味を噛み砕く':
     case '具体例（Aさんのケース）を提示する':
-      return `例えば、${typeName(context)} の人にとってはこの言葉が「${desire(context)}」や境界の感覚と結びつくことがあります。人によってまったく違う使われ方をします。`;
+      return `${name} の人の場合、この言葉が「${coreDesire}」や境界の感覚と結びつくことがあります。もちろん人によって違いますが、価値観の軸が反映されやすい言葉です。`;
 
     case '必要なら4核分析で補足する':
     case 'ユーザー自身の具体例を尋ねる':
-      return 'あなたの場合、この言葉はどんな場面で出てきましたか？具体的な状況を教えてもらえると、あなたにとっての意味を一緒に特定できます。';
+      return `あなた自身は、この言葉をどんな場面で耳にしましたか？具体的な状況を教えてもらえると、あなたの心理構造に沿って意味を特定できます。`;
 
     case '動機・願望・恐れの観点で整理する意図を説明する':
-      return `抽象語の本当の意味は、“動機・願望・恐れ・行動”の4つから整理すると明確になります。${typeName(context)} なら恐れは「${fear(context)}」、願望は「${desire(context)}」が起点になりやすいです。`;
+      return `抽象語の本当の意味をつかむには、“動機・願望・恐れ・行動”の4つの観点から整理すると分かりやすくなります。${name} の場合、恐れは「${coreFear}」、願望は「${coreDesire}」が起点になりやすいです。`;
 
     case 'まとめ（その言葉が9w8にどう関係するか）':
     case 'まとめ':
-      return `抽象語は“あなたにとっての意味”を特定することが大切です。${typeName(context)} の心理構造に沿って具体化できます。`;
+      return `抽象語は“あなたにとっての意味”を特定することが大切です。${name} の心理構造に沿って具体化すると、理解が深まりやすくなります。`;
 
     case '次の質問を提示する':
     case '必要なら追加質問':
-      return 'その言葉が出てきた場面を、思い出せる範囲で教えてください。';
+      return 'その言葉が出てきた場面を、思い出せる範囲で教えてください。そこから一緒に意味を特定していきましょう。';
 
     default:
       return step;
@@ -322,27 +345,35 @@ function writeFallbackExpert(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const conflictStyle = conflict(context);
+  const blind = blindSpot(context);
+  const work = workStyle(context);
+  const decisionStyle = decision(context);
+  const growthDir = growth(context);
+
   switch (step) {
     case 'ユーザーの質問を専門家として受け止める':
-      return `ご質問ありがとうございます。専門家の立場から「${userInput}」について整理します。`;
+      return `ご質問ありがとうございます。「${userInput}」について、専門的な観点から丁寧に整理していきますね。`;
 
     case '問題の背景を構造的に説明する':
-      return `まず、このテーマがどのような心理構造やタイプ論に関係するのかを明確にします。あなたの基準タイプは ${typeName(context)} です。`;
+      return `まず、このテーマがどのような心理構造やタイプ論に関係しているのかを明確にします。あなたの基準タイプは ${name} で、ここが理解の土台になります。`;
 
     case '専門的な観点から核心を提示する':
-      return '本質的なポイントは、表面的な行動ではなく、その背後にある動機・恐れ・欲求の構造です。';
+      return `本質的なポイントは、表面的な行動ではなく、その背後にある「動機」「恐れ」「欲求」の構造です。これらがどのように組み合わさって反応を生んでいるかを見ていきます。`;
 
     case 'タイプ論・心理構造の観点から分析する':
-      return `エニアグラムの観点では、中心となる恐れ「${fear(context)}」、自動反応「${conflict(context)}」、盲点「${blindSpot(context)}」の3つから説明できます。`;
+      return `エニアグラムの観点では、中心となる恐れ「${coreFear}」、自動反応「${conflictStyle}」、そして盲点「${blind}」の3つが、あなたの反応パターンを形づくっています。`;
 
     case 'ユーザーの状況に当てはめて具体化する':
-      return `あなたのケースでは、仕事スタイル「${workStyle(context)}」や意思決定「${decision(context)}」に特有の傾向が見られます。`;
+      return `あなたのケースでは、仕事の進め方「${work}」や意思決定の傾向「${decisionStyle}」に、タイプ特有の構造が自然に表れています。これらは性格の“癖”ではなく、心理構造の一貫した流れです。`;
 
     case '改善の方向性・理解のポイントを示す':
-      return `理解を深めるためには、自動反応を認識し、成長方向「${growth(context)}」に沿って動機を扱うことが重要です。`;
+      return `理解を深めるためには、自動反応を認識しつつ、成長方向である「${growthDir}」を少しずつ選択に取り入れていくことが大切です。これがタイプの統合に向かう動きになります。`;
 
     case '必要なら追加質問を提示する':
-      return 'もしよければ、最近このテーマに関連する出来事があれば教えてください。さらに深く分析できます。';
+      return 'もしよければ、最近このテーマに関連する出来事があれば教えてください。さらに精密に分析できます。';
 
     default:
       return step;
@@ -355,30 +386,36 @@ function writeRelationshipIssue(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const conflictStyle = conflict(context);
+  const communicationStyle = communication(context);
+  const blind = blindSpot(context);
+  const growthDir = growth(context);
+
   switch (step) {
     case '悩みを受け止める':
-      return `対人関係に関するご相談ですね。「${userInput}」について丁寧に整理していきます。`;
+      return `対人関係についてのご相談ですね。「${userInput}」という状況を、まずはあなた自身の反応の構造から丁寧に整理していきましょう。`;
 
     case '状況の構造を明確化する':
-      return 'まず、現在の状況を「事実」「相手の反応」「自分の内的反応」の3つに分けて理解します。';
+      return `対人関係の悩みは、「事実」「自分の内的反応」「自分の行動」の3つに分けて見ると理解しやすくなります。まずはあなたの側の構造を見ていきますね。`;
 
     case '相手の心理構造を推測する':
-      return '相手の行動や反応には、タイプ特有の動機や恐れが影響している可能性があります。';
+      return `ここでは相手のタイプや心理構造は扱わず、あなた自身の反応の流れに焦点を当てます。相手の理解が必要になったら、他者理解モジュールで扱うことができます。`;
 
     case '自分側の心理構造を整理する':
-      return `あなた自身の反応には、${typeName(context)} 固有の「${conflict(context)}」やコミュニケーション傾向「${communication(context)}」が表れやすいです。`;
+      return `あなたの反応には、${name} の傾向である「${conflictStyle}」や、コミュニケーションの癖である「${communicationStyle}」が自然に表れやすいです。これは性格の癖ではなく、心理構造の流れです。`;
 
     case '関係性の相互作用を分析する':
-      return `対人関係では、双方の自動反応が噛み合うことで問題が大きくなることがあります。あなたの側の盲点は「${blindSpot(context)}」です。`;
+      return `対人関係のズレは、あなたの自動反応と盲点「${blind}」が影響している可能性があります。まずは自分の反応のパターンを理解することが、関係改善の第一歩になります。`;
 
     case '改善の方向性を提示する':
-      return `改善の鍵は、相手の動機を理解しつつ、成長方向「${growth(context)}」に沿って自分の反応を少しずつ調整することです。`;
+      return `改善の鍵は、自分の反応を少しずつ調整することです。特に、成長方向である「${growthDir}」を意識すると、関係の流れが穏やかになりやすいです。`;
 
     case '具体的な行動案を示す':
-      return `具体的には、相手のニーズを確認する質問や、「${communication(context)}」を意識した境界の伝え方が有効です。`;
+      return `具体的には、「自分が何を感じているか」を少し丁寧に言語化したり、「${communicationStyle}」を意識して境界線を伝えると、関係の負荷が軽くなりやすいです。`;
 
     case '追加の状況確認を行う':
-      return 'もし差し支えなければ、最近その相手とのやり取りで印象的だった場面を教えてください。さらに深く分析できます。';
+      return 'もし差し支えなければ、最近のやり取りで「自分の反応が強く出た」と感じた場面を教えてください。そこからさらに精密に整理できます。';
 
     default:
       return step;
@@ -391,36 +428,44 @@ function writeSelfConflict(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+  const blind = blindSpot(context);
+  const work = workStyle(context);
+  const growthDir = growth(context);
+
   switch (step) {
     case '矛盾を受け止める':
-      return `自己矛盾についてのご相談ですね。「${userInput}」にどのような内的構造があるのか整理していきます。`;
+      return `自己矛盾についてのご相談ですね。「${userInput}」という状態を、まずはあなた自身の内側の構造から丁寧に整理していきます。`;
 
     case '矛盾の表層を明確化する':
-      return 'まず、表面上どのような矛盾が起きているのかを、行動・感情・思考の3つに分けて確認します。';
+      return `自己矛盾は、表面では「行動」「感情」「思考」が噛み合っていないように見えることがあります。まずはどこでズレが起きているのかを確認していきましょう。`;
 
     case '矛盾の深層構造を特定する':
-      return `自己矛盾は、多くの場合『欲求』『恐れ』『自動反応』の三層構造が衝突することで生じます。${typeName(context)} では恐れ「${fear(context)}」と願望「${desire(context)}」がぶつかりやすいです。`;
+      return `内側で矛盾が生じるときは、「欲求」「恐れ」「自動反応」の三層がぶつかっていることが多いです。${name} の場合、恐れ「${coreFear}」と願望「${coreDesire}」が同時に働きやすい傾向があります。`;
 
     case 'タイプ固有の葛藤ポイントを説明する':
-      return `エニアグラムでは、タイプごとに特有の葛藤ポイントがあります。${typeName(context)} では「${conflict(context)}」が矛盾を生みやすい構造です。`;
+      return `タイプごとに葛藤が生まれやすいポイントがあります。${name} の場合は「${conflictStyle}」が強く出ると、内側の動きがぶつかりやすくなります。`;
 
     case '矛盾の両側にある動機を言語化する':
-      return `矛盾の両側には、それぞれ守りたい価値や満たしたい欲求が存在します。あなたの軸は「${desire(context)}」です。`;
+      return `矛盾の両側には、それぞれ守りたい価値や満たしたい願望があります。あなたの軸は「${coreDesire}」で、ここがどのように働いているかを見ていくと整理しやすくなります。`;
 
     case '衝突している認知パターンを整理する':
-      return `次に、どの認知パターンが衝突しているのかを特定します。盲点「${blindSpot(context)}」が自動反応側に入りやすいです。`;
+      return `認知のズレは、盲点「${blind}」が影響している可能性があります。自動反応側に盲点が入りやすいので、気づきにくい衝突が起きやすいんです。`;
 
     case '感情の流れを構造化する':
-      return "矛盾が生じると、感情は『抑圧 → 反発 → 回避 → 固定化』の順で流れやすく、その流れを把握することが重要です。";
+      return `矛盾が強くなると、感情は「抑圧 → 反発 → 回避 → 固定化」という流れで動きやすくなります。この流れを把握すると、感情の扱いが楽になります。`;
 
     case '行動パターンへの影響を説明する':
-      return `この内的衝突は、行動の遅延・過剰適応・過剰防衛などの形で表面化することがあります。仕事面では「${workStyle(context)}」に影響しやすいです。`;
+      return `内的な衝突は、行動の遅延・過剰適応・防衛的な反応として表面化することがあります。仕事面では「${work}」に影響が出ることもあります。`;
 
     case '統合の方向性を提示する':
-      return `統合の鍵は、矛盾の両側を否定せず、成長方向「${growth(context)}」に沿って価値を使い分けることです。`;
+      return `統合の鍵は、矛盾の両側を否定せず、成長方向である「${growthDir}」を少しずつ選択に取り入れることです。これが内側の流れを整える助けになります。`;
 
     case '追加の深掘り質問を提示する':
-      return 'もしよければ、この矛盾が最も強く出た具体的な場面を教えてください。さらに精密に構造化できます。';
+      return 'もしよければ、この矛盾が最も強く出た具体的な場面を教えてください。そこからさらに精密に整理できます。';
 
     default:
       return step;
@@ -433,36 +478,42 @@ function writeStressPattern(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const stressPattern = stress(context);
+  const conflictStyle = conflict(context);
+  const decisionStyle = decision(context);
+  const growthDir = growth(context);
+
   switch (step) {
     case 'ストレスの訴えを受け止める':
-      return `ストレスに関するご相談ですね。「${userInput}」がどのような反応パターンを生むのか整理していきます。`;
+      return `ストレスについてのご相談ですね。「${userInput}」という状態を、まずはあなた自身の内側の反応から丁寧に整理していきます。`;
 
     case 'ストレスの入力源を特定する':
-      return 'まず、ストレスの入力源を「外的要因」「内的要因」「関係性要因」のどこにあるかを明確にします。';
+      return `ストレスは「外的要因」「内的要因」「関係性の要因」のどこから入ってきているかで、反応の出方が大きく変わります。まずはどこが一番負荷になっているのかを見ていきましょう。`;
 
     case '認知の歪みや自動反応を確認する':
-      return `ストレスがかかると、認知は自動反応を起こしやすくなります。${typeName(context)} では「${conflict(context)}」が出やすいです。`;
+      return `ストレスが強くなると、認知は自動反応に引っ張られやすくなります。${name} の場合は「${conflictStyle}」が先に働き、判断が偏ったり、感情が後ろに隠れたりすることがあります。`;
 
     case '感情の流れを把握する':
-      return "次に、感情がどのように流れているかを確認します。多くの場合、ストレス時は『不安 → 緊張 → 防衛 → 固定化』の順で強まります。";
+      return `ストレス時の感情は「不安 → 緊張 → 防衛 → 固定化」という流れで強まりやすいです。この流れを理解しておくと、感情の扱いが少し楽になります。`;
 
     case '行動パターンの変化を特定する':
-      return `ストレスは行動に影響し、回避・過剰努力・過剰防衛・衝動的行動などの形で表れます。あなたの反応は「${stress(context)}」に寄りやすいです。`;
+      return `ストレスは行動にも影響し、回避・過剰努力・防衛的な反応などの形で表れます。あなたの場合は「${stressPattern}」が出やすく、普段の自分とは違う行動になることがあります。`;
 
     case 'タイプ固有のストレス反応を説明する':
-      return `エニアグラムでは、タイプごとにストレス時の典型反応があります。${typeName(context)} では「${stress(context)}」が中心になります。`;
+      return `${name} のストレス反応は、「${stressPattern}」が中心になります。これは弱さではなく、心理構造が負荷に反応している自然な動きです。`;
 
     case '悪循環のループを構造化する':
-      return "ストレス反応は『認知 → 感情 → 行動 → 結果 → 再ストレス』というループを形成し、放置すると固定化します。";
+      return `ストレス反応は「認知 → 感情 → 行動 → 結果 → 再ストレス」というループを作りやすく、放置すると固定化します。どこでループが始まっているかを見極めることが大切です。`;
 
     case 'ループを断ち切るポイントを提示する':
-      return `改善の鍵は、ループのどこで介入するかを見極めることです。成長方向「${growth(context)}」を介入軸にすると整理しやすいです。`;
+      return `改善の鍵は、ループのどこで介入するかです。特に、成長方向である「${growthDir}」を小さく取り入れると、ループがゆっくりほどけていきます。`;
 
     case '具体的な対処案を示す':
-      return `具体的には、状況の再評価、境界線の設定、負荷の分散、短期的なクールダウンなどが有効です。意思決定では「${decision(context)}」を意識してください。`;
+      return `具体的には、状況の再評価、境界線の調整、負荷の分散、短期的なクールダウンなどが有効です。意思決定の場面では「${decisionStyle}」を意識すると、ストレスに引っ張られにくくなります。`;
 
     case '追加の状況確認を行う':
-      return 'もしよければ、最近ストレスが強く出た場面を教えてください。さらに精密に分析できます。';
+      return '最近、ストレスが強く出た場面があれば教えてください。そこからさらに精密に整理できます。';
 
     default:
       return step;
@@ -474,19 +525,34 @@ function writeQuestionHowToAsk(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+
   switch (step) {
     case 'ユーザーの迷いを要約する':
-      return `「${userInput}」について、どう質問すればよいか迷っていますね。`;
+      return `「${userInput}」について、どう質問すれば自分の内側が整理できるのか迷っている状態ですね。まずはその迷いを丁寧に扱っていきます。`;
+
     case '質問が難しい理由を説明する（抽象度／構造化の難しさ）':
-      return `質問が難しくなるのは、抽象語と具体エピソードが混ざるからです。${typeName(context)} では恐れ「${fear(context)}」が質問を曖昧にしやすいです。`;
+      return `質問が難しくなるのは、抽象的な言葉と具体的な場面が混ざってしまうからです。${name} の場合、恐れである「${coreFear}」が働くと、質問がぼやけやすい傾向があります。`;
+
     case '質問テンプレートを提示する（3〜5個）':
-      return '例: 「その場面で何を守りたかった？」「本当は何が怖かった？」「体はどう反応した？」';
+      return `質問を構造化すると、自分の内側が見えやすくなります。例えば次のような質問が役立ちます。
+- その場面で、何を一番守りたかった？
+- 本当は何が怖かった？
+- 体はどう反応していた？
+- どの瞬間から違和感が始まった？
+- その後、どんな選択をしようとしていた？`;
+
     case 'ユーザーの状況に合わせて使い方を説明する':
-      return `まず1つの場面だけ選び、上のテンプレートを順番に当てると精度が上がります。${typeName(context)} なら「${desire(context)}」を最初の軸にすると進めやすいです。`;
+      return `まずは最近の出来事を1つだけ選び、上の質問を順番に当ててみると、自分の反応の流れが見えやすくなります。${name} の場合は、願望である「${coreDesire}」を最初の軸にすると整理が進みやすいです。`;
+
     case 'まとめ（質問の精度が上がる理由）':
-      return '質問を構造化すると、感情と行動のつながりが見えやすくなります。';
+      return `質問を構造化すると、感情・思考・行動のつながりが自然に見えてきます。これは自己理解の精度を上げるための大切なステップです。`;
+
     case '次の質問を促す':
-      return '最近の1場面を1つ挙げて、最初の質問から試してみますか？';
+      return '最近の出来事を1つ挙げて、最初の質問から一緒に整理してみましょう。';
+
     default:
       return step;
   }
@@ -497,19 +563,37 @@ function writeNeedRediagnosis(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const stressPattern = stress(context);
+  const blind = blindSpot(context);
+
   switch (step) {
-    case '迷っている理由を要約する':
-      return `再診断すべきか迷っているのですね。「${userInput}」は自然な迷いです。現在の仮説は ${typeName(context)} です。`;
-    case '再診断が必要になる典型ケースを説明する':
-      return `環境変化が大きい時期や、回答時のストレスが強かった場合は再診断が有効です。${typeName(context)} では「${stress(context)}」の影響で回答が揺れやすいです。`;
-    case '現状の情報で判断できるポイントを提示する':
-      return `普段の反応とストレス時の反応を分けて見られるかが判断ポイントです。普段は「${desire(context)}」、ストレス時は「${stress(context)}」を比較してください。`;
-    case '追加で必要な情報を質問する':
-      return '最近繰り返している反応パターンを1つ教えてください。';
-    case '再診断の導線を提示する':
-      return '情報が揃ったら、再診断前に仮説を立ててから進めると精度が上がります。';
-    case 'まとめ':
-      return `再診断は「やり直し」ではなく、現在地を再確認する作業です。${typeName(context)} という地図を更新するイメージです。`;
+    case '再診断の迷いを受け止める':
+      return `「${userInput}」ということは、今のタイプ（${name}）に少し迷いが出ている状態ですね。まずはその感覚を丁寧に扱っていきましょう。`;
+
+    case '迷いが生まれる典型理由を説明する':
+      return `タイプ診断に迷いが出るのは自然なことで、ストレス状態・役割期待・環境の影響が強く出ていると、普段の自分と違って見えることがあります。特に「${stressPattern}」が出ていると、タイプが揺れやすくなります。`;
+
+    case 'タイプの核（恐れ・願望）を再確認する':
+      return `タイプを見直すときは、行動よりも「恐れ」「願望」を確認するのが一番確実です。あなたの核となる恐れは「${coreFear}」、願望は「${coreDesire}」です。ここがブレていないかを見ていきましょう。`;
+
+    case '迷いの原因を構造化する':
+      return `迷いの原因は、盲点「${blind}」が影響している可能性があります。盲点が働くと、自分の反応の“本当の理由”が見えづらくなり、タイプが違うように感じることがあります。`;
+
+    case '再診断が必要かどうかの判断基準を提示する':
+      return `再診断が必要かどうかは、「普段の自分」と「ストレス下の自分」を分けて見たときに、核となる願望がどちらでも同じかどうかで判断できます。願望が変わらないなら、タイプは大きくズレていません。`;
+
+    case '再診断の進め方を提案する':
+      return `もし再診断を進めるなら、最近の出来事を3つほど選び、それぞれで「何を守ろうとしたか」「何が怖かったか」を確認すると、タイプの軸が自然に浮かび上がります。`;
+
+    case 'まとめ（迷いの扱い方）':
+      return `タイプの迷いは、自己理解が深まっているサインでもあります。焦らず、核となる恐れと願望を手がかりに整理していけば、自然と輪郭がはっきりしてきます。`;
+
+    case '追加質問':
+      return '最近「この反応はタイプと違うかも」と感じた場面があれば、1つ教えてください。そこから一緒に整理できます。';
+
     default:
       return step;
   }
@@ -520,19 +604,41 @@ function writeBehaviorReason(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+  const blind = blindSpot(context);
+  const work = workStyle(context);
+
   switch (step) {
-    case '行動の内容を要約する':
-      return `「${userInput}」という行動の理由を整理しましょう。`;
-    case 'その行動が起きる心理的背景を説明する':
-      return `行動は多くの場合、恐れを避ける反応と、欲求を満たす反応の重なりで起きます。${typeName(context)} では恐れ「${fear(context)}」と願望「${desire(context)}」が同時に働きます。`;
-    case '4核分析で分解する':
-      return '動機・願望・恐れ・行動の4つに分けると、行動の意味が見えやすくなります。';
-    case 'タイプ9w8の構造と照合する':
-      return `${typeName(context)} では「${desire(context)}」と「${conflict(context)}」が同時に働くため、行動が揺れて見えることがあります。仕事面では「${workStyle(context)}」としても表れます。`;
-    case 'まとめ（その行動が示す性質）':
-      return `その行動は弱さではなく、守ろうとしている価値「${desire(context)}」の表れです。`;
-    case '次の質問':
-      return 'その行動が出る直前、何を一番避けたいと感じていましたか？';
+    case '行動理由の疑問を受け止める':
+      return `「${userInput}」という行動について、なぜそうしたのか自分でも分からない状態なんですね。まずはその感覚を丁寧に扱っていきましょう。`;
+
+    case '行動の表層を整理する':
+      return `行動には必ず「表に見える理由」と「内側で働いていた理由」があります。まずは表層の行動をそのまま整理してみますね。`;
+
+    case '行動の深層構造を説明する':
+      return `深層では、恐れ「${coreFear}」や願望「${coreDesire}」が同時に働いていた可能性があります。行動はこの2つの力のバランスで決まることが多いです。`;
+
+    case '自動反応の影響を説明する':
+      return `その場面では、${name} の自動反応である「${conflictStyle}」が先に働き、行動が瞬間的に決まった可能性があります。これは性格の癖ではなく、心理構造の自然な動きです。`;
+
+    case '盲点が行動理由を隠すことを説明する':
+      return `行動理由が分からなくなるのは、盲点「${blind}」が影響していることがあります。盲点が働くと、行動の“本当の動機”が自分でも見えづらくなるんです。`;
+
+    case '行動の目的を言語化する':
+      return `行動の裏側には、必ず守りたい価値や満たしたい願望があります。あなたの場合は「${coreDesire}」を守るための選択だった可能性が高いです。`;
+
+    case '行動パターンの傾向を説明する':
+      return `行動の傾向は、仕事の進め方「${work}」にも自然に表れます。これは性格の癖ではなく、心理構造の一貫した流れです。`;
+
+    case 'まとめ（行動理由の扱い方）':
+      return `行動理由が分からないときは、表層ではなく深層の「恐れ・願望・自動反応」を見ていくと、自然に輪郭がはっきりしてきます。これは自己理解を深める大切なステップです。`;
+
+    case '追加質問':
+      return 'この行動の前後で、どんな気持ちや違和感がありましたか？そこからさらに精密に整理できます。';
+
     default:
       return step;
   }
@@ -543,19 +649,44 @@ function writeEmotionMovement(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+  const stressPattern = stress(context);
+  const blind = blindSpot(context);
+
   switch (step) {
-    case '感情の疑問を要約する':
-      return `「${userInput}」について、感情の流れがつかみにくい状態ですね。`;
-    case '感情がわかりづらい理由を説明する（9の傾向）':
-      return `${typeName(context)} の傾向では、「${conflict(context)}」のために感情を後回しにしやすく、気づきが遅れがちです。`;
-    case 'タイプ9w8の感情構造を説明する':
-      return `${typeName(context)} は普段「${desire(context)}」を優先しても、境界が侵されると「${stress(context)}」として強い反応が出ることがあります。`;
-    case '具体例で補足する':
-      return '例として「最初は我慢→あとで疲労や怒りとして出る」という流れがよく起こります。';
-    case 'まとめ':
-      return `感情は「遅れて出る」前提で追うと、実感と一致しやすくなります。成長方向は「${growth(context)}」です。`;
-    case '次の質問':
-      return '最近、後から感情が出てきた場面はありましたか？';
+    case '感情の疑問を受け止める':
+      return `「${userInput}」という感情の動きについて、なぜそう感じたのか分からない状態なんですね。まずはその感覚を丁寧に扱っていきましょう。`;
+
+    case '感情の表層を整理する':
+      return `感情には「表に出ている感情」と「内側で先に動いていた感情」があります。まずは表層の感情をそのまま整理してみますね。`;
+
+    case '感情の深層構造を説明する':
+      return `深層では、恐れ「${coreFear}」や願望「${coreDesire}」が同時に働いていた可能性があります。感情はこの2つの力のバランスで揺れやすいんです。`;
+
+    case '自動反応の影響を説明する':
+      return `その場面では、${name} の自動反応である「${conflictStyle}」が先に働き、感情が一気に動いた可能性があります。これは性格の癖ではなく、心理構造の自然な動きです。`;
+
+    case '感情の流れを段階として説明する':
+      return `感情は「刺激 → 内的反応 → 認知の揺れ → 行動衝動 → 表出」という流れで動きます。ストレスが強いと「${stressPattern}」が入り、流れが速くなったり、途中で歪んだりします。`;
+
+    case '盲点が感情の理解を妨げることを説明する':
+      return `感情の理由が分からなくなるのは、盲点「${blind}」が影響していることがあります。盲点が働くと、感情の“最初の動き”が自分でも見えづらくなるんです。`;
+
+    case '感情の目的を言語化する':
+      return `感情の裏側には、必ず守りたい価値や満たしたい願望があります。あなたの場合は「${coreDesire}」を守るために感情が動いた可能性が高いです。`;
+
+    case '感情と行動のつながりを説明する':
+      return `感情の動きは行動にも影響し、回避・反発・沈黙・過剰適応などの形で表れます。これは弱さではなく、心理構造の自然な反応です。`;
+
+    case 'まとめ（感情の扱い方）':
+      return `感情の動きが分からないときは、表層ではなく深層の「恐れ・願望・自動反応」を見ていくと、自然に輪郭がはっきりしてきます。これは自己理解を深める大切なステップです。`;
+
+    case '追加質問':
+      return 'この感情が動いた場面で、最初に体がどう反応したか覚えていますか？そこからさらに精密に整理できます。';
+
     default:
       return step;
   }
@@ -566,19 +697,44 @@ function writeGuiltUnknown(
   context: WriterContext,
   userInput: string
 ): string {
+  const name = typeName(context);
+  const coreFear = fear(context);
+  const coreDesire = desire(context);
+  const conflictStyle = conflict(context);
+  const blind = blindSpot(context);
+  const stressPattern = stress(context);
+
   switch (step) {
-    case '罪悪感の疑問を要約する':
-      return `「${userInput}」という罪悪感の扱いが難しいのですね。`;
-    case '罪悪感が生まれる心理構造を説明する':
-      return `罪悪感は「期待とのズレ」を察知した時に生まれやすい感情です。${typeName(context)} では恐れ「${fear(context)}」がトリガーになりやすいです。`;
-    case 'タイプ9w8の罪悪感の特徴を説明する':
-      return `${typeName(context)} では「${conflict(context)}」と責任感が重なり、自分の境界より相手優先になりやすいです。盲点は「${blindSpot(context)}」です。`;
-    case '具体例で補足する':
-      return '断れなかった後に自己否定が強まる、という形で出ることがあります。';
-    case 'まとめ':
-      return `罪悪感は「悪い証拠」ではなく、価値観のセンサーとして扱うと整理しやすくなります。軸は「${desire(context)}」です。`;
-    case '次の質問':
-      return '最近、罪悪感が出た直前にどんな場面がありましたか？';
+    case '罪悪感の疑問を受け止める':
+      return `「${userInput}」という罪悪感について、なぜそう感じたのか自分でも分からない状態なんですね。まずはその感覚を丁寧に扱っていきましょう。`;
+
+    case '罪悪感の表層を整理する':
+      return `罪悪感には「表に出ている理由」と「内側で先に動いていた理由」があります。まずは表層の感情をそのまま整理してみますね。`;
+
+    case '罪悪感の深層構造を説明する':
+      return `深層では、恐れ「${coreFear}」や願望「${coreDesire}」が同時に働いていた可能性があります。罪悪感はこの2つの力がぶつかったときに生まれやすいんです。`;
+
+    case '自動反応の影響を説明する':
+      return `その場面では、${name} の自動反応である「${conflictStyle}」が先に働き、罪悪感が一気に強まった可能性があります。これは性格の癖ではなく、心理構造の自然な動きです。`;
+
+    case '罪悪感の流れを段階として説明する':
+      return `罪悪感は「刺激 → 内的反応 → 認知の揺れ → 自責 → 固定化」という流れで強まりやすいです。ストレスが強いと「${stressPattern}」が入り、流れが速くなったり、途中で歪んだりします。`;
+
+    case '盲点が罪悪感の理解を妨げることを説明する':
+      return `罪悪感の理由が分からなくなるのは、盲点「${blind}」が影響していることがあります。盲点が働くと、罪悪感の“最初の動機”が自分でも見えづらくなるんです。`;
+
+    case '罪悪感の目的を言語化する':
+      return `罪悪感の裏側には、必ず守りたい価値や満たしたい願望があります。あなたの場合は「${coreDesire}」を守るために罪悪感が動いた可能性が高いです。`;
+
+    case '罪悪感と行動のつながりを説明する':
+      return `罪悪感は行動にも影響し、過剰な責任感・謝罪・回避・自己抑制などの形で表れます。これは弱さではなく、心理構造の自然な反応です。`;
+
+    case 'まとめ（罪悪感の扱い方）':
+      return `罪悪感の理由が分からないときは、表層ではなく深層の「恐れ・願望・自動反応」を見ていくと、自然に輪郭がはっきりしてきます。これは自己理解を深める大切なステップです。`;
+
+    case '追加質問':
+      return 'この罪悪感が生まれた場面で、最初にどんな違和感がありましたか？そこからさらに精密に整理できます。';
+
     default:
       return step;
   }
