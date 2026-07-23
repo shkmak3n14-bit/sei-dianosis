@@ -48,8 +48,8 @@
       "emotion": ["混乱"],
       "context": ["感情理解"]
     },
-    "relationshipTrouble": {
-      "label": "他者との関係の悩み",
+    "relationshipIssue": {
+      "label": "対人関係の悩み",
       "keywords": ["相手", "関係", "人間関係", "悩み"],
       "emotion": ["ストレス"],
       "context": ["対人関係"]
@@ -88,7 +88,7 @@
     "angerUnknown",
     "guiltUnknown",
     "stressChange",
-    "relationshipTrouble",
+    "relationshipIssue",
     "abstractWordUnknown",
     "questionHowToAsk",
     "needRediagnosis",

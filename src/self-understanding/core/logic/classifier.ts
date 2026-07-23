@@ -46,3 +46,6 @@ export function classifyUserInput(text: string): string {
   // 最も高いものを返す
   return results.length > 0 ? results[0].type : 'fallbackExpert';
 }
+
+/** 多段対話対応版 response_engine 向けエイリアス */
+export const classify = classifyUserInput;

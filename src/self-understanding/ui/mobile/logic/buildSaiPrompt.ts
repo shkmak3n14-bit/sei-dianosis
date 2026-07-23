@@ -1,9 +1,11 @@
+import { SAI_PERSONA_PROMPT } from '../../../core/character/sai_persona';
 import type { ExampleStoryTemplate } from '../data/exampleStoryWeakness';
 
 export type SaiLlmPromptInput = {
   userQuestion: string;
   exampleStory: ExampleStoryTemplate['exampleStory'];
   userInput: string;
+  wingCode?: string;
 };
 
 /** 例え話 → ユーザー入力 → LLM へ渡すプロンプトを組み立てる */
@@ -11,13 +13,18 @@ export function buildSaiPrompt({
   userQuestion,
   exampleStory,
   userInput,
+  wingCode,
 }: SaiLlmPromptInput): string {
-  const exampleStoryText = [
-    exampleStory.title,
-    ...exampleStory.text,
-  ].join('\n');
+  const exampleStoryText = [exampleStory.title, ...exampleStory.text].join('\n');
+  const diagnosisLine = wingCode
+    ? `ユーザーの診断結果: ${wingCode}`
+    : 'ユーザーの診断結果: 未指定（一般的な構造で返答）';
 
-  return `あなたは「SIE診断AIサイ」です。
+  return `${SAI_PERSONA_PROMPT}
+
+---
+${diagnosisLine}
+---
 
 ユーザーが抽象語を質問しました：
 ${userQuestion}

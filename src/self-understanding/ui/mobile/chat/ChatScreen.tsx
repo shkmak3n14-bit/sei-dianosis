@@ -39,7 +39,7 @@ export default function ChatScreen({ route }: Props) {
           data={messages}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => <ChatBubble sender={item.sender} text={item.text} />}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(_, index) => index.toString()}
           onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
         />
 

@@ -1,29 +1,33 @@
-import { classifyUserInput } from './classifier';
-import { getTemplateByType } from './template_engine';
+// response_engine.ts
+
+import { classify } from './classifier';
+import { getTemplate } from './template_engine';
 
 export type GeneratedResponse = {
   type: string;
-  label?: string;
+  label: string;
   flow: string[];
 };
 
+/**
+ * 多段対話対応版 response_engine
+ *
+ * - ユーザー入力を分類する
+ * - 該当テンプレートの flow（ステップ名）を返す
+ * - 文章化はしない（useChatFlow が行う）
+ */
 export function generateResponse(userInput: string): GeneratedResponse {
-  const type = classifyUserInput(userInput);
-  const template = getTemplateByType(type) ?? getTemplateByType('fallbackExpert');
+  // ① 分類
+  const type = classify(userInput);
 
-  if (!template) {
-    return {
-      type: 'fallbackExpert',
-      flow: ['専門家モードで自由回答します。'],
-    };
-  }
+  // ② テンプレート取得
+  const template = getTemplate(type);
 
-  // テンプレート type を優先（relationshipTrouble → relationshipIssue など）
-  const responseType = template.type;
-
+  // ③ flow（ステップ名の配列）を返す
+  // type はテンプレート側を優先（stressChange → stressPattern など）
   return {
-    type: responseType,
+    type: template.type,
     label: template.label,
-    flow: template.flow,
+    flow: template.flow, // ← 未文章化のステップ名
   };
 }

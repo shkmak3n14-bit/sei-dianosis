@@ -78,8 +78,7 @@ export function getTemplateByType(type: string): ResponseTemplate | undefined {
     return FALLBACK_EXPERT_TEMPLATE;
   }
 
-  // classification 側の relationshipTrouble も同一テンプレートへ
-  if (type === 'relationshipIssue' || type === 'relationshipTrouble') {
+  if (type === 'relationshipIssue') {
     return RELATIONSHIP_ISSUE_TEMPLATE;
   }
 
@@ -93,4 +92,9 @@ export function getTemplateByType(type: string): ResponseTemplate | undefined {
   }
 
   return (templates.responseTemplates as ResponseTemplate[]).find((t) => t.type === type);
+}
+
+/** 多段対話対応版 response_engine 向け。必ずテンプレートを返す */
+export function getTemplate(type: string): ResponseTemplate {
+  return getTemplateByType(type) ?? FALLBACK_EXPERT_TEMPLATE;
 }
