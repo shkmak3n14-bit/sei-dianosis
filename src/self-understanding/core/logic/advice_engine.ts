@@ -34,6 +34,7 @@ export function generateAdvice(
   const typeKey = userProfile.wing || userProfile.type;
   const type = getEnneagramTypeEntry(typeKey);
   const behavior = getEnneagramBehaviorEntry(userProfile.type);
+  // behavior は wing の影響を受けないため、type を使う
   const instinct = userProfile.instinct
     ? getEnneagramInstinctEntry(userProfile.instinct)
     : null;
@@ -49,7 +50,7 @@ export function generateAdvice(
 /** チャット表示用に work / stress / growth を1本の文章にする */
 export function formatAdviceMessage(advice: GeneratedAdvice): string {
   return [
-    'ここまでの対話を踏まえて、あなたへの助言です。\n',
+    'ここまでの対話を踏まえて、あなたのタイプ構造に沿った助言をまとめました。\n',
     `【仕事】\n${advice.work}`,
     `【ストレス】\n${advice.stress}`,
     `【成長】\n${advice.growth}`,
