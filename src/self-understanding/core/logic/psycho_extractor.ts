@@ -8,6 +8,26 @@ export type PsychoStructure = {
   action: string | null;
 };
 
+export const EMPTY_PSYCHO_STRUCTURE: PsychoStructure = {
+  fear: null,
+  desire: null,
+  motive: null,
+  action: null,
+};
+
+/** 既存の蓄積に新規抽出をマージ（null は既存値を消さない） */
+export function mergePsychoStructure(
+  current: PsychoStructure,
+  incoming: PsychoStructure
+): PsychoStructure {
+  return {
+    fear: incoming.fear ?? current.fear,
+    desire: incoming.desire ?? current.desire,
+    motive: incoming.motive ?? current.motive,
+    action: incoming.action ?? current.action,
+  };
+}
+
 export type ExtractPsychoOptions = {
   wingCode?: string;
 };
