@@ -1,6 +1,6 @@
 /**
  * エニアグラム辞書の共通型
- * （types / wings / center の各ファイルで共有）
+ * （types / wings / center / behavior / instincts の各ファイルで共有）
  */
 
 /** 純タイプ（type1〜type9）／ウイング（type1w2 など）共通 */
@@ -29,5 +29,23 @@ export type EnneagramCenterEntry = {
   coreDesire: string;
   stressPattern: string;
   growthDirection: string;
+  blindSpot: string;
+};
+
+/** 行動パターン（behavior） */
+export type EnneagramBehaviorEntry = {
+  workStyle: string;
+  communication: string;
+  stressReaction: string;
+  decisionPattern: string;
+  conflictPattern: string;
+};
+
+/** 本能スタック（sp / so / sx） */
+export type EnneagramInstinctEntry = {
+  name: 'Self-Preservation' | 'Social' | 'Sexual';
+  coreDrive: string;
+  stressPattern: string;
+  focus: string;
   blindSpot: string;
 };

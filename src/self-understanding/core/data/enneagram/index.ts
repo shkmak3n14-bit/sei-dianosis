@@ -1,14 +1,18 @@
 /**
  * エニアグラム辞書の公開エントリ
- * center / types / wings をまとめて export する
+ * center / types / wings / behavior / instincts をまとめて export する
  */
 
+// ===== 型の export =====
 export type {
+  EnneagramBehaviorEntry,
   EnneagramCenterEntry,
   EnneagramInsightEntry,
+  EnneagramInstinctEntry,
   EnneagramTypeEntry,
 } from './schema';
 
+// ===== 辞書の export =====
 export { gutCenter } from './center/gut';
 export { heartCenter } from './center/heart';
 export { headCenter } from './center/head';
@@ -42,14 +46,33 @@ export { type8w9 } from './wings/type8w9';
 export { type9w1 } from './wings/type9w1';
 export { type9w8 } from './wings/type9w8';
 
+export { type1Behavior } from './behavior/type1.behavior';
+export { type2Behavior } from './behavior/type2.behavior';
+export { type3Behavior } from './behavior/type3.behavior';
+export { type4Behavior } from './behavior/type4.behavior';
+export { type5Behavior } from './behavior/type5.behavior';
+export { type6Behavior } from './behavior/type6.behavior';
+export { type7Behavior } from './behavior/type7.behavior';
+export { type8Behavior } from './behavior/type8.behavior';
+export { type9Behavior } from './behavior/type9.behavior';
+
+export { instinctSP } from './instincts/sp';
+export { instinctSO } from './instincts/so';
+export { instinctSX } from './instincts/sx';
+
+// ===== ここから内部利用の import =====
 import type {
+  EnneagramBehaviorEntry,
   EnneagramCenterEntry,
   EnneagramInsightEntry,
+  EnneagramInstinctEntry,
   EnneagramTypeEntry,
 } from './schema';
+
 import { gutCenter } from './center/gut';
 import { heartCenter } from './center/heart';
 import { headCenter } from './center/head';
+
 import { type1 } from './types/type1';
 import { type2 } from './types/type2';
 import { type3 } from './types/type3';
@@ -59,6 +82,7 @@ import { type6 } from './types/type6';
 import { type7 } from './types/type7';
 import { type8 } from './types/type8';
 import { type9 } from './types/type9';
+
 import { type1w2 } from './wings/type1w2';
 import { type1w9 } from './wings/type1w9';
 import { type2w1 } from './wings/type2w1';
@@ -78,7 +102,22 @@ import { type8w9 } from './wings/type8w9';
 import { type9w1 } from './wings/type9w1';
 import { type9w8 } from './wings/type9w8';
 
-/** 純タイプ（1〜9） */
+import { type1Behavior } from './behavior/type1.behavior';
+import { type2Behavior } from './behavior/type2.behavior';
+import { type3Behavior } from './behavior/type3.behavior';
+import { type4Behavior } from './behavior/type4.behavior';
+import { type5Behavior } from './behavior/type5.behavior';
+import { type6Behavior } from './behavior/type6.behavior';
+import { type7Behavior } from './behavior/type7.behavior';
+import { type8Behavior } from './behavior/type8.behavior';
+import { type9Behavior } from './behavior/type9.behavior';
+
+import { instinctSP } from './instincts/sp';
+import { instinctSO } from './instincts/so';
+import { instinctSX } from './instincts/sx';
+
+// ===== 辞書構造 =====
+
 export const BASE_TYPES: Record<string, EnneagramTypeEntry> = {
   '1': type1,
   '2': type2,
@@ -91,7 +130,6 @@ export const BASE_TYPES: Record<string, EnneagramTypeEntry> = {
   '9': type9,
 };
 
-/** ウイング（18種） */
 export const WING_TYPES: Record<string, EnneagramTypeEntry> = {
   '1w2': type1w2,
   '1w9': type1w9,
@@ -113,12 +151,53 @@ export const WING_TYPES: Record<string, EnneagramTypeEntry> = {
   '9w8': type9w8,
 };
 
-/** センター辞書 */
 export const CENTER_INSIGHTS: Record<string, EnneagramCenterEntry> = {
   Gut: gutCenter,
   Heart: heartCenter,
   Head: headCenter,
 };
+
+/** 行動パターン（純タイプ 1〜9） */
+export const BEHAVIOR_TYPES: Record<string, EnneagramBehaviorEntry> = {
+  '1': type1Behavior,
+  '2': type2Behavior,
+  '3': type3Behavior,
+  '4': type4Behavior,
+  '5': type5Behavior,
+  '6': type6Behavior,
+  '7': type7Behavior,
+  '8': type8Behavior,
+  '9': type9Behavior,
+};
+export function getEnneagramBehaviorEntry(
+  type: string
+): EnneagramBehaviorEntry | null {
+  const normalized = type.trim();
+  if (BEHAVIOR_TYPES[normalized]) {
+    return BEHAVIOR_TYPES[normalized];
+  }
+  const base = normalized.charAt(0);
+  return BEHAVIOR_TYPES[base] ?? null;
+}
+
+/** 本能スタック（sp / so / sx） */
+export const INSTINCT_TYPES: Record<string, EnneagramInstinctEntry> = {
+  sp: instinctSP,
+  so: instinctSO,
+  sx: instinctSX,
+  'Self-Preservation': instinctSP,
+  Social: instinctSO,
+  Sexual: instinctSX,
+};
+
+export function getEnneagramInstinctEntry(
+  code: string
+): EnneagramInstinctEntry | null {
+  const normalized = code.trim();
+  return INSTINCT_TYPES[normalized] ?? null;
+}
+
+// ===== Insight 関数 =====
 
 const DEFAULT_INSIGHT =
   'あなたのタイプの特性が、fear・desire・motive・action の動きに影響しています。';
@@ -134,7 +213,6 @@ function formatTypeInsight(entry: EnneagramTypeEntry): string {
   ].join('\n');
 }
 
-/** ウイング優先 → 純タイプ → デフォルト */
 export function getEnneagramInsight(type: string): string {
   const normalized = type.trim();
 
@@ -150,7 +228,6 @@ export function getEnneagramInsight(type: string): string {
   return DEFAULT_INSIGHT;
 }
 
-/** 文字列 insight が必要な呼び出し向け */
 export function getEnneagramInsightEntry(type: string): EnneagramInsightEntry {
   const normalized = type.trim();
   return {

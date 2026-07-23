@@ -6,8 +6,9 @@
   - `center/`（gut / heart / head）
   - `types/`（type1〜type9）
   - `wings/`（type1w9 など 18種）
+  - `behavior/`（行動パターン辞書）
+  - `instincts/`（本能スタック sp / so / sx）
   - `index.ts`（まとめて export）
-- 行動傾向（予定: B）
 - ストレス時の反応
 - 誤解ポイント
 - 自己理解の進捗ログ
