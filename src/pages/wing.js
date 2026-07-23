@@ -11,6 +11,8 @@ import { TYPE6_WING_DETAIL_PROFILES } from "../data/wingDetails/type6.js";
 import { TYPE7_WING_DETAIL_PROFILES } from "../data/wingDetails/type7.js";
 import { TYPE8_WING_DETAIL_PROFILES } from "../data/wingDetails/type8.js";
 import { TYPE9_WING_DETAIL_PROFILES } from "../data/wingDetails/type9.js";
+import { ENNEA_CARD_9W8 } from "../data/enneaCards/9w8.js";
+import { renderEnneaCardMarkup } from "../components/renderEnneaCardMarkup.js";
 import {
 	loadStoredDiagnosisState,
 	saveWingState,
@@ -502,6 +504,13 @@ function renderWingShareCardProfile(wingCode) {
 }
 
 function renderWingLayerProfile(wingCode, layer) {
+	// 9w8 は診断カード JSON（EnneaCard9w8）を優先表示
+	if (wingCode === "9w8") {
+		return renderEnneaCardMarkup(ENNEA_CARD_9W8.sections, {
+			heading: "診断結果カード｜タイプ9w8（穏やかで芯の強い人）"
+		});
+	}
+
 	if (layer === "mobile") {
 		return renderWingMobileProfile(wingCode);
 	}
