@@ -1,52 +1,143 @@
 // advice_engine.ts
 
-import { getEnneagramInsight } from '../data/enneagram';
-import type { PsychoStructure } from './psycho_extractor';
+import {
+  CENTER_INSIGHTS,
+  getEnneagramBehaviorEntry,
+  getEnneagramInstinctEntry,
+  getEnneagramTypeEntry,
+  type EnneagramBehaviorEntry,
+  type EnneagramCenterEntry,
+  type EnneagramInstinctEntry,
+  type EnneagramTypeEntry,
+} from '../data/enneagram';
+import type { UserEnneagramProfile } from './response_engine';
 
+export type GeneratedAdvice = {
+  work: string;
+  stress: string;
+  growth: string;
+};
+
+/**
+ * サイの助言エンジン（advice_engine）
+ *
+ * - 行動辞書（behavior）
+ * - 本能辞書（instincts）
+ * - タイプ辞書（type）
+ * - センター辞書（center）
+ *
+ * を統合して「タイプ別の助言」を生成する。
+ */
 export function generateAdvice(
-  structure: PsychoStructure,
-  enneagramType?: string // 例: "9w8"（任意）
+  userProfile: UserEnneagramProfile
+): GeneratedAdvice {
+  const typeKey = userProfile.wing || userProfile.type;
+  const type = getEnneagramTypeEntry(typeKey);
+  const behavior = getEnneagramBehaviorEntry(userProfile.type);
+  const instinct = userProfile.instinct
+    ? getEnneagramInstinctEntry(userProfile.instinct)
+    : null;
+  const center = CENTER_INSIGHTS[userProfile.center];
+
+  return {
+    work: buildWorkAdvice(type, behavior, instinct),
+    stress: buildStressAdvice(type, behavior, instinct),
+    growth: buildGrowthAdvice(type, behavior, instinct, center),
+  };
+}
+
+/** チャット表示用に work / stress / growth を1本の文章にする */
+export function formatAdviceMessage(advice: GeneratedAdvice): string {
+  return [
+    'ここまでの対話を踏まえて、あなたへの助言です。\n',
+    `【仕事】\n${advice.work}`,
+    `【ストレス】\n${advice.stress}`,
+    `【成長】\n${advice.growth}`,
+  ].join('\n\n');
+}
+
+/** 仕事の助言（work） */
+function buildWorkAdvice(
+  type: EnneagramTypeEntry | null,
+  behavior: EnneagramBehaviorEntry | null,
+  instinct: EnneagramInstinctEntry | null
 ): string {
-  const { fear, desire, motive, action } = structure;
+  const lines: string[] = [];
 
-  // ① 状況の要点整理
-  let advice = '今の状況を整理すると、あなたの内側では次のような動きが起きています。\n\n';
-
-  // ② fear / desire / motive / action の解釈
-  if (fear) {
-    advice += `● 恐れ（fear）：${fear}\n`;
+  if (behavior) {
+    lines.push(`あなたの仕事スタイルは「${behavior.workStyle}」です。`);
   }
-  if (desire) {
-    advice += `● 願望（desire）：${desire}\n`;
+  if (instinct) {
+    lines.push(
+      `本能スタック（${instinct.name}）の影響で「${instinct.focus}」を優先しやすい傾向があります。`
+    );
   }
-  if (motive) {
-    advice += `● 動機（motive）：${motive}\n`;
+  if (behavior) {
+    lines.push(
+      `そのため、仕事では「${behavior.decisionPattern}」という意思決定パターンが出やすいです。`
+    );
   }
-  if (action) {
-    advice += `● 行動パターン（action）：${action}\n`;
-  }
-
-  advice += '\n';
-
-  // ③ エニアグラムタイプの反映（任意）— insight 辞書を参照
-  if (enneagramType) {
-    advice += `あなたは ${enneagramType} の傾向を持っているため、これらの心理構造は特に強く働きやすいです。\n`;
-    advice += getEnneagramInsight(enneagramType);
-    advice += '\n';
+  if (type && lines.length === 0) {
+    lines.push(`タイプの特性として「${type.coreDesire}」が仕事観に影響しやすいです。`);
   }
 
-  // ④ 行動の選択肢
-  advice += 'ここから選べる行動の選択肢は、次の3つです。\n\n';
-  advice +=
-    '1. 恐れを避ける行動を続ける（短期的には楽だが、長期的には負荷が残る）\n';
-  advice +=
-    '2. 願望に沿った行動を小さく試す（負荷はあるが、自己効力感が上がる）\n';
-  advice +=
-    '3. 動機を再定義し、行動パターンを調整する（最も長期的な変化につながる）\n\n';
+  return lines.join('\n') || '仕事面の助言を組み立てるには、タイプ情報が必要です。';
+}
 
-  // ⑤ 誇りある選択を促す一言
-  advice +=
-    "どれを選ぶかはあなたの自由ですが、あなたが『誇りを持てる選択』をすることが一番大切です。";
+/** ストレス時の助言（stress） */
+function buildStressAdvice(
+  type: EnneagramTypeEntry | null,
+  behavior: EnneagramBehaviorEntry | null,
+  instinct: EnneagramInstinctEntry | null
+): string {
+  const lines: string[] = [];
 
-  return advice;
+  if (behavior) {
+    lines.push(
+      `ストレス時には「${behavior.stressReaction}」が強まりやすいです。`
+    );
+  }
+  if (instinct) {
+    lines.push(
+      `本能スタックの影響で「${instinct.stressPattern}」が加わり、反応が増幅されることがあります。`
+    );
+  }
+  if (type) {
+    lines.push(
+      `この状態では「${type.stressPattern}」というタイプ固有の反応が出やすくなります。`
+    );
+  }
+
+  return lines.join('\n') || 'ストレス面の助言を組み立てるには、タイプ情報が必要です。';
+}
+
+/** 成長方向の助言（growth） */
+function buildGrowthAdvice(
+  type: EnneagramTypeEntry | null,
+  behavior: EnneagramBehaviorEntry | null,
+  instinct: EnneagramInstinctEntry | null,
+  center: EnneagramCenterEntry | undefined
+): string {
+  const lines: string[] = [];
+
+  if (type) {
+    lines.push(`あなたの成長方向は「${type.growthDirection}」です。`);
+  }
+  if (center) {
+    lines.push(
+      `センター（${center.name}）の影響で「${center.growthDirection}」が基盤になります。`
+    );
+  }
+  if (behavior) {
+    lines.push(
+      `行動面では「${behavior.communication}」を意識すると、成長が加速します。`
+    );
+  }
+  if (instinct) {
+    lines.push(
+      `本能スタックの盲点「${instinct.blindSpot}」に注意すると、安定した成長が可能です。`
+    );
+  }
+
+  return lines.join('\n') || '成長面の助言を組み立てるには、タイプ情報が必要です。';
 }

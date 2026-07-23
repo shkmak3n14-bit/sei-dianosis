@@ -1,6 +1,9 @@
 // useChatFlow.ts
 import { useState } from 'react';
-import { generateAdvice } from '../../../core/logic/advice_engine';
+import {
+  formatAdviceMessage,
+  generateAdvice,
+} from '../../../core/logic/advice_engine';
 import {
   EMPTY_PSYCHO_STRUCTURE,
   extractPsychoStructure,
@@ -8,6 +11,10 @@ import {
   type PsychoStructure,
 } from '../../../core/logic/psycho_extractor';
 import { generateFollowUp } from '../../../core/logic/psycho_followup';
+import {
+  buildUserEnneagramProfile,
+  type ResponsePersonaContext,
+} from '../../../core/logic/response_engine';
 import { routeResponse } from '../../../core/logic/response_router';
 import { writeResponse } from '../../../core/logic/response_writer';
 import { selfUnderstandingMock } from '../mocks/selfUnderstandingMock';
@@ -21,6 +28,8 @@ type ConversationContext = {
   type: string | null;
   label: string | null;
   remainingSteps: string[];
+  /** 人格モデル（文章化・助言用） */
+  persona: ResponsePersonaContext | null;
   /** 対話中に蓄積する心理構造 */
   psychology: PsychoStructure;
   /** flow 完了後の助言をすでに出したか */
@@ -35,12 +44,14 @@ export type UseChatFlowOptions = {
 export function useChatFlow(options: UseChatFlowOptions = {}) {
   const userEnneagramType =
     options.enneagramType ?? selfUnderstandingMock.resultCard.wingCode;
+  const userProfile = buildUserEnneagramProfile(userEnneagramType);
 
   const [messages, setMessages] = useState<ChatFlowMessage[]>([]);
   const [context, setContext] = useState<ConversationContext>({
     type: null,
     label: null,
     remainingSteps: [],
+    persona: null,
     psychology: { ...EMPTY_PSYCHO_STRUCTURE },
     adviceDelivered: false,
   });
@@ -50,9 +61,9 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
     setMessages((prev) => [...prev, { sender: 'user', text }]);
 
     // ② flow が残っている間は flow を優先
-    if (context.type && context.remainingSteps.length > 0) {
+    if (context.type && context.persona && context.remainingSteps.length > 0) {
       const nextStep = context.remainingSteps[0];
-      const sieReply = writeResponse(context.type, nextStep, text);
+      const sieReply = writeResponse(nextStep, context.persona, text);
 
       setMessages((prev) => [...prev, { sender: 'sie', text: sieReply }]);
       setContext((prev) => ({
@@ -63,10 +74,13 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
       return;
     }
 
-    // ③ flow が全部終わったら psychology を使って advice
+    // ③ flow が全部終わったらタイプ辞書ベースの advice
     if (context.type && !context.adviceDelivered) {
-      const advice = generateAdvice(context.psychology, userEnneagramType);
-      setMessages((prev) => [...prev, { sender: 'sie', text: advice }]);
+      const advice = generateAdvice(userProfile);
+      setMessages((prev) => [
+        ...prev,
+        { sender: 'sie', text: formatAdviceMessage(advice) },
+      ]);
       setContext((prev) => ({
         ...prev,
         adviceDelivered: true,
@@ -92,6 +106,7 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
         type: null,
         label: null,
         remainingSteps: [],
+        persona: null,
         psychology,
         adviceDelivered: false,
       }));
@@ -100,11 +115,11 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
     }
 
     // ⑤ 心理構造が揃った → flow 開始（ここでは advice しない）
-    const result = routeResponse(text);
+    const result = routeResponse(text, userEnneagramType);
     const [firstStep, ...remaining] = result.steps;
 
     if (firstStep) {
-      const sieReply = writeResponse(result.type, firstStep, text);
+      const sieReply = writeResponse(firstStep, result.context, text);
       setMessages((prev) => [...prev, { sender: 'sie', text: sieReply }]);
     }
 
@@ -113,6 +128,7 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
       type: result.type,
       label: result.label ?? null,
       remainingSteps: remaining,
+      persona: result.context,
       psychology,
       adviceDelivered: false,
     }));
