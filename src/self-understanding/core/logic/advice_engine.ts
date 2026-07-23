@@ -26,7 +26,7 @@ export type GeneratedAdvice = {
  * - タイプ辞書（type）
  * - センター辞書（center）
  *
- * を統合して「タイプ別の助言」を生成する。
+ * を統合して「タイプ構造の自然な説明」を生成する。
  */
 export function generateAdvice(
   userProfile: UserEnneagramProfile
@@ -50,14 +50,14 @@ export function generateAdvice(
 /** チャット表示用に work / stress / growth を1本の文章にする */
 export function formatAdviceMessage(advice: GeneratedAdvice): string {
   return [
-    'ここまでの対話を踏まえて、あなたのタイプ構造に沿った助言をまとめました。\n',
-    `【仕事】\n${advice.work}`,
-    `【ストレス】\n${advice.stress}`,
-    `【成長】\n${advice.growth}`,
+    'ここまでの対話を踏まえて、あなたの内側で起きやすい動きを、タイプ構造に沿って整理してみました。\n',
+    `【仕事の場面】\n${advice.work}`,
+    `【負荷がかかったとき】\n${advice.stress}`,
+    `【これから少しずつ整えられる方向】\n${advice.growth}`,
   ].join('\n\n');
 }
 
-/** 仕事の助言（work） */
+/** 仕事の場面での構造説明 */
 function buildWorkAdvice(
   type: EnneagramTypeEntry | null,
   behavior: EnneagramBehaviorEntry | null,
@@ -65,27 +65,37 @@ function buildWorkAdvice(
 ): string {
   const lines: string[] = [];
 
+  if (type) {
+    lines.push(
+      `仕事の場面では、根っこにある願望「${type.coreDesire}」が、進め方や判断の軸になりやすいです。`
+    );
+  }
   if (behavior) {
-    lines.push(`あなたの仕事スタイルは「${behavior.workStyle}」です。`);
+    lines.push(
+      `そのうえで、あなたの仕事の進め方は「${behavior.workStyle}」として表れやすいです。`
+    );
+    lines.push(
+      `決めるときの流れも、「${behavior.decisionPattern}」になりやすい傾向があります。`
+    );
   }
   if (instinct) {
     lines.push(
-      `本能スタック（${instinct.name}）の影響で「${instinct.focus}」を優先しやすい傾向があります。`
+      `そこに、${instinct.name} の本能が加わると、「${instinct.focus}」を先に大切にしたくなりやすいです。これは性格の癖ではなく、内側の自然な優先順位です。`
     );
   }
-  if (behavior) {
+  if (type && !behavior && !instinct) {
     lines.push(
-      `そのため、仕事では「${behavior.decisionPattern}」という意思決定パターンが出やすいです。`
+      `恐れ「${type.coreFear}」が刺激されると、仕事のペースや関わり方が揺れやすくなることもあります。`
     );
-  }
-  if (type && lines.length === 0) {
-    lines.push(`タイプの特性として「${type.coreDesire}」が仕事観に影響しやすいです。`);
   }
 
-  return lines.join('\n') || '仕事面の助言を組み立てるには、タイプ情報が必要です。';
+  return (
+    lines.join('\n') ||
+    '仕事の場面の構造を整理するには、タイプ情報がもう少し必要です。'
+  );
 }
 
-/** ストレス時の助言（stress） */
+/** 負荷がかかったときの構造説明 */
 function buildStressAdvice(
   type: EnneagramTypeEntry | null,
   behavior: EnneagramBehaviorEntry | null,
@@ -93,26 +103,29 @@ function buildStressAdvice(
 ): string {
   const lines: string[] = [];
 
+  if (type) {
+    lines.push(
+      `負荷がかかると、まず恐れ「${type.coreFear}」が動きやすくなります。そのとき「${type.stressPattern}」という流れが出てくることがあります。`
+    );
+  }
   if (behavior) {
     lines.push(
-      `ストレス時には「${behavior.stressReaction}」が強まりやすいです。`
+      `行動面では、「${behavior.stressReaction}」が少し強まりやすいです。これは弱さではなく、内側が自分を守ろうとしている自然な反応です。`
     );
   }
   if (instinct) {
     lines.push(
-      `本能スタックの影響で「${instinct.stressPattern}」が加わり、反応が増幅されることがあります。`
-    );
-  }
-  if (type) {
-    lines.push(
-      `この状態では「${type.stressPattern}」というタイプ固有の反応が出やすくなります。`
+      `${instinct.name} の本能が働いていると、「${instinct.stressPattern}」が加わり、普段より反応が大きく感じられることがあります。`
     );
   }
 
-  return lines.join('\n') || 'ストレス面の助言を組み立てるには、タイプ情報が必要です。';
+  return (
+    lines.join('\n') ||
+    '負荷がかかったときの構造を整理するには、タイプ情報がもう少し必要です。'
+  );
 }
 
-/** 成長方向の助言（growth） */
+/** これから少しずつ整えられる方向の説明 */
 function buildGrowthAdvice(
   type: EnneagramTypeEntry | null,
   behavior: EnneagramBehaviorEntry | null,
@@ -122,23 +135,28 @@ function buildGrowthAdvice(
   const lines: string[] = [];
 
   if (type) {
-    lines.push(`あなたの成長方向は「${type.growthDirection}」です。`);
+    lines.push(
+      `これから少しずつ整えられる方向は、「${type.growthDirection}」です。願望「${type.coreDesire}」を大切にしつつ、恐れ「${type.coreFear}」に引っ張られすぎない選択を増やすイメージです。`
+    );
   }
   if (center) {
     lines.push(
-      `センター（${center.name}）の影響で「${center.growthDirection}」が基盤になります。`
+      `${center.name} センターの土台としては、「${center.growthDirection}」が支えになります。`
     );
   }
   if (behavior) {
     lines.push(
-      `行動面では「${behavior.communication}」を意識すると、成長が加速します。`
+      `日々の関わりでは、「${behavior.communication}」を少し意識するだけで、内側の流れが穏やかになりやすいです。`
     );
   }
   if (instinct) {
     lines.push(
-      `本能スタックの盲点「${instinct.blindSpot}」に注意すると、安定した成長が可能です。`
+      `${instinct.name} の本能では、「${instinct.blindSpot}」が見えにくくなりやすいので、ここだけやさしく気にかけておくと、整えやすくなります。`
     );
   }
 
-  return lines.join('\n') || '成長面の助言を組み立てるには、タイプ情報が必要です。';
+  return (
+    lines.join('\n') ||
+    '整え方の構造を整理するには、タイプ情報がもう少し必要です。'
+  );
 }
