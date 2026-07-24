@@ -11,12 +11,14 @@ import {
   type PsychoStructure,
 } from '../../../core/logic/psycho_extractor';
 import { generateFollowUp } from '../../../core/logic/psycho_followup';
+import { respond } from '../../../core/logic/respond';
+import { respondVoiceInput } from '../../../core/logic/respond_voice';
 import {
   buildUserEnneagramProfile,
   type ResponsePersonaContext,
 } from '../../../core/logic/response_engine';
-import { routeResponse } from '../../../core/logic/response_router';
 import { writeResponse } from '../../../core/logic/response_writer';
+import { toSpeechFriendly } from '../../../core/logic/speech_summarizer';
 import { selfUnderstandingMock } from '../mocks/selfUnderstandingMock';
 
 export type ChatFlowMessage = {
@@ -74,13 +76,11 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
       return;
     }
 
-    // ③ flow が全部終わったらタイプ辞書ベースの advice
+    // ③ flow が全部終わったらタイプ構造の整理（音声向け短文）
     if (context.type && !context.adviceDelivered) {
       const advice = generateAdvice(userProfile);
-      setMessages((prev) => [
-        ...prev,
-        { sender: 'sie', text: formatAdviceMessage(advice) },
-      ]);
+      const speechText = toSpeechFriendly(formatAdviceMessage(advice));
+      setMessages((prev) => [...prev, { sender: 'sie', text: speechText }]);
       setContext((prev) => ({
         ...prev,
         adviceDelivered: true,
@@ -114,25 +114,60 @@ export function useChatFlow(options: UseChatFlowOptions = {}) {
       return;
     }
 
-    // ⑤ 心理構造が揃った → flow 開始（ここでは advice しない）
-    const result = routeResponse(text, userEnneagramType);
-    const [firstStep, ...remaining] = result.steps;
-
-    if (firstStep) {
-      const sieReply = writeResponse(firstStep, result.context, text);
-      setMessages((prev) => [...prev, { sender: 'sie', text: sieReply }]);
-    }
-
+    // ⑤ フェーズ判定：advice / deepening / conversation → respond へ
+    const { text: sieReply, phase } = await respond(text, userProfile);
+    setMessages((prev) => [...prev, { sender: 'sie', text: sieReply }]);
     setContext((prev) => ({
       ...prev,
-      type: result.type,
-      label: result.label ?? null,
-      remainingSteps: remaining,
-      persona: result.context,
+      type: null,
+      label: null,
+      remainingSteps: [],
+      persona: null,
       psychology,
-      adviceDelivered: false,
+      adviceDelivered: phase === 'advice',
     }));
   };
 
-  return { messages, sendMessage, context };
+  /**
+   * 音声入力: STT → generateResponse → チャットに反映
+   * （文字起こし結果をユーザー発言、短文化した返答をサイ発言として追加）
+   */
+  const sendVoiceMessage = async (audioUri: string) => {
+    try {
+      const { text, phase, userInput } = await respondVoiceInput(
+        audioUri,
+        userProfile
+      );
+
+      const spoken = userInput.trim() || '（音声を認識できませんでした）';
+      setMessages((prev) => [
+        ...prev,
+        { sender: 'user', text: spoken },
+        { sender: 'sie', text },
+      ]);
+      setContext((prev) => ({
+        ...prev,
+        type: null,
+        label: null,
+        remainingSteps: [],
+        persona: null,
+        adviceDelivered: phase === 'advice',
+      }));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : '音声の処理に失敗しました';
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: 'sie',
+          text:
+            message === 'SAI_STT_ENDPOINT_NOT_SET'
+              ? '音声認識の接続先がまだ設定されていないよ。テキストで話してくれると助かるな。'
+              : '音声の取り込みに失敗したみたい。もう一度試すか、テキストで送ってみてね。',
+        },
+      ]);
+    }
+  };
+
+  return { messages, sendMessage, sendVoiceMessage, context };
 }

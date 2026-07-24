@@ -12,7 +12,10 @@
       "backgroundColor": "#f4f8f6"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "サイとの音声会話のためにマイクを使います。"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,8 +24,17 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
+      "permissions": ["RECORD_AUDIO"],
       "predictiveBackGestureEnabled": false
     },
+    "plugins": [
+      [
+        "expo-av",
+        {
+          "microphonePermission": "サイとの音声会話のためにマイクを使います。"
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
     }

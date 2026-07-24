@@ -60,5 +60,44 @@ function buildMockLlmReply(prompt: string): string {
     });
   }
 
+  // detectToneLLM 向け
+  if (prompt.includes('感情トーン') && prompt.includes('"tone"')) {
+    const speechMatch = prompt.match(/ユーザー発話:\s*([\s\S]*)$/);
+    const speech = (speechMatch?.[1] ?? '').toLowerCase();
+    if (
+      /わからない|分からない|違う|モヤモヤ|不安|どうしたら/.test(speech)
+    ) {
+      return JSON.stringify({ tone: 'soft' });
+    }
+    if (/うーん|そうなんだよね|ちょっと/.test(speech)) {
+      return JSON.stringify({ tone: 'voice' });
+    }
+    if (/なるほど|気になった|整理|もう少し/.test(speech)) {
+      return JSON.stringify({ tone: 'calm' });
+    }
+    return JSON.stringify({ tone: 'calm' });
+  }
+
+  // detectPhaseLLM 向け
+  if (prompt.includes('会話フェーズ') && prompt.includes('"phase"')) {
+    const speechMatch = prompt.match(/ユーザー発話:\s*([\s\S]*)$/);
+    const speech = (speechMatch?.[1] ?? '').toLowerCase();
+    if (
+      /どうすれば|改善|成長|ストレス|仕事|特徴|理由|傾向|構造|深く知りたい|自分は|いつも|こうなる|タイプ的|ストレスの時|職場で|人間関係で/.test(
+        speech
+      )
+    ) {
+      return JSON.stringify({ phase: 'advice' });
+    }
+    if (
+      /分からない|わからない|どういうこと|もっと知りたい|具体的|説明して|なぜ|なんで/.test(
+        speech
+      )
+    ) {
+      return JSON.stringify({ phase: 'deepening' });
+    }
+    return JSON.stringify({ phase: 'conversation' });
+  }
+
   return '（モック返答）LLMエンドポイント未設定のため、仮の返答を返しています。';
 }

@@ -1,7 +1,7 @@
 // response_writer.ts
 // 人格モデル（center / type / wing / behavior / instinct / insight）を使って文章化する
 
-import type { ResponsePersonaContext } from './response_engine';
+import type { ResponsePersonaContext } from './response_engine/types';
 
 export type WriterContext = ResponsePersonaContext;
 

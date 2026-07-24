@@ -10,7 +10,7 @@ import {
   type EnneagramInstinctEntry,
   type EnneagramTypeEntry,
 } from '../data/enneagram';
-import type { UserEnneagramProfile } from './response_engine';
+import type { UserEnneagramProfile } from './response_engine/types';
 
 export type GeneratedAdvice = {
   work: string;

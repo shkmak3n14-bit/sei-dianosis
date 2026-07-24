@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { sieColors } from '../theme';
+import { VoiceRecordButton } from './VoiceRecordButton';
 
 type Props = {
   onSend: (text: string) => void;
+  onVoiceRecorded?: (uri: string) => void | Promise<void>;
 };
 
-export default function InputBox({ onSend }: Props) {
+export default function InputBox({ onSend, onVoiceRecorded }: Props) {
   const [text, setText] = useState('');
 
   const handleSend = () => {
@@ -28,6 +30,9 @@ export default function InputBox({ onSend }: Props) {
         placeholderTextColor={sieColors.muted}
         multiline
       />
+      {onVoiceRecorded ? (
+        <VoiceRecordButton onRecorded={onVoiceRecorded} />
+      ) : null}
       <Pressable
         style={[styles.button, !text.trim() && styles.buttonDisabled]}
         onPress={handleSend}

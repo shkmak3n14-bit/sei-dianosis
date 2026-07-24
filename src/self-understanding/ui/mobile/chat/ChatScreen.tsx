@@ -12,7 +12,7 @@ import { useChatFlow, type ChatFlowMessage } from './useChatFlow';
 type Props = NativeStackScreenProps<SelfUnderstandingStackParamList, 'Chat'>;
 
 export default function ChatScreen({ route }: Props) {
-  const { messages, sendMessage } = useChatFlow();
+  const { messages, sendMessage, sendVoiceMessage } = useChatFlow();
   const listRef = useRef<FlatList<ChatFlowMessage>>(null);
   const didSendTemplateRef = useRef(false);
 
@@ -43,7 +43,7 @@ export default function ChatScreen({ route }: Props) {
           onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
         />
 
-        <InputBox onSend={sendMessage} />
+        <InputBox onSend={sendMessage} onVoiceRecorded={sendVoiceMessage} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

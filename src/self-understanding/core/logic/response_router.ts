@@ -1,8 +1,8 @@
 // response_router.ts
 
 import {
+  buildResponsePlan,
   buildUserEnneagramProfile,
-  generateResponse,
   type UserEnneagramProfile,
 } from './response_engine';
 
@@ -22,7 +22,7 @@ export function routeResponse(
       : userProfile;
 
   // ① response_engine で返答の設計図を取得
-  const result = generateResponse(userInput, profile);
+  const result = buildResponsePlan(userInput, profile);
   const { type, label, flow, context } = result;
 
   // ② flow は未文章化のステップ名の配列として返す
